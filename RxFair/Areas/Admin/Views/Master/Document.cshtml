@@ -1,0 +1,175 @@
+﻿@{
+    ViewData["Title"] = "Document";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Document</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Document
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="javascript:;" onclick="AddEditDocument(0);" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Document</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtDocument" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Document Type</th>
+                                    <th>Document Name</th>
+                                    <th>Download</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindDocumentList();
+        });
+        function bindDocumentList() {
+            if ($.fn.DataTable.isDataTable("#dtDocument")) {
+                $('#dtDocument').DataTable().destroy();
+            }
+            var table = $('#dtDocument')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Master/GetDocumentList",
+                    "order": [[2, ""]],
+                    "columns": [
+                        {
+                            "data": "id",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data) {
+                                const content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                                 <a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>`;
+                                return dataTableAction(content);
+                            }
+                        },
+                        {
+                            "data": "isActive",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "className": "admin_toggle",
+                            "render": function (data, type, row) {
+                                return statusToggle(row.id, data);
+                            }
+                        },
+                        {
+                            "data": "documentType",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": true,
+                            "render": function(data, type, row) {
+                                return row.typeName;
+                            }
+                        },
+                        {
+                            "data": "documentName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "documentFile",
+                            "width": "8%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                return `<a href="javascript:;" ${dataParams("Download", "download", data)} class="icon_btn action"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>`;
+                            }
+                        }
+                    ]
+                });
+        };
+
+        $('#dtDocument').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    AddEditDocument(id);
+                    break;
+                case "delete":
+                    DeleteDocument(id);
+                    break;
+                case "download":
+                    DownloadDocument(id);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $('#dtDocument').on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+            $.ajax({
+                url: "@Url.Action("ManageDocumentStatus", "Master")",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function(data) {
+                }
+            });
+        });
+
+        function AddEditDocument(id) {
+            $("#modalContent").load(`/Admin/Master/AddEditDocument/${id}`, function () {
+                $("#divModal").modal('show');
+            });
+        }
+
+        function DownloadDocument(data) {
+            DownloadFile(data);
+        }
+
+        function DeleteDocument(id) {
+            RxFair.Confirm("Delete Document", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!", function () {
+                    $.ajax({
+                        url: "@Url.Action("RemoveDocument", "Master")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function (response) {
+                            setTimeout(function () {
+                                RxFair.HandleResponse(response);
+                                if (response.status === 1) {
+                                    window.bindDocumentList();
+                                }
+                            }, 100);
+                        },
+                        error: function (data) {
+                        }
+                    });
+                }, function () { });
+        }
+    </script>
+}

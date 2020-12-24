@@ -1,0 +1,19 @@
+﻿@model RxFair.Dto.Dtos.AdvertiseTemplateDto
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h4> View Email Template</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <h4 class="modal-title" id="exampleModalLabel">@Model.TemplateName</h4>
+    <br/>
+    @Html.Raw(Model.Template)
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>

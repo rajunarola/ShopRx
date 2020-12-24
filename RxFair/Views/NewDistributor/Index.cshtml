@@ -1,0 +1,210 @@
+﻿@model RxFair.Dto.Dtos.NewDistributorRequestDto
+@{
+    ViewData["Title"] = "New Distributor";
+    bool isEdit = Model.Id != 0;
+}
+<section class="breadcrumb_section">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / Registration</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<!-- Pagination End -->
+<!-- Distributor Information start -->
+<section class="pharmacies_sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 order-value">
+                <div class="pharmacies_text">
+                    <h4>Welcome New Distributor!</h4>
+                    <p>
+                        ShopRx lets pharmacies, hospitals, clinics and governmental agencies <span>buy prescription drugs at substantial discount.</span>
+                        They enjoy easy online shopping while saving money and better managing inventory.
+                    </p>
+                    <p>
+                        <span>We're secure.</span> ShopRx encrypts your information as it is transmitted over the Internet and we verify all pharmacies and wholesalers are properly licensed to conduct business in their state.
+                        This ensures you are getting safe, top quality pharmaceuticals at fantastic prices.
+                    </p>
+                    <p><span>There are no fees </span>for pharmacies to join ShopRx and when purchasing products on our site!</p>
+                    <p>On the other hand we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms.</p>
+                    <p>Click <span>"Get Started"</span> below to start saving with ShopRx.</p>
+                    <button type="button" class="btn btn-outline-primary con_btn mt-3">Learn More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <div>
+                    <img src="~/rxfairfrontend/images/pharmacy.jpg" class="img-fluid" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pharmacies Information End -->
+<!-- Distributor Form Start -->
+<section class="pharmacies_form pt-0">
+    <div class="container">
+        <div class="smartwizard">
+            <div class="smartwizard_one">
+                <div class="smartwizard_title">
+                    <div class="wizard_text d-flex align-items-center">
+                        <i class="fa fa-briefcase" aria-hidden="true"></i>
+                        <h4 class="">@(!isEdit ? "New Distributor Account request" : "Distributor Account request")</h4>
+                    </div>
+                </div>
+                <form class="form-section" id="frmRequest">
+                    <input type="hidden" asp-for="Id" />
+                    @Html.AntiForgeryToken()
+                    <div class="form_title">
+                        <h3>Distributor Info</h3>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4 ">
+                            <label>Company name *</label>
+                            <input type="text" class="form-control" asp-for="CompanyName" required data-parsley-pattern="^[a-zA-Z _0-9]+$" data-parsley-trigger="keyup" autofocus>
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>Email *</label>
+                            @if (isEdit)
+                            {
+                                <input asp-for="Email" type="email" class="form-control" readonly="readonly">
+                            }
+                            else
+                            {
+                                @*<input asp-for="Email" type="email" class="form-control" data-parsley-type="email" data-parsley-trigger="change" required>*@
+                                <input asp-for="Email" type="text" class="form-control parsley-required"
+                                       data-parsley-type="email" data-parsley-trigger="change"
+                                       data-parsley-remote="/Admin/Master/CheckUserIsExist" data-parsley-remote-message="Email already exist."
+                                       data-parsley-remote-options='{ "type": "POST", "dataType": "json", "data": { "email": "value" } }'
+                                       data-parsley-remote-validator="emailAvailable"
+                                       data-parsley-remote-reverse="false" data-parsley-required="true"
+                                       data-parsley-required-message="This field is required."
+                                       required="required" />
+                            }
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>Mobile *</label>
+                            <input type="text" class="form-control" asp-for="Mobile" data-mask="999-999-9999" data-parsley-required data-parsley-trigger="change">
+                        </div>
+                        <div class="form-group col-md-8 ">
+                            <label>Address *</label>
+                            <input type="text" class="form-control" asp-for="Address" data-parsley-required data-parsley-trigger="keyup">
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>City *</label>
+                            <input type="text" class="form-control" asp-for="City" data-parsley-required data-parsley-trigger="keyup" data-parsley-pattern="^[a-zA-Z ]+$">
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>State *</label>
+                            @Html.DropDownListFor(m => m.StateId, ViewBag.StateList as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control ", required = "Select state" })
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>Zip Code *</label>
+                            <input type="text" class="form-control" asp-for="ZipCode" data-mask="99999" data-parsley-required data-parsley-trigger="keyup">
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>Phone *</label>
+                            <input type="text" class="form-control" asp-for="Phone" data-mask="999-999-9999" data-parsley-required data-parsley-trigger="change">
+                        </div>
+                    </div>
+
+                    <div class="form_title mbf-3">
+                        <h3>Contact person Info</h3>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Name *</label>
+                            <input type="text" class="form-control" asp-for="ContactName" data-parsley-required data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="keyup">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Email *</label>
+                            <input type="email" class="form-control" asp-for="ContactEmail" data-parsley-required data-parsley-trigger="keyup">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Mobile *</label>
+                            <input type="text" class="form-control" asp-for="ContactMobile" data-mask="999-999-9999" data-parsley-required data-parsley-trigger="keyup">
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label>Address *</label>
+                            <input type="text" class="form-control" asp-for="ContactAddress" data-parsley-required data-parsley-trigger="keyup">
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>City *</label>
+                            <input type="text" class="form-control" asp-for="ContactCity" data-parsley-required="true" data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>State *</label>
+                            @Html.DropDownListFor(m => m.ContactStateId, ViewBag.StateList as IEnumerable<SelectListItem>, "Select State" , new { @class = "form-control ", required = "required" })
+                        </div>
+                        <div class="form-group col-md-4 ">
+                            <label>Zip *</label>
+                            <input type="text" class="form-control" asp-for="ContactZipCode" data-mask="99999" data-parsley-required="true" data-parsley-trigger="change">
+                        </div>
+
+                        <!--testing-->
+                        <!--testing end-->
+
+                        <div class="col-md-4"></div>
+                        <div class="col-md-6 mtf-2 form_btn">
+                            <button type="button" class="btn btn-outline-primary con_btn mr-3 active" id="btnSendRequest">Send Request <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                            <button type="reset" class="btn btn-outline-primary con_btn reset" id="btnClear">Clear</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pharmacies Form End -->
+@section scripts {
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+             window.InitMaskInput();
+             const message = $.trim("@ViewBag.Message");
+             if (message !== "") {
+                 RxFair.Success("New Distributor", message);
+             }
+        });
+        $(".reset").click(function () {
+            $("#frmRequest").parsley().reset();
+        });
+
+        $("#btnSendRequest").click(function () {
+            var result = $('#frmRequest').parsley().validate();
+            if (result == null || $("#frmRequest").parsley().isValid()) {
+                $.post("@Url.Action("NewDistributorRequest", "NewDistributor")", $("#frmRequest").serialize(),function(response) {
+                    if (response.status === 1) {
+                        RxFair.HandleResponse(response, true, function() {
+                            window.location.href = "/";
+                        });
+                    } else {
+                        RxFair.HandleResponse(response);
+                    }
+                });
+            }
+        });
+        /**
+        * Parsley validating masked fields
+        */
+        $(document).on("keypress", function (evt) {
+            if (evt.isDefaultPrevented()) {
+                // Assume that's because of maskedInput
+                // See https://github.com/guillaumepotier/Parsley.js/issues/1076
+                $(evt.target).trigger("input");
+            }
+        });
+
+        $('#Email').parsley().addAsyncValidator('emailAvailable', function (xhr) {
+            return !(xhr.responseJSON.status === 1);
+        }, '/Admin/Master/CheckUserIsExist');
+
+    </script>
+}
+

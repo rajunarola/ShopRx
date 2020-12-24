@@ -1,0 +1,85 @@
+﻿@model List<RxFair.Dto.Dtos.RewardMoneyDto>
+@{
+    ViewData["Title"] = "Manage Reward Point";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Reward Point</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Edit Manage Reward Point</h3>
+                <a href="@Url.Action("MoneyRange", "Reward")" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right active"><i class="fa fa-list" aria-hidden="true"></i> Manage Money Range</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <form id="frmRewardMoney" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="example" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Reward Type</th>
+                                        <th>Reward</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (var i = 0; i < Model.Count; i++)
+                                    {
+                                        var isReferral = (Model[i].MinRange == 0 && Model[i].MaxRange == 0);
+                                        <tr>
+                                            <td>
+                                                @(isReferral ? Model[i].TypeName : $@"$ {Model[i].MinRange} - $ {Model[i].MaxRange}")
+                                            </td>
+                                            <td>
+                                                <div class="form-group value_input mb-1 mt-1">
+                                                    <input asp-for="@Model[i].Id" type="hidden" />
+                                                    <input asp-for="@Model[i].RewardTypeId" type="hidden" />
+                                                    <input asp-for="@Model[i].TypeName" type="hidden" />
+                                                    <input asp-for="@Model[i].MinRange" type="hidden" />
+                                                    <input asp-for="@Model[i].MaxRange" type="hidden" />
+                                                    <input asp-for="@Model[i].Referral" type="text" value="@Model[i].Referral" class="form-control h-40 w-25" placeholder="@(isReferral ? "100$" : "0.0%")">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @if (Model.Count != 0 || Model.Any())
+                    {
+                        <div class="btn_sec mtf-2">
+                            <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                            <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        window.InitMaskInput();
+        $("#btnSave").click(function () {
+            $('#frmRewardMoney').parsley().validate();
+            if ($("#frmRewardMoney").parsley().isValid()) {
+                $.post("/Admin/Reward/RewardMoney", $("#frmRewardMoney").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                });
+            }
+        });
+    </script>
+}

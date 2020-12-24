@@ -1,0 +1,114 @@
+﻿@model RxFair.Dto.Dtos.TermsAndConditionDto
+@{
+    ViewData["Title"] = "Terms and Condition";
+}
+<link href="~/rxfairbackend/js/plugins/summernote/summernote-bs4.css" rel="stylesheet" />
+<style type="text/css">
+    .summernote {
+    }
+</style>
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Terms and Condition</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Add Terms and Condition
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show">
+                                <form id="frmTermsCondition">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="Id" name="Id" />
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>Terms and Condition *</label>
+                                            @Html.HiddenFor(m => m.TermsCondition)
+                                            <div class="form-control summernote">
+                                                @Html.Raw(Model.TermsCondition)
+                                            </div>
+                                            <div id="templateError" style="display:none;">
+                                                <ul class="parsley-errors-list filled"><li class="parsley-required">This field is required.</li></ul>
+                                            </div>
+                                            <div id="getContent" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                    <div class="btn_sec mtf-2">
+                        <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                        @*<button type="button" class="btn btn-outline-primary con_btn">Cancel</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script src="~/rxfairbackend/js/plugins/summernote/summernote-bs4.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                placeholder: 'Enter Terms & Condition here...',
+                height: 300,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+        });
+        $("#btnSave").click(function () {
+            var body = $.trim($('.summernote').summernote("code"));
+            $("#TermsCondition").val(body);
+
+            $("#getContent").html("");
+            $("#getContent").html(body);
+
+            var checkBody = $.trim($("#getContent").text());
+            if (checkBody === "") {
+                $("#templateError").show();
+            } else {
+                $("#templateError").hide();
+            }
+            $('#frmTermsCondition').parsley().validate();
+            if ($("#frmTermsCondition").parsley().isValid()) {
+                if (checkBody === "") {
+                    return false;
+                }
+
+                $.post("@Url.Action("TermsConditions","Master")", $("#frmTermsCondition").serialize(), function(response) {
+                    RxFair.HandleResponse(response);
+                    if (response.status === 1) {
+                        $("#Id").val(response.data);
+                    }
+                });
+            }
+
+        });
+    </script>
+}

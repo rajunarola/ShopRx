@@ -1,0 +1,199 @@
+﻿@using RxFair.Dto.Enum
+
+@{
+    ViewData["Title"] = "Distributor Users";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="DistributorUser">Manage Distributor Users</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Distributor Users List
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="javascript:;" onclick="AddEditUser(0);" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Distributor User</a>
+            </div>
+        </div>
+        <div class="col-12 data-padding">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtDistributorUser" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Email Confirmed</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+        window.InitMaskInput();
+        $(document).ready(function () {
+            window.BindUserList();
+        });
+        function BindUserList() {
+            if ($.fn.DataTable.isDataTable("#dtDistributorUser")) {
+                $('#dtDistributorUser').DataTable().destroy();
+            }
+            var table = $('#dtDistributorUser')
+                .DataTable({
+                    "sAjaxSource": "/Distributor/DistributorUser/GetUserList",
+                    "columns": [
+                        {
+                            "data": "id",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data,type,row,meta) {
+                                var content;                                
+                               
+                                if (row.emailConfirmed == false) {
+                                     content  = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>`;
+                                }
+                                else {
+
+                                     content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                               <a href="javascript:;" ${dataParams("Reset Password", "reset", data)} class="dropdown-item action"><i class="fa fa-expeditedssl" aria-hidden="true"></i>Reset Password</a>`;
+                                }
+                                //<a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                return dataTableAction(content);
+                            }
+                        },
+                        {
+                            "data": "isActive",
+                            "searchable": false,
+                            "orderable": false,
+                            "className": "admin_toggle text-center",
+                            "render": function (data, type, row) {
+                                return statusToggle(row.id, data);
+                            }
+                        },
+                        {
+                            "data": "emailConfirmed",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                return emailConfirmed(data);
+                            }
+                        },
+                        {
+                            "data": "firstName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "lastName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "email",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "mobile",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "role",
+                            "autoWidth": false,
+                            "searchable": true
+                        }
+                    ]
+                });
+        };
+
+        $('#dtDistributorUser').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    AddEditUser(id);
+                    break;
+                case "delete":
+                    DeleteUser(id);
+                    break;
+                case "reset":
+                    ResetPassword(id);
+                    break;
+                default:
+            }
+        });
+
+        function AddEditUser(id) {
+            const newUrl = `/Account/AddEditUser/?id=${id}&userGroup=${'@UserRoleGroup.Distributor'}`;
+            $("#modalContent").load(newUrl, function () {
+                $("#divModal").modal('show');
+            });
+        }
+
+        function DeleteUser(id) {
+            RxFair.Confirm("Delete User", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!",
+                function () {
+                    RemoveUser(id, refreshDatatable("#dtDistributorUser", id));
+                },
+                function () { }
+            );
+        }
+
+        $('#dtDistributorUser').on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+            $.ajax({
+                url: "@Url.Action("DistributorUserStatus", "DistributorUser")",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function(data) {
+                }
+            });
+        });
+
+        function checkEmailConfirmation(id) {
+             $.ajax({
+                url: "@Url.Action("DistributorUserStatus", "DistributorUser")",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function(data) {
+                }
+            });
+        }
+
+    </script>
+}
+
+

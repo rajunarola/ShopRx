@@ -1,0 +1,431 @@
+﻿@model RxFair.Dto.Dtos.NewPharmacyDto
+@{
+    ViewData["Title"] = "New Pharmacy";
+    bool isEdit = Model.Id != 0;
+}
+<link href="~/rxfairfrontend/css/bootstrap-datepicker.css" rel="stylesheet" />
+<style type="text/css">
+    .DiffrentBillingIfo {
+    }
+</style>
+<!-- breadcrumbsection -->
+<section class="breadcrumb_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / Registration</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumbsection -->
+<!-- Pharmacies Information start -->
+<section class="pharmacies_sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 order-value">
+                <div class="pharmacies_text">
+                    <h4>Welcome New Pharmacies!</h4>
+                    <p>
+                        ShopRx lets pharmacies, hospitals, clinics and governmental agencies <span>buy prescription drugs at substantial discount.</span>
+                        They enjoy easy online shopping while saving money and better managing inventory.
+                    </p>
+                    <p>
+                        <span>We're secure.</span> ShopRx encrypts your information as it is transmitted over the Internet and we verify all pharmacies and wholesalers are properly licensed to conduct business in their state.
+                        This ensures you are getting safe, top quality pharmaceuticals at fantastic prices.
+                    </p>
+                    <p><span>There are no fees </span>for pharmacies to join ShopRx and when purchasing products on our site!</p>
+                    <p>On the other hand we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms.</p>
+                    <p>Click <span>"Get Started"</span> below to start saving with ShopRx.</p>
+                    <button type="button" class="btn btn-outline-primary con_btn mt-3">Learn More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex align-items-center justify-content-center">
+                <div>
+                    <img src="rxfairfrontend/images/pharmacy.jpg" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pharmacies Information End -->
+<!-- Pharmacies Form Start -->
+
+<section class="pharmacies_form pt-0">
+
+    <div class="container">
+        @*<form asp-controller="newpharmacy" asp-action="RegisterNewPharmacy" method="post" id="newPharmacy">*@
+        <!-- SmartWizard html -->
+        <div id="smartwizard" class="smartwizard">
+            @Html.AntiForgeryToken()
+            <ul>
+                <li><a href="#step-1">1</a>Business Info</li>
+                <li><a href="#step-2">2</a>Contact Info</li>
+                <li><a href="#step-3">3</a>License Info</li>
+                <li><a href="#step-4">4</a>Finish</li>
+            </ul>
+            <div>
+                <div id="step-1" class="form-section">
+                    <div class="smartwizard_one">
+                        <div class="smartwizard_title">
+                            <div class="wizard_text d-flex align-items-center">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i>
+                                <h4 class="">Business & Billing Info</h4>
+                            </div>
+                        </div>
+                        <form class="form-section" id="FirstSection">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="Id" />
+                            <div class="form_title">
+                                <h3>Business Info</h3>
+                            </div>
+
+                            <h4>Please tell us about your organization.</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Business Name *</label>
+                                    <input asp-for="PharmacyName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z0-9_ ]+$" data-parsley-trigger="change" autofocus>
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Pharmacy Type *</label>
+                                    @Html.DropDownListFor(m => m.PharmacyTypeId, ViewBag.PharmacyTypeMaster as IEnumerable<SelectListItem>, "Select Pharmacy Type", new { @class = "form-control", required = "Select PharmacyType" })
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Pharmacy System *</label>
+                                    @Html.DropDownListFor(m => m.PharmacySystemId, ViewBag.PharmacySystemMaster as IEnumerable<SelectListItem>, "Select Pharmacy System", new { @class = "form-control", required = "Select Pharmacy System" })
+                                </div>
+                            </div>
+                            <h4>Pharmacy Delivery Address</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Address 1 *</label>
+                                    <input asp-for="DeliveryAddress1" type="text" class="form-control" data-parsley-required="true" data-parsley-trigger="change">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Address 2 </label>
+                                    <input asp-for="DeliveryAddress2" type="text" class="form-control" >
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>City *</label>
+                                    <input asp-for="DeliveryCity" class="form-control" data-parsley-required="true" data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>State *</label>
+                                    @Html.DropDownListFor(m => m.DeliveryState, ViewBag.StateList as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control ", required = "Select state" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Zip Code *</label>
+                                    <input asp-for="DeliveryZipCode" type="text" class="form-control" data-mask="99999" data-parsley-required="true" data-parsley-trigger="change">
+                                </div>
+
+                                <div class="form-group col-md-4 d-flex justify-content-center align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="gridCheck2">
+                                        <label class="form-check-label" for="gridCheck2">
+                                            Check for different billing address
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="DiffrentBillingIfo" style="display: none;">
+                                <div class="form_title mbf-3">
+                                    <h3>Billing Info</h3>
+                                </div>
+                                <div class="form-row" id="BillingInfo">
+                                    <div class="form-group col-md-4">
+                                        <label>Address 1 </label>
+                                        <input asp-for="BillAddress1" type="text" class="form-control" data-parsley-required="false" data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Address 2 </label>
+                                        <input asp-for="BillAddress2" type="text" class="form-control" data-parsley-required="false" data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>City </label>
+                                        <input asp-for="BillCity" type="text" class="form-control" data-parsley-required="false" data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>State </label>
+                                        @Html.DropDownListFor(m => m.BillState, ViewBag.StateList as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control " })
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Zip Code </label>
+                                        <input asp-for="BillZipCode" type="text" class="form-control" data-mask="99999" data-parsley-required="false" data-parsley-trigger="change" data-parsley-length-message="Invalid Zipcode">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="step-2" class="">
+                    <div class="smartwizard_one">
+                        <div class="smartwizard_title">
+                            <div class="wizard_text d-flex align-items-center">
+                                <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                                <h4 class="">Contact Info & User Login Info</h4>
+                            </div>
+                        </div>
+                        <form class="form-section" id="SecondSection">
+                            <div class="form_title">
+                                <h3>Contact Info</h3>
+                            </div>
+
+                            <h4>Please tell us about your self.</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>First Name *</label>
+                                    <input asp-for="FirstName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="change" data-parsley-focus="first">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Last Name *</label>
+                                    <input asp-for="LastName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="change">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Primary Email *</label>
+                                    @if (!isEdit)
+                                    {
+                                        @*<input asp-for="PrimaryEmail" type="hidden" class="form-control">*@
+                                        <input asp-for="Email" type="text" class="form-control parsley-required"
+                                               data-parsley-type="email" data-parsley-trigger="change"
+                                               data-parsley-remote="/Account/CheckUserIsExist" data-parsley-remote-message="Email already exist."
+                                               data-parsley-remote-options='{ "type": "POST", "dataType": "json", "data": { "email": "value" } }'
+                                               data-parsley-remote-validator="emailAvailable"
+                                               data-parsley-remote-reverse="false" data-parsley-required="true"
+                                               data-parsley-required-message="This field is required."
+                                               required="required" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Email" value="@Model.PrimaryEmail" readonly="readonly" class="form-control">
+                                    }
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Phone Number *</label>
+                                    <input asp-for="PhoneNumber" type="text" class="form-control" required data-mask="999-999-9999" data-parsley-trigger="change">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Mobile Number</label>
+                                    <input asp-for="MobileNumber" type="text" class="form-control"  data-mask="999-999-9999" data-parsley-trigger="change" >
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Job Title *</label>
+                                    <input asp-for="JobTitle" type="text" class="form-control" data-parsley-required="true" data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="change">
+                                </div>
+                            </div>
+
+                            @if (!isEdit)
+                            {
+                                <div class="form_title mbf-3">
+                                    <h3>User Login </h3>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Username</label>
+                                        <input asp-for="UserName" readonly="readonly" class="form-control">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Password *</label>
+                                        <input id="firstpassword" type="password" class="form-control" data-parsley-required data-parsley-pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$" data-parsley-pattern-message="Password must be at least 8 characters, not more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit." data-parsley-trigger="change" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Verify Password *</label>
+                                        <input asp-for="Password" type="password" class="form-control" data-parsley-equalto="#firstpassword" data-parsley-equalto-message="This password must match with the password" data-parsley-trigger="change" required />
+                                    </div>
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+
+                <div id="step-3" class="">
+                    <div class="smartwizard_one">
+                        <div class="smartwizard_title">
+                            <div class="wizard_text d-flex align-items-center">
+                                <i class="fa fa-id-card" aria-hidden="true"></i>
+                                <h4 class="">License Info</h4>
+                            </div>
+                        </div>
+                        <form class="form-section" id="ThirdSection">
+                            <div class="form_title">
+                                <h3>License Info</h3>
+                            </div>
+                            <h4>Your Business License Number and License expiration are required.</h4>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>License No *</label>
+                                    <input asp-for="LicenseNumber" class="form-control" required data-mask="***********"   data-parsley-focus="first">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>DEA No *</label>
+                                    <input asp-for="DeaNumber" class="form-control" required data-mask="***********" >
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>NPI Number *</label>
+                                    <input asp-for="NpiNumber" class="form-control" required data-mask="**********">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>License Expires *</label>
+                                    <input asp-for="LicenseExpiresDate" type='text' required class="form-control datepicker" placeholder="DD/MM/YYYY" />
+                                    @*data-date-format="MMM/DD/YYYY" data-date-minDate="Oct/21/2014" data-parsley-mindate="Oct/21/2014" data-parsley-trigger="change"*@
+
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>DEA Expires *</label>
+                                    <input asp-for="DeaExpriesDate" type='text' required class="form-control datepicker" placeholder="DD/MM/YYYY" />
+                                    @*data-date-format="MMM/DD/YYYY" data-date-minDate="Oct/21/2014" data-parsley-mindate="Oct/21/2014" data-parsley-trigger="change" />*@
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label asp-for="LicenseFile">
+                                        <span asp-validation-for="LicenseFile" class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                        <input asp-for="LicenseFile" style="display: none;" type="file" class="form-control-file" data-parsley-required="true" data-parsley-trigger="change">
+                                    </label>
+                                    <label asp-for="LicenseFile">License file Upload</label>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label asp-for="DeaFile">
+                                        <span asp-validation-for="DeaFile" class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                        <input asp-for="DeaFile" style="display: none;" type="file" class="form-control-file" data-parsley-required="true" data-parsley-trigger="change">
+                                    </label>
+                                    <label asp-for="DeaFile">DEA file Upload</label>
+                                </div>
+                            </div>
+                            <div class="form_title mbf-3 mt-2">
+                                <h3>Refer Code Info</h3>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Refer Code</label>
+                                    <input asp-for="ReferCode" type="text" data-parsley-trigger="change" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label id="ValidReferCode"></label>
+                                </div>
+                                <div class="note">
+                                    <p>
+                                        We will need a copy of your pharmacy license, DEA registration certificate and NPI number to process your application. You can upload these documents in .GIF, .JPG, JPEG, .PDF, .DOC and
+                                        .DOCX format. If you do not have your documents scanned at this time we'll contact you for copies.
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="step-4" class="">
+                    <div class="smartwizard_one">
+                        <div class="smartwizard_title">
+                            <div class="wizard_text d-flex align-items-center">
+                                <i class="fa fa-gg-circle" aria-hidden="true"></i>
+                                <h4 class="">Review</h4>
+                            </div>
+                        </div>
+                        <div class="certificate_text">
+                            <div class="text-center">
+                                <img src="rxfairfrontend/images/check.png" class="img-fluid" alt="">
+                                <h2>Registration was Successful</h2>
+                                <p>we will review your details and send you email confirmation as soon as possible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*</form>*@
+    </div>
+</section>
+<!-- Pharmacies Form End -->
+@section Scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script src="~/rxfairfrontend/PageJs/PharmacyValidation.js"></script>
+    
+    <script type="text/javascript">
+ 
+
+        var isEdit = @isEdit.ToString().ToLower();
+        $(function () {
+            $("#FirstSection,#SecondSection,#ThirdSection").parsley();
+        });
+
+        window.InitMaskInput();
+    
+        var result = isEdit ? 0 : '';
+
+        $('#Email').parsley().addAsyncValidator('emailAvailable', function (xhr) {
+            $("#UserName").val($('#Email').val());
+            result = xhr.responseJSON.status;
+            return !(xhr.responseJSON.status === 1);
+        }, '/Account/CheckUserIsExist');
+
+        $(document).ready(function () {
+           
+            const message = $.trim("@ViewBag.Message");
+            if (message !== "") {
+                RxFair.Success("New Pharmacy", message);
+            }
+            const disableDate = new Date(2014, 10 - 1, 21);
+            $('#LicenseExpiresDate,#DeaExpriesDate').datepicker({
+                startDate: '-0m',
+                format: "M/dd/yyyy",
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                autoclose: true
+            });
+        });
+
+        $(document).on("change", "#ReferCode", function(e) {
+            $.ajax({
+                url: "NewPharmacy/CheckReferCode",
+                data: { "refercode": $(this).val() },
+                type: "GET",
+                success: function(response) {
+                    if (response.status === 0) {
+                        RxFair.HandleResponse(response);
+                        $("#ReferCode").val("");
+                    }
+                }
+            });
+        });
+
+        $(document).on("change", "#LicenseFile, #DeaFile", function (e) {
+            var id = $(this).attr("id");
+            var files = $(this).get(0).files;
+            if (files.length !== 0) {
+                var fileName = $(this).val();
+                var getExt = fileName.split('.');
+                var label = $(e.currentTarget).parent().next();
+                //var lblText = $(label).html();
+                getExt = getExt.reverse();
+                if ($.inArray(getExt[0].toLowerCase(), RxFair.Licencetypes) === -1) {
+                    e.target.value = '';
+                    const fileTypes = RxFair.Licencetypes.join();
+                    //$(label).html($.trim(lblText));
+                    id = (id == "LicenseFile" ? "License File" : "Dea File");
+                    RxFair.Error(`Allowed ${id} Types`, "The file type you are attempting to upload is not allowed. Allowed Types : " + fileTypes);
+                    return false;
+                } else {
+                    $(label).html(files[0].name);
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        });
+
+        /**
+        * Parsley validating masked fields
+        */
+        $(document).on("keypress", function (evt) {
+            if (evt.isDefaultPrevented()) {
+                // Assume that's because of maskedInput
+                // See https://github.com/guillaumepotier/Parsley.js/issues/1076
+                $(evt.target).trigger("input");
+            }
+        });
+    </script>
+}

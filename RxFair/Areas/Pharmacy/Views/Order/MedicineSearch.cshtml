@@ -1,0 +1,343 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@model IEnumerable<RxFair.Dto.Dtos.SearchMedicineDto>
+@{
+    ViewData["Title"] = "MedicineSearch";
+}
+@section styles{
+
+    <link href="~/css/jquery_ui.css" rel="stylesheet" />
+    <link href="~/rxfairfrontend/css/admin-frontend/style.css" rel="stylesheet" />
+}
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
+            <li class="breadcrumb-item"><a mhref="MedicineSearch">Medicine Search</a></li>
+        </ul>
+    </div>
+    <!-- Statues Div Start -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mega-search">
+                <div class="input-group cust_drop">
+                    <input type="text" required class="form-control" id="medicineList" aria-label="Text input with dropdown button">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-theme dropdown-toggle" id="btnDistributor" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Distributors</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" data-id="0" onclick="setDistributor(0,'Select Distributors')"> Select Distributors </a>
+                            @foreach (var item in ViewBag.DistributorList)
+                            {
+                                <a class="dropdown-item" href="#" onclick="setDistributor(@item.Value,'@item.Text')">@item.Text</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="button-serch">
+                    <button class="btn btn-theme" id="searchMedicine" type="button"> Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-4 mb-4">
+            <div class="btn-group product-view">
+                <button type="button" class="btn btn-theme dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="~/rxfairfrontend/images/grid-view.png" class="img-fluid" alt="grid-view" />
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:;" title="Grid view" class="grid-view"><img src="~/rxfairfrontend/images/grid-view.png" class="img-fluid" alt="grid-view">Grid View</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" title="view" class="list-view"><img src="~/rxfairfrontend/images/list-view.png" class="img-fluid" alt="list-view">List View</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row product-view-point">
+            <div class="row product-view-point MedicineResult w-100" id="renderPaginationContent">
+                @foreach (var medicine in Model)
+                {
+                    var medicineColor = "";
+                    if (medicine.IsCheap)
+                    {
+                        medicineColor = "yellow_border";
+                    }
+                    else
+                    {
+                        // if 1 Medicine fullfiled more then 2 conditions
+                        if (medicine.IsShortDated && medicine.IsContracted && medicine.IsBestDeal) { medicineColor = "teal_border"; }
+
+                        //if 1 medicine fullfiled more then 1 conditions
+                        if (medicine.IsContracted && medicine.IsBestDeal) { medicineColor = "teal_border"; }
+                        if (medicine.IsShortDated && medicine.IsBestDeal) { medicineColor = "green_border"; }
+                        if (medicine.IsShortDated && medicine.IsContracted) { medicineColor = "teal_border"; }
+
+                        //if 1 medicine fullfiled only 1 conditions
+                        if (medicine.IsContracted) { medicineColor = "teal_border"; }
+
+                        if (medicine.IsShortDated) { medicineColor = "red_border"; }
+
+                        if (medicine.IsBestDeal) { medicineColor = "green_border"; }
+                    }
+                    <div class="col-md-3 custom_col">
+                        <div class="product-wrapper @medicineColor">
+                            <div class="product-img">
+                                <a href="javaascript:;">
+                                    <img src="~/UploadFile/MedicineImage/@medicine.MedicineImage" onerror="this.src='/rxfairbackend/images/placeholder.jpg'" class="w-100 product_img" >
+                                    @*<img src="~/UploadFile/MedicineImage/637086373123226275.jpg" class="w-100" alt="p-1">*@
+                                </a>
+                                <div class="cart-info">
+                                    <button onclick="AddtoCart('@medicine.Id','@medicine.DistributorId','@medicine.WacPrice')"><i class="fa fa-shopping-bag" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                            <div class="product-text">
+                                <div class="rating">
+                                </div>
+                                <h5 class="d-block product_text">@medicine.MedicineName</h5>
+                                <h5 class="d-block product_text"><b>NDC/UPC</b> : @medicine.NDC</h5>
+                                <h5 class="d-block product_text"><b>Dosage Form</b> : @medicine.DosageForm</h5>
+                                <h5 class="d-block product_text"><b>Packaging Size</b> : @medicine.PackageSize</h5>
+                                <h5 class="product-text-s product_text" data-toggle="tooltip" data-placement="top" title="@(medicine.ManufacturerName ?? "--")"><b>Manufacturer</b> : @(medicine.ManufacturerName ?? "--")</h5>
+                                <h5 class="d-block product_text"><b>Strength</b> : @(medicine.Strength.Trim() == "" ? "--" : medicine.Strength.Trim())</h5>
+                                <h5 class="d-block product_text">$ @medicine.WacPrice</h5>
+                                <p class="d-block product_text"></p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                @*<nav aria-label="Page navigation example" class="theme-pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-angle-left"></i></a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">5</a></li>
+                            <li class="page-item"><a class="page-link" href="#">6</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="fa fa-angle-right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>*@
+
+                <nav aria-label="Page navigation example" class="theme-pagination">
+                    <ul class="pagination justify-content-center paginationUl"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</main>
+@section scripts {
+    <script src="~/js/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    <script src="~/rxfairbackend/PageJs/MedicineSearch.js"></script>
+    <script>var jQuery1102 = $.noConflict(true);</script>
+    <script type="text/javascript">
+        (function ($) {
+            // here $ points to the old jQuery
+            $("#medicineList").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Pharmacy/Order/GetMedicineList",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term, distributorId: DistributorId },
+                        success: function (data) {
+                            response($.map(data,
+                                function (item) {
+                                    return { label: item.text, value: item.text };
+                                }));
+                        }
+                    });
+                },
+                messages: {
+                    noResults: "",
+                    results: ""
+                }
+            });
+        })(jQuery1102);
+        //function createjscssfile(filename, filetype) {
+        //    if (filetype == "js") { //if filename is a external JavaScript file
+        //        var fileref = document.createElement('script')
+        //        fileref.setAttribute("type", "text/javascript")
+        //        fileref.setAttribute("src", filename)
+        //    }
+        //    else if (filetype == "css") { //if filename is an external CSS file
+        //        var fileref = document.createElement("link")
+        //        fileref.setAttribute("rel", "stylesheet")
+        //        fileref.setAttribute("type", "text/css")
+        //        fileref.setAttribute("href", filename)
+        //    }
+        //    return fileref
+        //}
+
+        //function replacejscssfile(oldfilename, newfilename, filetype) {
+        //    var targetelement = (filetype == "js") ? "script" : (filetype == "css") ? "link" : "none" //determine element type to create nodelist using
+        //    var targetattr = (filetype == "js") ? "src" : (filetype == "css") ? "href" : "none" //determine corresponding attribute to test for
+        //    var allsuspects = document.getElementsByTagName(targetelement)
+        //    for (var i = allsuspects.length; i >= 0; i--) { //search backwards within nodelist for matching elements to remove
+        //        if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) != null && allsuspects[i].getAttribute(targetattr).indexOf(oldfilename) != -1) {
+        //            var newelement = createjscssfile(newfilename, filetype)
+        //            allsuspects[i].parentNode.replaceChild(newelement, allsuspects[i])
+        //        }
+        //    }
+        //}
+        
+        $('.list-view').on('click', function (e) {
+            $('.product-view-point').addClass("list-view");
+            $('.product-view-point').children().removeClass();
+            $('.product-view-point').children().addClass("col-lg-12");
+            $('.product-view-point ').children().children().removeClass("col-md-3");
+        });
+        $('.grid-view').on('click', function (e) {
+            $('.product-view-point').removeClass("list-view");
+            $('.product-view-point').addClass("grid-view");
+            $('.product-view-point').children().removeClass("col-lg-12");
+            //$('.product-view-point ').children().children().children().addClass("col-md-4");
+            //$('.product-view-point ').children().addClass("row");
+            $('.product-view-point ').find("#renderPaginationContent").addClass("row");
+            $('.product-view-point ').children().children().addClass("col-md-3");
+        });
+
+        var DistributorId = '0';
+        //var isNotification = false, comment = "";
+        var PerPage = parseInt(@ViewBag.PerPage);
+        $(document).ready(function () {
+            Bindpagination();
+        });
+
+        function Bindpagination() {
+            var totalRecords = isNaN(parseInt(@ViewBag.TotalRecords))?10:parseInt(@ViewBag.TotalRecords);
+            //var searchRecords = isNaN(parseInt(@ViewBag.SearchRecords))?"":parseInt(@ViewBag.SearchRecords);
+            if (totalRecords > PerPage) {
+                pagination(totalRecords, 1);
+            }
+        }
+
+        function setDistributor(distributorId, distributorName) {
+            $("#btnDistributor").text(distributorName);
+            $("#btnDistributor").attr('data-id', distributorId);
+            DistributorId = distributorId == "" ? "0" : distributorId;
+        }
+
+        function pagination(totalRecords, currentPage) {
+            $(".paginationUl").html("");
+            var finalHtml = '';
+            var resultPager = listPages(totalRecords, PerPage, currentPage, 3,
+                "<span class=\"currPage\">AllPages</span>",
+                '<li class="page-item"><a class=\"listPageLink page-link\" href=\"javascript:AjaxList_changePage(0)\">AllPages</a></li>',
+                '<li class="page-item active"><a class=\"currPage page-link\">#0#</a></li>', //change a with span
+                '<li class="page-item"><a class="page-link" href="javascript:AjaxList_changePage(#0#)">#0#</a></li>',
+                '<li class="page-item"><a class="page-link" href="javascript:AjaxList_changePage(#0#)"><span class="glyphicon glyphicon-arrow-left"></span></a></li>',
+                '<li class="page-item"><a class="page-link" href="javascript:AjaxList_changePage(#0#)"><span class="glyphicon glyphicon-arrow-right"></span></a></li>',
+                '<li class="page-item"><a class="page-link" href="javascript:AjaxList_changePage(#0#)" aria-label="Previous"><span class="cls fa fa-angle-left"></span></a></li>',
+                '<li class="page-item"><a class="page-link" href="javascript:AjaxList_changePage(#0#)" aria-label="Next"><span class="cls fa fa-angle-right"></span></a></li>'
+            );
+            finalHtml = "";
+            $(resultPager).each(function (a, item) {
+                finalHtml += item.html;
+            });
+            $(".paginationUl").html(finalHtml);
+        }
+
+        function AjaxList_changePage(currentPage) {
+            var dId = $("#btnDistributor").attr('data-id');
+            var searchdata = $("#medicineList").val();
+            $.ajax({
+                url: `/Pharmacy/Order/MedicineSearchList`,
+                data: { search: searchdata, distributorId: parseInt(dId), startFrom: (currentPage<=0?0:currentPage-1) * 10 },
+                type: "POST",
+                success: function (response) {
+                    if (response.status === 1){
+                        var medicineData = response.data;
+                        var content = RenderPaginationResult(medicineData.data);
+                        $("#renderPaginationContent").html("");
+                        $("#renderPaginationContent").html(content);
+                        if (medicineData.data.length === 0 || medicineData.totalRecords <= PerPage)
+                            $(".paginationUl").html("");
+                         else
+                          pagination(medicineData.totalRecords, currentPage);
+                    } else {
+                        $("#renderPaginationContent").html("");
+                        $("#renderPaginationContent").html("<center><h3>No Medicine Found.</h3></center>");
+                        $(".paginationUl").html("");
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        }
+
+        $("#searchMedicine").on("click", function () {
+            var dId = parseInt($("#btnDistributor").attr('data-id'));
+            var searchdata = $("#medicineList").val();
+            if (isNaN(dId) && searchdata == "")
+                 window.location.href = "/Pharmacy/Order/MedicineSearch";
+                AjaxList_changePage(1);
+        });
+
+        function AddtoCart(medicineId,distributorId,medicinePrice) {
+            if (medicinePrice != 0) {
+                var medicine = {
+                    MedicineId: medicineId,
+                    Quantity: 1,
+                    DistributorId: distributorId
+                }
+                var result = [];
+                result.push(medicine);
+                $.ajax({
+                    url: '/Pharmacy/Order/AddtoCart',
+                    data: { model: result, isMedicineSearch:true },
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.status === 1)
+                            RxFair.HandleResponse(response);
+                    },
+                    error: function (response) {
+                        RxFair.Error(response.messages);
+                    }
+
+                });
+            } else {
+                RxFair.Error("Medicine Price is Not Available.");
+            }
+        }
+
+        //$(document).ready(function () {
+        //$(".AddToCart").on("click", function () {
+        //    var Medicine = {
+        //        MedicineId: $(this).attr('data-medicineId'),
+        //        Quantity: 1,
+        //        DistributorId: $(this).attr('data-distributorId')
+        //    }
+        //    var result = [];
+        //    result.push(Medicine);
+
+        //        $.ajax({
+        //             url: '/Pharmacy/Order/AddtoCart',
+        //            data: { model: result },
+        //            type: 'POST',
+        //            success: function (response) {
+        //                if (response.status === 1)
+        //                    RxFair.HandleResponse(response);
+        //            },
+        //            error: function (response) {
+        //                RxFair.error(response);
+        //            }
+
+        //        });
+        //       });
+        //});
+    </script>
+}

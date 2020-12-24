@@ -1,0 +1,167 @@
+﻿@model RxFair.Dto.Dtos.WatchListDto
+@{
+    ViewData["Title"] = "Search Medicine";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="WatchList">Watch List</a></li>
+        </ul>
+    </div>
+    <form id="frmViewWatchList">
+        <div class="row pharmacies_form admin_tabel">
+            <div class="col-12">
+                <div class="database_title">
+                    <h3>
+                        Add Watch List
+                    </h3>
+                </div>
+            </div>
+            <div class="col-12">
+                <!-- Tab panes -->
+                <div class="tab-content p-0">
+                    <div role="tabpanel" class="tab-pane in active" id="account">
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block border-0">
+                            <div class="accordian-block border-0">
+                                <div class="accordian-para acc-show p-0">
+                                    <div class="form-row mt-0">
+                                        <div class="form-group col-xl-4 col-lg-6">
+                                            <label>NDC or Name *</label>
+                                            <input type="text" asp-for="Ndc" class="form-control">
+                                        </div>
+                                        <div class="form-group col-xl-4 col-lg-6 d-flex align-items-end">
+                                            <div class="btn_sec mb-1">
+                                                <button type="button" class="btn btn-outline-primary con_btn active mr-2" data-toggle="tooltip" data-original-title="Find" id="btnView"><i class="fa fa-eye p-0" aria-hidden="true"></i> Find</button>
+                                                <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="col-12" id="tbldiv" style="display: none">
+        <!-- Tab panes -->
+        <div class="tab-content pt-0">
+            <div class="tile-body">
+                <div class="dataTables_wrapper no-footer">
+                    <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtWatchList" role="grid" aria-describedby="sampleTable_info">
+                        <thead>
+                            <tr role="row" class="title_datatable">
+                                <th>Action</th>
+                                <th>Ndc</th>
+                                <th>Medicine</th>
+                                <th>Strength</th>
+                                <th>Dosage</th>
+                                <th>Package Size</th>
+                                <th>Manufacturer</th>
+                                <th>Current Price</th>
+                                <th>Distributor</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+        $("#btnView").on("click", function () {
+         
+            var search = $.trim($("#Ndc").val());
+            if (search === "") {
+                RxFair.Error("Error", "Please enter Ndc or Medicine name");
+            } else {
+                $("#tbldiv").css("display", "");
+              
+                BindDataTable(search);
+                $("#Ndc").focus();
+              
+            }
+        });
+        function BindDataTable(search) {
+            var watchListOnSearch = $("#dtWatchList").DataTable({
+                "sAjaxSource": "/Pharmacy/WatchList/GetWatchListOnSearch?search=" + search,
+                "rowCallback": function (row, data, index) {
+                    if (data.isExist) {
+                        $(row).addClass('redgreen');
+                    }
+                },
+                "order": [[2, "DESC"]],
+                "columns": [
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            const content = `<a href="javascript:;" onclick=AddEditWatchlist(${row.distributorId},${row.medicineId},${row.isExist},${row.isExist})><i class="fa fa-eye" aria-hidden="true"></i> </a>`;
+                            return renderHtml(content);
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "dosage",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "packageSize",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "manufacturer",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "price",
+                        "autoWidth": false,
+                        "searchable": false
+                    },
+                    {
+                        "data": "distributorName",
+                        "autoWidth": false,
+                        "searchable": false
+                    }
+                ]
+            });
+        }
+        function AddEditWatchlist(distributorId, id, isExist, isView = false) {
+            $("#modalContent").load(`/Pharmacy/WatchList/AddWatchList/${distributorId}/${id}/${isView}/${isExist}`, function () {
+                if (!isView) {
+                    modalSize("xl");
+                }
+                $("#divModal").modal('show');
+            });
+        }
+    </script>
+}

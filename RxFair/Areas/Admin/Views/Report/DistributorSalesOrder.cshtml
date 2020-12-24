@@ -1,0 +1,275 @@
+﻿@{
+    ViewData["title"] = "Distributor Sales Order ";
+}
+@model RxFair.Dto.Dtos.ReportDto
+<style>
+    td.details-control {
+        background: url('/rxfairfrontend/images/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('/rxfairfrontend/images/details_close.png') no-repeat center center;
+    }
+</style>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Reports</a></li>
+            <li class="breadcrumb-item"><a href="DistributorSalesOrder">Distributor Sales Order</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Distributor Sales Order</h3>
+                <button type="button" id="ExportToExcel" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right active"><i class="fa fa-align-center" aria-hidden="true"></i> Export</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="accordian-block border-0">
+                <div class="accordian-para acc-show purches_order">
+                    <form id="frmReport">
+                        <div class="form-row mt-0">
+                            <div class="form-group col-md-2 mbf-3">
+                                <label>Distributor</label>
+                                @Html.DropDownList("DistributorId", ViewBag.DistributorList as IEnumerable<SelectListItem>, "Select Distributor", new { @class = "form-control", required = "Select Distributor" })
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Start Date *</label>
+                                @*<input id="startDate" class="form-control datepicker" type="text">*@
+                                <input type="text" name="startDate" id="startDate" readonly value="" class="date" required placeholder="DD/MM/YYYY" />
+                            </div>
+                            <div class="form-group ">
+                                <label>End Date</label>
+                                <input id="endDate" class="form-control datepicker" type="text" required placeholder="DD/MM/YYYY">
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn active mb-0" id="btnView">View Reports</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtDistributorSalesReport" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th></th>
+                                    <th>Id</th>
+                                    <th>Pharmacy</th>
+                                    <th>Order Number</th>
+                                    <th>Grand Total</th>
+                                    <th>Shipping Total</th>
+                                    <th>Sub Total</th>
+                                    <th>Distributor</th>
+                                    <th>Delivery Status</th>
+                                    <th>Order Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        var container = $('#frmReport').length > 0 ? $('#frmReport').parent() : "body";
+        var endDate = new Date();
+
+        //$('#endDate').datepicker('setDate', d);
+        //$('#endDate').datepicker('setDate', new Date());
+       // newDate.setDate(newDate.getDate() + 7);
+
+        $(function () {
+            $(".date").datepicker({
+                container: container,
+                orientation: 'bottom',
+                onSelect: function (dateText) {
+                    $(this).change();
+                }
+            }).on("change", function () {
+                $('#endDate').datepicker('setStartDate', new Date($(this).val()));
+            });
+        });
+
+        $('#startDate').datepicker({
+            endDate: '+0d',
+            format: "M/dd/yyyy",
+            setDate: new Date(),
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        }).on('changeDate', function () {
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if (Date.parse(startDate) > Date.parse(endDate)) {
+                RxFair.Error("Start date cannot be greater than end date !");
+            }
+        });
+
+        myDate = new Date();
+        minusSeven = new Date(myDate.setDate(myDate.getDate() - 6));
+        $('#startDate').datepicker('setDate', minusSeven);
+
+        $('#endDate').datepicker({
+            endDate: '+0d',
+            format: "M/dd/yyyy",
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        });
+
+        $('#endDate').datepicker('setDate', new Date());
+        
+        $(document).ready(function () {
+            var distributorId = $("#DistributorId").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            bindReport(distributorId, startDate, endDate);
+        });
+
+        $(document).on('click', '#btnView', function () {
+            var distributorId = $("#DistributorId").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+
+            if (Date.parse(startDate) > Date.parse(endDate)) {
+                RxFair.Error("Start date cannot be greater than end date !");
+            }
+            else {
+                bindReport(distributorId, startDate, endDate);
+            }
+            // Add event listener for opening and closing details
+        });
+
+        $(document).on('click', '#ExportToExcel', function () {
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var search = $("input[type='search']").val();
+            var distributorId = $("#DistributorId").val();
+            distributorId = isNaN(distributorId) ? 0 : distributorId;
+
+            if (Date.parse(startDate) > Date.parse(endDate)) {
+                RxFair.Error("Start date cannot be greater than end date !");
+            } else {
+                ExportToExcelData(distributorId, startDate, endDate, search);
+            }
+            // Add event listener for opening and closing details
+        });
+
+        function ExportToExcelData(distributorId, startDate, endDate, search) {
+            window.location = `/Admin/Report/ExportToExcelDistributorSalesOrder?distributorId=${distributorId}&startDate=${startDate}&endDate=${endDate}&search=${search}`;
+        }
+        
+        function bindReport(distributorId, startDate, endDate) {
+            //if ($.fn.DataTable.isDataTable("#dtMedicineHistory")) {
+            //    historyTable.destroy();
+            //}
+            var historyTable = $('#dtDistributorSalesReport')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Report/GetDistributorSalesOrder?distributorId=" + distributorId + "&startDate=" + startDate + "&endDate=" + endDate,
+                    "order": [[2, "DESC"]],
+                    "columns": [
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                const content = `<a href="javascript:;" data-toggle="tooltip" data-original-title="view" onclick=ViewMedicine(${data},'${startDate}','${endDate}') class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i></a>`;
+                                return renderHtml(content);
+                            }
+                        },
+                        {
+                            "data": "id",
+                            "visible": false,
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": false,
+                        },
+                        {
+                            "data": "pharmacyName",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "uniqueOrder",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "grandTotal",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "shippingTotal",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "subTotal",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "distributor",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "deliveryStatus",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "orderStatus",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "dateCreated",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                    ]
+                });
+        };
+
+
+        function ViewMedicine(id, startDate, endDate) {
+            const newUrl = `/Admin/Report/ViewMedicines/?id=${id}&startDate=${startDate}&endDate=${endDate}`;
+            $("#modalContent").load(newUrl, function () {
+                modalSize("xl");
+                $("#divModal").modal('show');
+            });
+        }
+    </script>
+}
+

@@ -1,0 +1,349 @@
+﻿@model RxFair.Dto.Dtos.DistributorDto
+@{
+    ViewData["Title"] = ((bool)ViewBag.Action ? "View Distributor" : Model.Id == 0 ? "Add Distributor" : "Edit Distributor");
+    bool isEdit = Model.Id != 0;
+    string isdisabled = isEdit ? "disabled" : "";
+}
+@section styles{
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManageDistributor">Distributors</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    @ViewData["Title"]
+                </h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab1" aria-expanded="false" aria-controls="collapseThree">
+                                <p>Distributor Info</p>
+                                <i class="fa fa-angle-up plus-icon cross-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show" id="tab1" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <form id="DistributerInfo">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Company Name *</label>
+                                            <input asp-for="Id" type="hidden" />
+                                            <input asp-for="SubscriptionDto.Id" type="hidden" />
+                                            <input asp-for="CompanyName" type="text" class="form-control" data-parsley-trigger="change" required="">
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Email *</label>
+                                            @if (Model.Id == 0)
+                                            {
+                                                <input asp-for="Email" type="text" class="form-control" data-parsley-type="email" data-parsley-trigger="change"
+                                                       data-parsley-remote="/Account/CheckUserIsExist"
+                                                       data-parsley-remote-message="Email already exist."
+                                                       data-parsley-remote-options='{ "type": "POST", "dataType": "json", "data": { "email": "", "contactEmail": "", "userEmail": ""} }'
+                                                       data-parsley-remote-validator="emailAvailable1"
+                                                       data-parsley-remote-reverse="false"
+                                                       data-parsley-required="true"
+                                                       data-parsley-required-message="This field is required."
+                                                       required="required" />
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="Email" type="text" class="form-control" readonly="readonly" />
+                                                @*data-parsley-remote="/Account/CheckUserIsExist"
+                                    data-parsley-remote-message="Email already exist."*@
+                                            }
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Mobile *</label>
+                                            <input asp-for="Mobile" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change" required>
+                                        </div>
+                                        <div class="form-group col-md-8 mbf-3">
+                                            <label>Address *</label>
+                                            <input asp-for="Address" type="text" class="form-control" data-parsley-trigger="change" data-parsley-required="true">
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>City *</label>
+                                            <input asp-for="City" type="text" class="form-control" data-parsley-required="true" data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>State *</label>
+                                            @Html.DropDownListFor(m => m.StateId, ViewBag.StateList as IEnumerable<SelectListItem>, Model.StateName, new { @class = "form-control ", required = "required" })
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>Zip *</label>
+                                            <input asp-for="ZipCode" type="text" class="form-control" data-mask="99999" data-parsley-required="true" data-parsley-trigger="change">
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>Phone *</label>
+                                            <input asp-for="Phone" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change" data-parsley-required="true">
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>Fax *</label>
+                                            <input asp-for="FaxNumber" type="text" class="form-control" data-parsley-required="true" data-mask="999-999-9999">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab2" aria-expanded="false" aria-controls="collapseThree">
+                                <p>Contact Person Info</p>
+                                <i class="fa fa-angle-up plus-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show" id="tab2" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <form id="DistributerContact">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Contact Name *</label>
+                                            <input asp-for="ContactName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z]+$" data-parsley-trigger="change">
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Email *</label>
+                                            <input asp-for="ContactEmail" type="text" class="form-control" data-parsley-type="email" data-parsley-trigger="change"
+                                                   data-parsley-required="true"
+                                                   data-parsley-required-message="This field is required."
+                                                   required="required" />
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Mobile *</label>
+                                            <input asp-for="ContactMobile" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change" required="">
+                                        </div>
+                                        <div class="form-group col-md-8 mbf-3">
+                                            <label>Address *</label>
+                                            <input asp-for="ContactAddress" type="text" class="form-control" data-parsley-required data-parsley-trigger="change">
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>City *</label>
+                                            <input asp-for="ContactCity" type="text" class="form-control" data-parsley-required="true" data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>State *</label>
+                                            @Html.DropDownListFor(m => m.ContactStateId, ViewBag.StateList as IEnumerable<SelectListItem>, Model.StateName, new { @class = "form-control ", required = "required" })
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>Zip *</label>
+                                            <input asp-for="ContactZipCode" type="text" class="form-control" data-mask="99999" data-parsley-required="true" data-parsley-trigger="change">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        @if (Model.Id == 0)
+                        {
+                            <div class="accordian-block mbf-2">
+                                <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab3" aria-expanded="false" aria-controls="collapseThree">
+                                    <p>Distributor Admin</p>
+                                    <i class="fa fa-angle-up plus-icon"></i>
+                                </div>
+                                <div class="accordian-para collapse show" id="tab3" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                    <form id="DistributerPersonal">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4 mbf-3">
+                                                <label>First Name *</label>
+                                                <input asp-for="FirstName" type="text" class="form-control" required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                            </div>
+                                            <div class="form-group col-md-4 mbf-3">
+                                                <label>Last Name *</label>
+                                                <input asp-for="LastName" type="text" class="form-control" required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                            </div>
+                                            @*<div class="form-group col-md-4 mbf-3">
+                                    <label>Name *</label>
+                                    <input asp-for="FirstName" type="text" data-parsley-trigger="keyup" class="form-control" required="">
+                                </div>*@
+                                            <div class="form-group col-md-4 mbf-3">
+                                                <label>Email </label>
+                                                <input asp-for="UserEmail" type="text" class="form-control" data-parsley-type="email" data-parsley-trigger="change"
+                                                       readonly />
+                                                @*required=""*@
+                                                @*data-parsley-required="true"*@
+                                                @*data-parsley-required-message="This field is required."*@
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="accordian-block mbf-2">
+                                <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab5" aria-expanded="false" aria-controls="collapseThree">
+                                    <p>Distributor Admin</p>
+                                    <i class="fa fa-angle-up plus-icon"></i>
+                                </div>
+                                <div class="accordian-para acc-show show" id="tab5" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                    <form id="DistributerPersonal">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4 mbf-3">
+                                                <label>First Name *</label>
+                                                <input asp-for="FirstName" type="text" class="form-control" required data-parsley-trigger="change" readonly>
+                                            </div>
+                                            <div class="form-group col-md-4 mbf-3">
+                                                <label>Last Name *</label>
+                                                <input asp-for="LastName" type="text" class="form-control" required data-parsley-trigger="change" readonly>
+                                            </div>
+                                            @*<div class="form-group col-md-4 mbf-3">
+                                    <label>Name *</label>
+                                    <input asp-for="FirstName" type="text" data-parsley-trigger="keyup" class="form-control" required="">
+                                </div>*@
+                                            <div class="form-group col-md-4 mbf-3">
+                                                <label>Email </label>
+                                                <input asp-for="UserEmail" type="text" class="form-control" data-parsley-type="email" data-parsley-trigger="change"
+                                                       readonly />
+                                                @*required=""*@
+                                                @*data-parsley-required="true"*@
+                                                @*data-parsley-required-message="This field is required."*@
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab4" aria-expanded="false" aria-controls="collapseThree">
+                                <p>Choose Subscription Plan</p>
+                                <i class="fa fa-angle-up plus-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show" id="tab4" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="row">
+                                    <div class="col-12 subscription_plan pt-3">
+                                        <input id="OldSubscription" value="@Model.SubscriptionDto.SubscriptionTypeId" type="hidden" />
+                                        <form id="DistributerSubscription">
+                                            @foreach (var item in Model.SubscriptionDto.SubscriptionTypeDtos)
+                                            {
+                                                <div class="radiobtn">
+                                                    <div class="card_plan">
+                                                        <input asp-for="SubscriptionDto.SubscriptionTypeId" id="SubscriptionTypeId@(item.Id)" type="radio" value="@item.Id" required="" @isdisabled />
+                                                        <label for="SubscriptionTypeId@(item.Id)">
+                                                            <h5>@item.SubscriptionTypeName Plan</h5>
+                                                            <h5 class="card_title">Monthly Charged Commission : @item.ChargedMonthly%</h5>
+                                                            <h6 class="card_title">Brand: @item.Brand %, Generic: @item.Generic %, OTC: @item.Otc %</h6>
+                                                            @Html.Raw(item.Description)
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </form>
+
+                                        <!--Tab Wrapper close-->
+                                        <div class="border-0">
+                                            <div class="p-0">
+                                                <form id="DistributerSubscriptionNote">
+                                                    <div class="form-row w-100 mt-0">
+                                                        <div class="form-group col-md-12 mb-0">
+                                                            <label>Note *</label>
+                                                            <textarea asp-for="SubscriptionDto.Notes" class="form-control" rows="5" data-parsley-required="true"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!ViewBag.Action)
+                        {
+                            <div class="btn_sec mtf-2">
+                                <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSave">Save</button>
+                                <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+        window.InitMaskInput();
+
+        $('#Email').parsley().addAsyncValidator('emailAvailable1', function (xhr) {
+            return !(xhr.responseJSON.status == 1);
+        }, '/Account/CheckUserIsExist');
+
+        $(document).ready(function () {
+            var $span = $('.radiobtn ul span');
+            $.each($span, function (i, item) {
+                $(item).replaceWith($(item).html());
+            });
+            $span = $('.radiobtn ul span');
+            $.each($span, function (i, item) {
+                $(item).replaceWith($(item).html());
+            });
+           @if (ViewBag.Action) {
+                <text>
+                    $('form *').prop('disabled', true);
+                </text>
+            }
+            @if (isEdit) {
+                <text>
+                    $('#DistributerSubscription *').prop('disabled', true);
+                </text>
+            }
+            $("#Email").keyup(function () {
+                var value = $(this).val();
+                $("#UserEmail").val(value);
+            });
+        });
+        $("#btnSave").click(function () {
+            var frmDistributerInfo = $("#DistributerInfo").parsley().validate();
+            $("#DistributerContact").parsley().validate();
+            if (@Model.Id == 0) {
+                $("#DistributerPersonal").parsley().validate();
+            }
+            $("#DistributerSubscription").parsley().validate();
+            $("#DistributerSubscriptionNote").parsley().validate();
+            @if (Model.Id == 0) {
+                    <Text>
+                    if ((frmDistributerInfo == null || $("#DistributerInfo").parsley().isValid()) && $("#DistributerContact").parsley().isValid() && $("#DistributerPersonal").parsley().isValid() && $("#DistributerSubscription").parsley().isValid() && $("#DistributerSubscriptionNote").parsley().isValid()) {
+                    </Text>
+                } else {
+                    <Text>
+                    if ((frmDistributerInfo == null || $("#DistributerInfo").parsley().isValid()) && $("#DistributerContact").parsley().isValid() /*&& $("#DistributerPersonal").parsley().isValid()*/ && $("#DistributerSubscription").parsley().isValid() && $("#DistributerSubscriptionNote").parsley().isValid()) {
+                    </Text>
+                }
+                var data = $('form').serialize();
+                $.post("/Admin/ManageDistributor/AddEditDistributor", data, function (response) {
+                    if (response.status == 1) {
+                        RxFair.HandleResponse(response, true, function () {
+                            window.location.href = "/Admin/ManageDistributor/";
+                        });
+                    } else {
+                        if (response.message.indexOf("downgraded") != -1) {
+                            var oldSub = parseInt($("#OldSubscription").val());
+                            oldSub = isNaN(oldSub) ? 0 : oldSub;
+                            var selected = parseInt($("input[type='radio']:checked").val());
+                            if (oldSub == selected) {
+                                $("input[type='radio'][val='" + oldSub + "']").prop("checked", true);
+                            }
+                        }
+                        RxFair.HandleResponse(response);
+                    }
+                });
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,129 @@
+﻿@model RxFair.Dto.Dtos.ContactDetailsDto
+@{
+    ViewData["Title"] = "ContactUs";
+}
+
+<!-- breadcrumb_section Start -->
+<section class="breadcrumb_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / Contact Us</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb_section End -->
+<!-- Contact Us Start -->
+<section class="contactus">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <form class="contact_form" id="frmRequest">
+                    @Html.AntiForgeryToken()
+                    <h3>We Love To Hear From You</h3>
+                    <p>Please call or email contact form and we will be happy to assist you.</p>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>Your Name *</label>
+                            <input type="text" asp-for="ContactRequest.Name" class="form-control" data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-required data-parsley-trigger="change">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>Your Company *</label>
+                            <input type="text" asp-for="ContactRequest.CompanyName" data-parsley-pattern="^[a-zA-Z ]+$" class="form-control" data-parsley-required data-parsley-trigger="change">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>Your Email *</label>
+                            <input type="email" asp-for="ContactRequest.Email" data-parsley-type-message="Please enter a valid email" data-parsley-required  data-parsley-required-message="This field is required." data-parsley-pattern="^([a-z0-9_\.-]+\@@[\da-z\.-]+\.[a-z\.]{2,6})$" class="form-control">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>Phone *</label>
+                            <input type="text" asp-for="ContactRequest.Phone" data-mask="999-999-9999" class="form-control" data-parsley-required data-parsley-trigger="change">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>Message</label>
+                            <textarea class="form-control" asp-for="ContactRequest.Message" rows="3"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary con_btn" id="btnSendMessage">Send Message <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-6 ">
+
+                <div class="contact_detail">
+                    <div class="contact_title">
+                        <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                        <h4>Contact Details</h4>
+                    </div>
+                    <div class="row c_detail">
+                        <div class="col-md-6">
+                            <div class="con_text mb-3">
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                                <h5>@Model.ContactDetails?.Telephone</h5>
+                            </div>
+                            <div class="con_text mb-3">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                <h5>@Model.ContactDetails?.Email</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="con_text mb-3">
+                                <i class="fa fa-fax" aria-hidden="true"></i>
+                                <h5>@Model.ContactDetails?.Telephone</h5>
+                            </div>
+                            <div class="con_text mb-3">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                <h5>@Model.ContactDetails?.Email</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="con_text">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <h5>
+                                    @Model.ContactDetails?.Address
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Start -->
+                <div class="rx_map">
+                    <iframe src="https://maps.google.com/maps?q=@Model.ContactDetails?.Address&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" style="border: 0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Us End -->
+<!-- Javascript -->
+
+@section scripts {
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+        window.InitMaskInput();
+        $("#btnSendMessage").click(function() {
+            $('#frmRequest').parsley().validate();
+            if ($("#frmRequest").parsley().isValid()) {
+                $.post("@Url.Action("ContactRequest","Home")", $("#frmRequest").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                    if (response.status === 1) {
+                        resetForm("frmRequest");
+                    }
+                });
+            }
+        });
+        /**
+        * Parsley validating masked fields
+        */
+        $(document).on("keypress", function (evt) {
+            if (evt.isDefaultPrevented()) {
+                // Assume that's because of maskedInput
+                // See https://github.com/guillaumepotier/Parsley.js/issues/1076
+                $(evt.target).trigger("input");
+            }
+        });
+    </script>
+}

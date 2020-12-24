@@ -1,0 +1,166 @@
+﻿@{
+    Layout = null;
+}
+@using RxFair.Dto.Enum
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">View @ViewBag.RequestLabel Medicine</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicines" role="grid" aria-describedby="sampleTable_info" width="100%">
+        <thead>
+            <tr role="row" class="title_datatable">
+                <th>Quantity</th>
+                <th>Action</th>
+                <th>Medicine</th>
+                <th>NDC</th>
+                <th>Strength</th>
+                <th>Package Size</th>
+                <th>Price</th>
+                <th>Deal Price</th>
+                <th>Manufacturer</th>
+                @if (ViewBag.DealType == (short)GlobalEnums.DealType.TopDeals)
+                {
+                    <th>End Date</th>
+                }
+                @if (ViewBag.DealType == (short)GlobalEnums.DealType.DealOfTheDay)
+                {
+                    <th>Deal Date</th>
+                }
+                @if (ViewBag.DealType == (short)GlobalEnums.DealType.ProductPriceIncrease)
+                {
+                    <th>Price Increase Date</th>
+                }
+            </tr>
+        </thead>
+        <tbody> </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    var distributorId = @ViewBag.DistributorId;
+    var dealType = @ViewBag.DealType;
+    $(document).ready(function () {
+        BindDataTable();
+    });
+    function BindDataTable() {
+        var medicineList = $("#dtMedicines").DataTable({
+          
+            "sAjaxSource": `/Pharmacy/ManageAdvertisement/GetPharmacyMedicines?DistributorId=${distributorId}&DealType=${dealType}`,
+            "order": [[2, ""]],
+            "language": {
+                "info": "Showing _START_ to _END_ of _TOTAL_ Medicines",
+                "sInfoEmpty": "Showing 0 to 0 of 0 Medicines"
+            },
+            "columns": [
+                {
+                    data: "quantity",
+                    render: function (data, type, row) {
+                        const inputContent = `<input type ="number" value="${data}" class ="form-control Quantity"  id="Medicine${row.id}" data-id="${row.id}" data-distributorId="${row.distributorId}" placeholder="Qty" data-parsley-required="true" data-parsley-trigger="keyup" max ="100"  min="1" data-parsley-type="digits"  />`;
+                        //onchange = "AddToCart('${row.id}','${row.distributorId}','Medicine${row.id}')"
+                        return inputContent;
+                    }
+                },
+                {
+                    visible: false,
+                    render: function (data, type, row) {
+                        const inputcontent = `
+                                <a href="javascript:;" onclick="AddToCart(${row.id},${row.distributorId},'Medicine${row.id}')" data-toggle="tooltip" data-original-title="Add to Cart" > <i class="fa fa-opencart" aria-hidden="true"></i></a >`;
+                        return renderHtml(inputcontent);
+                    }
+                },
+                {
+                    "data": "medicineName",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "ndc",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "strength",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "packageSize",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "price",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "dealPrice",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "manufacturerName",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "dateOfAdvertisement",
+                    "autoWidth": false,
+                    "searchable": true
+                }
+            ]
+        });
+        dataTableReSize();
+    }
+    $("#dtMedicines").on("change", ".Quantity", function (e) {
+        var medicineId = $(e.currentTarget).data("id");
+        var qtyId = "#Medicine" + medicineId;
+        $(qtyId).parsley().validate();
+        if ($(qtyId).parsley().isValid()) {
+            var quantity = parseInt($(e.currentTarget).val());
+            var distributorId = $(e.currentTarget).data("distributorid");
+            quantity = isNaN(quantity) ? 0 : quantity;
+
+            var result = [];
+            var medicine = { Quantity: quantity, MedicineId: medicineId, DistributorId: distributorId };
+            result.push(medicine);
+            $.ajax({
+                url: "/Pharmacy/Order/AddtoCart",
+                data: { model: result },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) { }
+            });
+        }
+
+    });
+    //function AddToCart(medicineId, distributorId, quantityid) {
+    //    var qtyId = `#${quantityid}`;
+    //    $(qtyId).parsley().validate();
+    //    if ($(qtyId).parsley().isValid())
+    //    {
+    //        var quantity = $("#dtMedicines").find(qtyId).val();
+    //        var result = [];
+    //        var medicine = { Quantity: quantity, MedicineId: medicineId, DistributorId: distributorId };
+    //        result.push(medicine);
+    //        $.ajax({
+    //            url: "/Pharmacy/Order/AddtoCart",
+    //            data: { model:result },
+    //            type: "POST",
+    //            success: function (response) {
+    //                RxFair.HandleResponse(response);
+    //            },
+    //            error: function (data) { }
+    //        });
+    //    }
+    //}
+
+</script>
+
+

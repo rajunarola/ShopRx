@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Access denied";
+}
+
+<div class="container py-5">
+    <br />
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <p><i class="fa fa-exclamation-triangle fa-5x"></i><br /></p>
+        </div>
+        <div class="col-md-10">
+            <h3>OPPSSS!!!! Sorry...</h3>
+            <p>Sorry, your access is refused due to security reasons of our server and also our sensitive data.<br />Please try with the valid user details and continue browsing.</p>
+            <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" id="logoutForm">
+                <a class="btn btn-danger" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out fa-lg"></i> Logout</a>
+            </form>
+        </div>
+    </div>
+    <br />
+</div>

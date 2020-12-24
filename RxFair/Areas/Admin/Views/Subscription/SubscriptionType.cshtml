@@ -1,0 +1,156 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RxFair.Dto.Enum
+@{
+    ViewData["Title"] = "Subscription Type";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Subscription Type</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Subscription Type
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtSubscriptionType" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Subscription Type</th>
+                                    <th>Subscription Charge</th>
+                                    <th>Commission (%)</th>
+                                    <th>Brand (%)</th>
+                                    <th>Generic (%)</th>
+                                    <th>Otc (%)</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindSubscriptionTypeList();
+        });
+
+        function bindSubscriptionTypeList() {
+            if ($.fn.DataTable.isDataTable("#dtSubscriptionType")) {
+                $('#dtSubscriptionType').DataTable().destroy();
+            }
+            var table = $('#dtSubscriptionType')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Subscription/GetSubscriptionTypeList",
+                    "order": [[1, "asc"]],
+                    "rowCallback": function (row, data, index) {
+                        if (data.id === @((int)Enum.Parse(typeof(GlobalEnums.SubscriptionTypes), GlobalEnums.SubscriptionTypes.Silver.ToString()))) {
+                            $(row).hide();
+                        }
+                    },
+                    "columns": [
+                        {
+                            "data": "id",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                               var content
+                                    content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                               <a href="javascript:;" ${dataParams("Commission History", "history", data)} class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> Commission History</a>`;
+                                  
+                                return dataTableAction(content);
+                                }
+                            
+                        },
+                        {
+                            "data": "subscriptionTypeName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "subscriptionCharge",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "chargedMonthly",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "brand",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "generic",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "otc",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "description",
+                            "className": "text-justify",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                return renderHtml(data);
+                            }
+                        }
+                    ]
+                });
+        };
+
+        $('#dtSubscriptionType').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    EditSubscriptionType(id);
+                    break;
+                case "history":
+                    HistorySubscriptionType(id);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        function EditSubscriptionType(id) {
+            $("#modalContent").load(`/Admin/Subscription/EditSubscriptionType/${id}`, function () {
+                modalSize("lg");
+                $("#divModal").modal('show');
+            });
+        }
+
+        function HistorySubscriptionType(id) {
+            window.location.href = `/Admin/Subscription/CommissionHistory/${id}`;
+        }
+
+    </script>
+}

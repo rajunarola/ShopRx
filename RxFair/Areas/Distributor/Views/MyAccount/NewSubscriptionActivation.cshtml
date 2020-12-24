@@ -1,0 +1,178 @@
+﻿@using Microsoft.AspNetCore.Http
+@using RxFair.Dto.Enum
+@using Newtonsoft.Json
+@model RxFair.Dto.Dtos.DistributorSubscriptionDto
+@{
+    ViewData["Title"] = "Distributor Subscription";
+}
+@section Styles{
+    <link href="~/rxfairfrontend/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <style type="text/css">
+        .datepicker {
+            transform: translate(0, 5.1em);
+        }
+
+        .card_plan ul li {
+            list-style: inherit;
+        }
+        .infoSection{
+            margin-left:inherit;
+        }
+        .card_padding .radiobtn input[type="radio"]:checked + label h6 {
+            border-bottom: 1px solid #fff;
+            color: white;
+        }
+    </style>
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="">Distribution Subscription</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Distribution Subscription
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show">
+                                <form id="frmDistributorSub">
+                                    @Html.AntiForgeryToken()
+                                    <input asp-for="Id" type="hidden" />
+                                    <input asp-for="DistributorId" type="hidden" />
+                                    <div class="form-row">
+                                        @*<div class="form-group col-md-4">
+                                                <label>Distributor *</label>
+                                                @Html.DropDownListFor(m => m.DistributorId, ViewBag.DistributorList as IEnumerable<SelectListItem>, "Select Distributor", new { @class = "form-control", required = "Select Distributor", disabled = "disabled" })
+                                            </div>*@
+                                        <div class="form-group col-md-4">
+                                            <label>Distributor Admin Email *</label>
+                                            <input type="text" asp-for="Email" name="Email" class="form-control" readonly="readonly">
+                                        </div>
+                                        @*<div class="form-group col-md-4" style="display:none">
+                                            <label>Start Date *</label>
+                                            <input type="text" asp-for="DateStart" name="DateStart" class="form-control" data-parsley-required="true" data-parsley-trigger="change">
+                                        </div>*@
+                                        <div class="form-group col-md-12">
+                                            <label>Note</label>
+                                            <textarea class="form-control" asp-for="Notes" name="Notes" rows="5" data-parsley-trigger="change"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="acc-show card_padding" style="display: block;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Choose Subscription Plan *</label>
+                                </div>
+                                <div class="col-12">
+                                    <form id="frmDistributorSub1" disabled="disabled">
+                                        @foreach (var item in Model.SubscriptionTypeDtos)
+                                        {
+                                            @if (item.Id == (int)Enum.Parse(typeof(GlobalEnums.SubscriptionTypes), GlobalEnums.SubscriptionTypes.Silver.ToString()))
+                                            {
+
+                                                continue;
+                                            }
+                                            <div class="radiobtn">
+                                                <div class="card_plan">
+                                                    <input asp-for="SubscriptionTypeId" id="SubscriptionTypeId@(item.Id)" type="radio" required data-parsley-error-message="Please Choose Your subscription plan." name="SubscriptionTypeId" value="@item.Id" data-JsonData="@JsonConvert.SerializeObject(item)" />
+                                                    <label for="SubscriptionTypeId@(item.Id)">
+                                                        <h5>@item.SubscriptionTypeName Plan <span class="pull-right" style="margin-right: 10px;">(Charge : @item.SubscriptionCharge)</span></h5>
+                                                        <h6>Monthly Charged Commission : @item.ChargedMonthly%</h6>
+                                                        <h6>Brand: @item.Brand %, Generic: @item.Generic %, OTC: @item.Otc %</h6>
+                                                        @Html.Raw(item.Description)
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+                    <div class="btn_sec mb-5">
+                        <button type="button" id="btnPayment" class="btn btn-outline-primary con_btn pull-right active">Pay Now</button>
+                        @*<button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#DateStart').datepicker({
+                startDate: '-0m',
+                format: "M/dd/yyyy",
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                autoclose: true
+            });
+            var startDate = "";
+            @if (Model.Id != 0)
+            {
+                <text>
+            var today = new Date();
+            //  startDate = "@Model.DateStart";
+             startDate = new Date();
+           // startDate = today.getMonth() + "/" + today.getDate() + "/" + today.getFullYear();
+                    $('#DateStart').val(startDate);
+                    $('#frmDistributorSub1 *').prop('disabled', true);
+                </text>
+            }
+        });
+        $("#btnPayment").click(function () {
+                $('#frmDistributorSub').parsley().validate();
+            $('#frmDistributorSub1').parsley().validate();
+            if ($("#frmDistributorSub").parsley().isValid() && $("#frmDistributorSub1").parsley().isValid()) {
+                RxFair.Confirm("After your successful payment, you will be logged out.", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, Do it!", function () {
+                    var subscriptionTypeId = "SubscriptionTypeId=" + $("input[type='radio']:checked").val();
+                    var formData = $("#frmDistributorSub,#frmDistributorSub1").serialize() + "&" + subscriptionTypeId;
+                    $.post("/Distributor/MyAccount/SetSessionNewSubscriptionActivation", formData,
+                        function (response) {
+                            if (response.status === 1) {
+                                doPayment();
+                            } else {
+                                if (response.status === 0 && response.message !== "") {
+                                    RxFair.HandleResponse(response);
+                                    return false;
+                                } else {
+                                    window.location.href = "/Distributor/MyAccount/FailureView";
+                                }
+                            }
+                        });
+                }, function () { });
+            } else {
+                RxFair.Error("Please Choose Your subscription plan.")
+                   }
+        });
+        //$("#btnPayment").click(function() {
+        //    var selected = $("input[type='radio']:checked").data("jsondata");
+        //    var getAmount = selected.SubscriptionCharge;
+        //    var getName = selected.SubscriptionTypeName;
+        //    window.location.href = `/Distributor/MyAccount/PaymentWithPaypal?subscriptionName=${getName}&subscriptionAmount=${getAmount}`;
+        //});
+        function doPayment() {
+            var selected = $("input[type='radio']:checked").data("jsondata");
+            var getAmount = selected.SubscriptionCharge;
+            var getName = selected.SubscriptionTypeName;
+            window.location.href = `/Distributor/MyAccount/PaymentWithPaypal?subscriptionName=${getName}&subscriptionAmount=${getAmount}`;
+        }
+    </script>
+}

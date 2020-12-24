@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Manage Reward Products";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Reward Products</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Reward Products
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="/Admin/Reward/AddEditRewardProduct" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add New Reward Products</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtProduct" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Product Image</th>
+                                    <th>Product Name</th>
+                                    <th>Redeem Require($)</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window.bindProductList();
+        });
+
+        function bindProductList() {
+            if ($.fn.DataTable.isDataTable("#dtProduct")) {
+                $('#dtProduct').DataTable().destroy();
+            }
+
+            const table = $('#dtProduct').DataTable({
+                "sAjaxSource": "/Admin/Reward/GetProductList",
+                "rowCallback": function (settings, json) {
+                    setTimeout(function () {
+                        ImageBroken.fixBrokenImages(ImageBroken.path.RedeemProduct);
+                    }, 300);
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "width": "5%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data) {
+                            const content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                             <a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "data": "isActive",
+                        "width": "5%",
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "admin_toggle",
+                        "render": function (data, type, row) {
+                            return statusToggle(row.id, data);
+                        }
+                    },
+                    {
+                        "data": "productImage",
+                        "width": "15%",
+                        "searchable": false,
+                        "orderable": false,
+                        //"className": "datatable_img",
+                        "className": "database_image",
+                        "render": function (data, type, row) {
+                            return showImage(data);
+                        }
+                    },
+                    {
+                        "data": "productName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "redeem",
+                        "autoWidth": false,
+                        "searchable": true,
+                        "render": function (data, type, row) {
+                            return data.currencyFormat();
+                        }
+                    },
+                    {
+                        "data": "description",
+                        "autoWidth": false,
+                        "searchable": true
+                    }
+                ]
+            });
+        };
+
+        $('#dtProduct').on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+            $.ajax({
+                url: "/Admin/Reward/ManageRewardProductstatus",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) {
+                }
+            });
+        });
+
+        $('#dtProduct').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    AddEditRewardProduct(id);
+                    break;
+                case "delete":
+                    DeleteRewardProduct(id);
+                    break;
+                default:
+            }
+        });
+
+        function AddEditRewardProduct(id) {
+            window.location.href = `/Admin/Reward/AddEditRewardProduct/${id}`;
+        }
+
+        function DeleteRewardProduct(id) {
+            RxFair.Confirm("Delete reward product", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!",
+                function () {
+                    $.ajax({
+                        url: "/Admin/Reward/RemoveRewardProduct",
+                        data: { id: id },
+                        type: "POST",
+                        success: function (response) {
+                            RxFair.HandleResponse(response);
+                            window.location.href = "/Admin/Reward/Product";
+                        },
+                        error: function (data) {
+                        }
+                    });
+                },
+                function () { } );
+        }
+    </script>
+}

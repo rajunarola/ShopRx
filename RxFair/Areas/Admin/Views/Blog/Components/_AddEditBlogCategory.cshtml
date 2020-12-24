@@ -1,0 +1,56 @@
+﻿@model RxFair.Dto.Dtos.BlogDto
+@{
+    Layout = null;
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@(Model.Id == 0 ? "Add" : "Edit") Blog Category</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="frmBlog" asp-action="" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" name="Id" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-12">
+                        <label>Category Name *</label>
+                        <input type="text" asp-for="BlogCategoryName" class="form-control" data-parsley-required data-parsley-trigger="change">
+                    </div>
+                    @*<div class="form-group col-md-12 mb-0">
+                        <label>Description</label>
+                        <textarea class="form-control" asp-for="Descriptions" rows="4"></textarea>
+                    </div>*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary con_btn active" id="btnSave">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+
+    $(document).on("focusout", "#BlogCategoryName", function (e) {
+        var categoryName = $.trim($("#BlogCategoryName").val());
+        $(this).val(categoryName);
+    });
+
+    $("#btnSave").click(function () {
+        $('#frmBlog').parsley().validate();
+        if ($("#frmBlog").parsley().isValid()) {
+            $.post("/Admin/Blog/AddEditBlogCategory", $("#frmBlog").serialize(), function (response) {
+                RxFair.HandleResponse(response);
+                if (response.status === 1) {
+                    window.bindBlogCategory();
+                    closeModal();
+                }
+            });
+        }
+    });
+</script>
+   

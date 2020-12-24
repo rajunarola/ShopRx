@@ -1,0 +1,211 @@
+﻿@*@model List<RxFair.Dto.Dtos.UploadMedicine>*@
+@{
+    ViewData["Title"] = "Manage Duplicate";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManageDuplicate">Manage Duplicate</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Invoice</h3>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="invoice">
+                    <header>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <a target="_blank" href="https://lobianijs.com">
+                                    <img src="http://lobianijs.com/lobiadmin/version/1.0/ajax/img/logo/lobiadmin-logo-text-64.png" data-holder-rendered="true" class="img-fluid" />
+                                </a>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 company-details">
+                                <h2 class="name">
+                                    <a target="_blank" href="https://lobianijs.com">
+                                        Arboshiki
+                                    </a>
+                                </h2>
+                                <div>455 Foggy Heights, AZ 85004, US</div>
+                                <div>(123) 456-789</div>
+                                <div>company@example.com</div>
+                            </div>
+                        </div>
+                    </header>
+                    <main>
+                        <div class="row contacts">
+                            <div class="col invoice-to">
+                                <div class="text-gray-light">INVOICE TO:</div>
+                                <h2 class="to">John Doe</h2>
+                                <div class="address">796 Silver Harbour, TX 79273, US</div>
+                                <div class="email"><a href="mailto:john@example.com">john@example.com</a></div>
+                            </div>
+                            <div class="col invoice-details">
+                                <h1 class="invoice-id">INVOICE 3-2-1</h1>
+                                <div class="date">Date of Invoice: 01/10/2018</div>
+                                <div class="date">Due Date: 30/10/2018</div>
+                            </div>
+                        </div>
+                        <div class="table-custom">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-left">DESCRIPTION</th>
+                                        <th class="text-right">HOUR PRICE</th>
+                                        <th class="text-right">HOURS</th>
+                                        <th class="text-right">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="no">04</td>
+                                        <td class="text-left">
+                                            <h3>
+                                                <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
+                                                    Youtube channel
+                                                </a>
+                                            </h3>
+                                            <a target="_blank" href="https://www.youtube.com/channel/UC_UMEcP_kF0z4E6KbxCpV1w">
+                                                Useful videos
+                                            </a>
+                                            to improve your Javascript skills. Subscribe and stay tuned :)
+                                        </td>
+                                        <td class="unit">$0.00</td>
+                                        <td class="qty">100</td>
+                                        <td class="total">$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="no">01</td>
+                                        <td class="text-left"><h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity</td>
+                                        <td class="unit">$40.00</td>
+                                        <td class="qty">30</td>
+                                        <td class="total">$1,200.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="no">02</td>
+                                        <td class="text-left"><h3>Website Development</h3>Developing a Content Management System-based Website</td>
+                                        <td class="unit">$40.00</td>
+                                        <td class="qty">80</td>
+                                        <td class="total">$3,200.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="no">03</td>
+                                        <td class="text-left"><h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)</td>
+                                        <td class="unit">$40.00</td>
+                                        <td class="qty">20</td>
+                                        <td class="total">$800.00</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td colspan="2">SUBTOTAL</td>
+                                        <td>$5,200.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td colspan="2">TAX 25%</td>
+                                        <td>$1,300.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td colspan="2">GRAND TOTAL</td>
+                                        <td>$6,500.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="thanks">Thank you!</div>
+                        <div class="notices">
+                            <div>NOTICE:</div>
+                            <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                        </div>
+                    </main>
+                    <footer>
+                        Invoice was created on a computer and is valid without the signature and seal.
+                    </footer>
+                <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
+                <div></div>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        
+                        @*<table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicines" role="grid" aria-describedby="sampleTable_info">
+            <thead>
+                <tr role="row" class="title_datatable">
+                    <th>NDC</th>
+                    <th>Image</th>
+                    <th>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td colspan="4">Other Info</td>
+                                </tr>
+                                <tr>
+                                    <td>Medicine</td>
+                                    <td>Strength</td>
+                                    <td>Manufacturer</td>
+                                    <td>Action</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.GroupBy(x => x.Ndc))
+                {
+                    <tr>
+                        <td>@item.FirstOrDefault()?.Ndc</td>
+                        <td>
+                            <table>
+                                @foreach (var innerItem in item)
+                                {
+                                    <tr>
+                                        <td>@innerItem.MedicineName</td>
+                                        <td>@innerItem.Strength</td>
+                                        <td>@innerItem.PackageSize</td>
+                                        <td>@innerItem.Manufacturer</td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        //$("#dtMedicines").on("click", ".action", function (e) {
+        //    const flag = $(e.currentTarget).data("flag");
+        //    const id = $(e.currentTarget).data("id");
+        //    switch (flag) {
+        //        case "view":
+        //            ViewMedicine(id);
+        //            break;
+        //        case "delete":
+        //            break;
+        //    }
+        //});
+    </script>
+}

@@ -1,0 +1,28 @@
+﻿@model List<RxFair.Dto.Dtos.FaQsView>
+@{Layout = null;}
+
+@if (Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="accordian-block">
+            <div class="ac-title" data-in=@item.Id>
+                <p>@item.Question</p>
+                <i class="fa fa-angle-down plus-icon QuestionAero"></i>
+            </div>
+            <div class="accordian-para " id="tab_@item.Id">
+                <p class="commn-para-sm">@item.Answer</p>
+            </div>
+        </div>
+    }
+    <script type="text/javascript">
+        $("#renderFaqs").css("text-align", "");
+    </script>
+}
+else
+{
+    <p>No result found.</p>
+    <script type="text/javascript">
+        $("#renderFaqs").css("text-align", "center");
+    </script>
+}

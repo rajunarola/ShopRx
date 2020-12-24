@@ -1,0 +1,378 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Helpers
+@model RxFair.Dto.Dtos.GetOrderDetailList
+@{
+    ViewData["Title"] = "View Order Details";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Manage Orders</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManageOrders">Order Details</a></li>
+        </ul>
+    </div>
+
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3 id="uniqueOrder" data-OrderId="@Model.UniqueOrder" data-pharmacyId="@Model.PharmacyId">Order ID : @Model.UniqueOrder</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <form id="orderForm">
+                <div class="tab-content invoice_data pt-0">
+                    <table style="width: 30%" class="roundedCorners">
+                        <tr>
+                            <th colspan="2">
+                                Order Details
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="title">Order Date :</td>
+                            <td id="orderDate" data-date="@Model.OrderDate">@Model.OrderDate</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Order By :</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="title">Pharmacy : </td>
+                            <td id="pharmacyName">@Model.Pharmacy</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Distributor :  </td>
+                            <td id="distributorName">@Model.Distributor</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Invoice :  </td>
+                            <td id="invoice">@Model.UniqueOrder</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Order Cost :</td>
+                            <td id="grandTotal">$ @Model.GrandTotal</td>
+                        </tr>
+                    </table>
+
+                    <div class="invoice_data_mid">
+                        <table style="width: 100%">
+                            <tr>
+                                <th colspan="2">
+                                    Order Status Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="title">Current Status *</td>
+                                <td>
+                                    <div class="form-group mb-1 mt-1">
+                                        <input class="form-control h-40 " value="@Model.OrderStatus"  type="text" readonly/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">Change Order Status *</td>
+                                <td>
+                                    <div class="form-group mb-1 mt-1">
+                                        @Html.DropDownList("OrderStatus", ViewBag.OrderStatus as IEnumerable<SelectListItem>, Enum.GetName(typeof(GlobalEnums.OrderStatus), Model.orderStatus), new { @class = "form-control", @id = "OrderStatus" })
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table style="width: 100%" class="mt-3">
+                            <tr>
+                                <th colspan="2">
+                                    Payment Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="title">Payment Date *</td>
+                                <td>
+                                    <div class="form-group mb-1 mt-1">
+                                        <input class="form-control h-40 datepicker" type="text" id="paymentDate" value="@(Model.PaymentDate??"")" required  autocomplete="off"  >
+                                        @*data-parsley-pattern="^[a-zA-Z ]+$"*@
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title">Amount *</td>
+                                <td>
+                                    <div class="form-group mb-1 mt-1">
+                                        <input id="paymentAmount" type="number" required value="@Model.PaymentAmount" class="form-control h-40" min="@Model.GrandTotal"  data-required-message="Amount should be the same as total order cost">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td class="title">Payment Note *</td>
+                                <td>
+                                    <div class="form-group mb-1 mt-1">
+                                        <input id="paymentNote" type="text" value="@Model.PaymentNote" class="form-control h-40" >
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table style="width: 30%">
+                        <tr>
+                            <th colspan="2">
+                                Shipping Details
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="title">Date *</td>
+                            <td>
+                                <div class="form-group mb-1 mt-1">
+                                    <input class="form-control h-40 datepicker" value="@(Model.ShippingDate??"")" type="text" id="shippingDate" required  autocomplete="off">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title">Cost *</td>
+                            <td>$ @Model.ShippingCost</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Overnight Cost *</td>
+                            <td>$ @Model.OvernightCost</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Tracking No *</td>
+                            <td>
+                                <div class="form-group mb-1 mt-1">
+                                    <input id="trackingNo" type="text" value="@Model.TrackingNumber" class="form-control h-40" required>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="title">Tracking Link *</td>
+                            <td>
+                                <div class="form-group mb-1 mt-1">
+                                    <input id="trackingLink" type="text" value="@Model.TrackingLink" class="form-control h-40" required>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+            <div class="btn_sec mbf-2">
+                <button id="btnSave" type="button" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bottom_admin_tbl pharmacies_form mt-4">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Item Details</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicineList" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Item ID</th>
+                                    <th>NDC/UPC</th>
+                                    <th>Medicine</th>
+                                    <th>Category</th>
+                                    <th>Package Size</th>
+                                    <th>Qty</th>
+                                    <th>Package Price</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+
+        $('#shippingDate').datepicker({
+            startDate: $("#orderDate").text(),
+            format: "M/dd/yyyy",
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+        });
+
+        $('#paymentDate').datepicker({
+            startDate: $("#orderDate").text(),
+            format: "M/dd/yyyy",
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            orientation: 'bottom',
+            container: 'body'
+        });
+
+        $("#paymentAmount").on("change", function () {
+            $(this).parsley().validate();
+            if ($(this).parsley().isValid()) {
+                $("#btnSave").attr("disabled",false);
+                    return true;
+            } else { $("#btnSave").attr("disabled",true); return false;}
+            
+        });
+
+        $(document).ready(function () {
+            @if (Model.orderStatus == (short)GlobalEnums.OrderStatus.Cancelled ) {
+            <text>
+                   HideFields();
+            </text>
+            }
+            var uniqueOrder = $("#uniqueOrder").attr("data-OrderId");
+            var pharmacyId = $("#uniqueOrder").attr("data-pharmacyId");
+            BindDistributorOrderChargeMedicineList(uniqueOrder, pharmacyId);
+        });
+
+        function BindDistributorOrderChargeMedicineList(uniqueOrder, pharmacyId) {
+
+            var dtMedicineList = $("#dtMedicineList").DataTable({
+                sAjaxSource: "/Distributor/ManageOrder/GetDistributorOrderChargeMedicineList?uniqueOrderId=" + uniqueOrder + "&PharmacyId=" + pharmacyId,
+               initComplete: function(settings, json) {
+                   var api = new $.fn.dataTable.Api(settings);
+                    @if (Model.orderStatus == (short)GlobalEnums.OrderStatus.Pending)
+                    {
+                    <text>
+                       api.columns(0).visible(true); //show Edit Option only Order is Pending
+                    </text>
+                    }
+                    else {
+                    <text>
+                       api.columns(0).visible(false); //Hide Edit Option is OrderStatus in not Pending.
+                    </text>
+                        }
+                },
+                columns: [
+                    {
+                        data: "id",
+                        autoWidth: false,
+                        className: "text-center",
+                        searchable: true,
+                        render: function (data, type, row) {
+                            var content = `<a data-toggle="modal" data-id="${data}" class="icon_btn medicineQty"><i class="fa fa-pencil" aria-hidden="true"></i></a>`;
+                            return renderHtml(content);
+                        }
+                    },
+                    {
+                        data: "id",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: "ndc",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "medicineName",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "category",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "packageSize",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "quantity",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "price",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return row.quantity * row.price;
+                        }
+                    }
+                ]
+            });
+        }
+
+        $(document).on("click", ".medicineQty", function () {
+            var distributorOrderId = $(this).attr("data-id");
+            UpdateMedicineQty(distributorOrderId);
+        });
+        function UpdateMedicineQty(id) {
+            const newUrl = `/Distributor/ManageOrder/UpdateMedicineQty/${id}`;
+            $("#modalContent").load(newUrl, function () {
+                $("#divModal").modal('show');
+            });
+        }
+
+        function HideFields() {
+            $("#shippingDate,#paymentDate,#paymentAmount,#trackingNo,#trackingLink,#paymentNote").attr('Disabled', true);
+            //$("#shippingDate,#paymentDate").attr('Disabled', true);
+            $("#btnSave").hide();
+        }
+
+        $("#btnSave").click(function () {
+            debugger;
+            if(@Convert.ToString(((Model.orderStatus == (short)GlobalEnums.OrderStatus.Pending))).ToLower() || @Convert.ToString((Model.orderStatus == (short)GlobalEnums.OrderStatus.Delivered)).ToLower() || @Convert.ToString((Model.orderStatus == (short)GlobalEnums.OrderStatus.Cancelled)).ToLower() || @Convert.ToString((Model.orderStatus == (short)GlobalEnums.OrderStatus.Returned)).ToLower() )
+             {      
+                    SendOrderDetails();
+                } else {
+                     $("#orderForm").parsley().validate();
+                     if ($("#orderForm").parsley().isValid()) {
+                         SendOrderDetails();
+                     } else {
+                         $("#paymentDate").datepicker('hide');
+                }
+            }
+        });
+
+        function SendOrderDetails() {            
+            var model = {
+                uniqueOrder: $("#uniqueOrder").attr("data-OrderId"),
+                OrderStatus: $("#OrderStatus").val() == "" ?"@Enum.GetName(typeof(GlobalEnums.OrderStatus),Model.orderStatus)": $("#OrderStatus").val(),
+                PaymentDate: $('#paymentDate').val(),
+                PaymentAmount: parseFloat($("#paymentAmount").val()) == 'NaN' ? 0 : parseFloat($("#paymentAmount").val()),
+                PaymentNote: $("#paymentNote").val(),
+                ShippingDate: $('#shippingDate').val(),
+                TrackingNumber: $("#trackingNo").val(),
+                TrackingLink: $("#trackingLink").val()
+            };
+
+            $.ajax({
+                url: "/Distributor/ManageOrder/UpdateOrder",
+                type: "POST",
+                data: model,
+                success: function (response) {
+                    if (response.status == 1)
+                        window.location.href = "/Distributor/ManageOrder/ManageOrders";
+                    RxFair.HandleResponse(response);
+                }
+            });
+        }
+    </script>
+}
+

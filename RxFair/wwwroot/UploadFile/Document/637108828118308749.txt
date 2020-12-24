@@ -1,0 +1,62 @@
+USE [RxFair]
+GO
+/****** Object:  StoredProcedure [dbo].[GetAdvertisementList]    Script Date: 10/17/2019 9:58:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[GetAdvertisementList]  
+(
+ @DistributorId   BIGINT=null,  
+ @TimeZoneId	  INT,
+ @DealType        INT,
+ @Status          BIT=null,
+ @iDisplayStart   INT=0,
+ @iDisplayLength  INT=10,
+ @SortColumn      VARCHAR(MAX),
+ @SortDir         VARCHAR(MAX),
+ @Search          VARCHAR(MAX),
+ @SearchRecords   INT OUT
+)  
+AS  
+BEGIN  
+   SET NOCOUNT ON  
+	DECLARE @Finalquery NVARCHAR(MAX), @QueryCount NVARCHAR(MAX);  
+	DECLARE @StartDate NVARCHAR(MAX)= 'dbo.Fn_ToDefaultFormat(dbo.Fn_GetTimeZoneDateValue(a.StartDate, @TimeZoneId), ''MM/dd/yyyy'')';
+	DECLARE @EndDate NVARCHAR(MAX)= 'dbo.Fn_ToDefaultFormat(dbo.Fn_GetTimeZoneDateValue(a.EndDate, @TimeZoneId), ''MM/dd/yyyy'')';
+	DECLARE @DealDate NVARCHAR(MAX)= 'dbo.Fn_ToDefaultFormat(dbo.Fn_GetTimeZoneDateValue(a.DealDate, @TimeZoneId), ''MM/dd/yyyy'')';
+	DECLARE @PriceIncreaseDate NVARCHAR(MAX)= 'dbo.Fn_ToDefaultFormat(dbo.Fn_GetTimeZoneDateValue(a.PriceIncreaseDate, @TimeZoneId), ''MM/dd/yyyy'')';
+	
+  IF @Status IS NULL
+  BEGIN
+			SET @Finalquery=  'SELECT a.Id, a.IsActive,ISNULL('+@StartDate+', '''') As AdvStartDate, ISNULL('+@EndDate+', '''') As AdvEndDate , ISNULL('+@DealDate+', '''') As AdvDealDate, ISNULL('+@PriceIncreaseDate+', '''') As AdvPriceIncreaseDate, a.Request,ISNULL(a.Notes, '''') AS Notes, TotalRecords = COUNT(1) OVER()
+FROM Advertisements a 
+JOIN Distributor d ON a.DistributorId = d.Id 
+WHERE 1 = 1 AND a.DealType = @DealType AND a.[Status] IS NULL  AND a.DistributorId = @DistributorId';	
+  END
+  ELSE
+  	BEGIN	
+SET @Finalquery = 'SELECT a.Id, a.IsActive,ISNULL('+@StartDate+', '''') As AdvStartDate, ISNULL('+@EndDate+', '''') As AdvEndDate , ISNULL('+@DealDate+', '''') As AdvDealDate, ISNULL('+@PriceIncreaseDate+', '''') As AdvPriceIncreaseDate, a.Request,ISNULL(a.Notes, '''') AS Notes, TotalRecords = COUNT(1) OVER()
+FROM Advertisements a 
+JOIN Distributor d ON a.DistributorId = d.Id  
+WHERE 1 = 1 AND a.DealType = @DealType AND a.[Status] = @Status AND a.DistributorId = @DistributorId ';	
+  END
+  
+ IF @Search != ''
+     BEGIN  
+         SET @Finalquery = @Finalquery+' AND ( a.Request LIKE ''%''+@Search+''%'' OR a.Notes LIKE ''%''+@Search+''%''  OR ISNULL('+@StartDate+', '''') LIKE ''%''+@Search+''%'' OR ISNULL('+@EndDate+', '''') LIKE ''%''+@Search+''%'' OR ISNULL('+@DealDate+', '''')  LIKE ''%''+@Search+''%''  OR ISNULL('+@PriceIncreaseDate+', '''') LIKE ''%''+@Search+''%'' )';
+ END; 
+ SET @Finalquery = @Finalquery+' ORDER BY '+REPLACE(@SortColumn, '''', '');  
+      
+ IF @SortDir = 'desc'  
+ BEGIN  
+     SET @Finalquery = @Finalquery+' DESC';  
+ END;  
+	 
+ SET @Finalquery = @Finalquery+' OFFSET @iDisplayStart ROWS FETCH NEXT @iDisplayLength ROWS ONLY;';  
+ SET @Finalquery = @Finalquery+'      SELECT @SearchRecords = @@ROWCOUNT;';  
+   
+   print @Finalquery;
+    EXEC sp_executesql @Finalquery, N'@DistributorId BIGINT, @TimeZoneId INT, @DealType INT,@Status INT,@Search VARCHAR(MAX), @iDisplayStart INT, @iDisplayLength INT, @SortColumn VARCHAR(1000), @SearchRecords INT OUTPUT',  
+         @DistributorId, @TimeZoneId, @DealType, @Status,@Search, @iDisplayStart, @iDisplayLength, @SortColumn, @SearchRecords OUTPUT;    
+END

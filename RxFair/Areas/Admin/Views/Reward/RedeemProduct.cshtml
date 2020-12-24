@@ -1,0 +1,51 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Helpers
+@model List<RxFair.Dto.Dtos.EarnedRewardProducts>
+@{
+    ViewData["Title"] = "View Redeemed Products";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="MoneyHistory">View Redeemed Products</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>View Redeem Products</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3">
+                <div class="redeem_products">
+                    <img src="@($@"\{FilePathList.RewardProduct}\{item.ProductImage}")" class="img-fluid reward-con_img" alt="">
+                    <h5 class="title">@item.ProductName</h5>
+                    <div class="d-flex">
+                        <div class="redeem_text">
+                            <h5>Redeem Money</h5>
+                            <p class="price">@item.Redeem.ToString("C")</p>
+                        </div>
+                        <div class="redeem_text border-right-0">
+                            <h5>Delivered Status</h5>
+                            <p class="disabled">@(((GlobalEnums.DeliveryType)item.DeliveryStatus).GetDescription())</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+            ImageBroken.fixBrokenImages(ImageBroken.path.RedeemProduct);
+            ImageBroken.fixBrokenUserProfile(ImageBroken.path.UserProfile);
+        }
+    </script>
+}

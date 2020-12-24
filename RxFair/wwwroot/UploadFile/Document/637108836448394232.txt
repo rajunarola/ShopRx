@@ -1,0 +1,38 @@
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace RxFair.Core
+{ 
+    public class ApplicationUser : IdentityUser
+    {
+        [Column("varchar(50)")]
+        public string FirstName { get; set; }
+
+        [Column("varchar(50)")]
+        public string MiddleName { get; set; }
+
+        [Column("varchar(50)")]
+        public string LastName { get; set; }
+
+        [Column("varchar(10)")]
+        public string Gender { get; set; }
+
+        [NotMapped]
+        public string FullName => $@"{FirstName} {LastName}";
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? LastLogin { get; set; }
+
+        public DateTime LastResetPassword { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        public virtual ICollection<Distributor> Distributors { get; set; }
+    }
+}

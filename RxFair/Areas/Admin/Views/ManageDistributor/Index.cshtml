@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Manage Distributors";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Distributors</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Manage Distributors</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-sm-center justify-content-md-end">
+                <button type="button" onclick="AddEditDistributor(0);" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Distributor</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtManageDistributer" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Email Confirmed</th>
+                                    <th>Company Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                        <tbody></tbody>
+                      
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{ 
+<script src="~/rxfairbackend/PageJs/ManageDistributer.js"></script>
+}
+

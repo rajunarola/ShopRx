@@ -1,0 +1,79 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@{
+    Layout = $@"~/Areas/{User.GetClaimValue(UserClaims.UserRoleGroup)}/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Manage Access Permission";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\@User.GetClaimValue(UserClaims.UserRoleGroup)">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="AccessPermission">Master</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title d-flex">
+                <h3 class="d-flex w-100 align-items-center">Manage Access Permission</h3>
+                <div class="accordian-block border-0 w-100">
+                    <div class="accordian-para acc-show purches_order p-0">
+                        <form>
+                            <div class="form-row mt-0 d-flex justify-content-end">
+                                <div class="form-group m-0 d-flex w-cust-50 w-sm-50">
+                                    @Html.DropDownList("UserGroupId", ViewBag.UserGroup as IEnumerable<SelectListItem>, new { @class = "form-control", @id = "UserGroupId", required = "Select User Group" })
+                                    <button type="button" id="btnSearch" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right active m-0 ml-2">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body" id="RoleWishPermission"></div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const id = parseInt($("#UserGroupId").val());
+            if (isNaN(id)) {
+                $("#RoleWishPermission").html("");
+                RxFair.Error("User Group", "Please select user group.");
+                return false;
+            }
+            loadRoleWishPermission(id);
+            return true;
+        });
+        $(document).on("click", "#btnSearch", function (e) {
+            const id = parseInt($("#UserGroupId").val());
+            if (isNaN(id)) {
+                $("#RoleWishPermission").html("");
+                RxFair.Error("User Group", "Please select user group.");
+                return false;
+            }
+            loadRoleWishPermission(id);
+            return true;
+        });
+
+        //$(document).on("change", "#UserGroupId", function (e) {
+        //  const id = parseInt($(this).val());
+        //if (isNaN(id)) {
+        //  $("#RoleWishPermission").html("");
+        //  RxFair.Error("User Group", "Please select user group.");
+        //  return false;
+        //}
+        //  loadRoleWishPermission(id);
+        // return true;
+        //});
+
+        function loadRoleWishPermission(userGroupId) {
+            $("#RoleWishPermission").load(`/Admin/Master/RoleWishPermission/${userGroupId}`, function () { });
+        }
+    </script>
+}

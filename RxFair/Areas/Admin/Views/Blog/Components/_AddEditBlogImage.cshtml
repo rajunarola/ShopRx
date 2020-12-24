@@ -1,0 +1,83 @@
+﻿@model RxFair.Dto.Dtos.BlogImageDto
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+
+    <h5 class="modal-title" id="exampleModalLabel">Upload Blog Image</h5>
+
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("AddEditBlogImage", "Blog", FormMethod.Post, new { id = "frmMyImage", enctype = "multipart/form-data" }))
+    {
+
+        @Html.HiddenFor(m => Model.BlogId)
+        @Html.HiddenFor(m => Model.ImageName)
+        @Html.AntiForgeryToken()
+
+        <div id="demo-dropzone" class="dropzone">
+            <div class="dz-default dz-message">
+                <div class="dz-icon icon-wrap icon-circle icon-wrap-md"> <i class="fa fa-cloud-upload fa-2x"></i> </div>
+                <div>
+                    <p class="dz-text">Drop files to upload</p>
+                    <p class="text-muted">or click to pick manually</p>
+                </div>
+            </div>
+            <div class="fallback">
+                <input type="file" multiple name="BlogImage[]" data-val="@Model.BlogImage" asp-for="BlogImage" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;" required />
+            </div>
+        </div>
+    }
+
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script src="~/lib/RxFair-Common/dialogs.js"></script>
+<script type="text/javascript">
+    $("div#demo-dropzone").dropzone({
+        url: "/Admin/Blog/AddEditBlogImage",
+        paramName: "BlogImage",
+        maxFilesize: 3.0,
+        maxFiles: 6,
+        parallelUploads: 10000,
+        uploadMultiple: true,
+        autoProcessQueue: false,
+        acceptedFiles: "image/jpeg,image/png",
+        addedFileName: "ImageName",
+        params: {
+            "__RequestVerificationToken": $('input[name=__RequestVerificationToken]').val(),
+            "BlogId": parseInt($("#BlogId").val()),
+            "ImageName": ""
+        },
+        init: function () {
+            var myDropzone = this;
+            //  Here's the change from enyo's tutorial...
+            $("#btnSave").click(function (e) {
+                var attachement = myDropzone.files;
+                if (attachement <= 0) {
+                    RxFair.Error("Please select file first");
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                myDropzone.processQueue();
+            });
+            this.on("successmultiple", function (file, response) {
+                if (response.status === 1) {
+                    closeModal();
+                    RxFair.HandleResponse(response, true, function () {
+                        window.location.reload();
+                    });
+                }
+                // CallImageList(response);
+            });
+        }
+    });
+    
+</script>

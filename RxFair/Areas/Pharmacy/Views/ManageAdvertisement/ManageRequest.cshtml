@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = ViewBag.RequestLabel;
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a mhref="@ViewBag.RequestType">Advertisements</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>@ViewBag.RequestLabel</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtAdvertisement" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Distributor Name</th>
+                                    <th>Number Of Advertisements</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            BindDataTable();
+        });
+
+        function BindDataTable() {
+        var advertisement = $("#dtAdvertisement").DataTable({
+            "sAjaxSource": "/Pharmacy/ManageAdvertisement/GetDistributorAdvertisement?DealType=" +@ViewBag.DealType,
+            "order": [[2, ""]],
+            "language": { "info": "Showing _START_ to _END_ of _TOTAL_ Advertisements", "sInfoEmpty": "Showing 0 to 0 of 0 Advertisements"},
+            "columns": [
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                const content = `<a href="javascript:;" data-toggle="tooltip" data-original-title="view" onclick=ViewMedicine(${data},@ViewBag.DealType) class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i></a>`;
+                                return renderHtml(content);
+                            }
+                        },
+                        {
+                            "data": "distributorName",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                        },
+                        {
+                            "data": "numberOfAdvertisements",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                        }
+                       ]
+        });
+    }
+
+        function ViewMedicine(distributorId,dealType) {
+            const newUrl = `/Pharmacy/ManageAdvertisement/ViewMedicines/?id=${distributorId}&dealType=${dealType}`;
+            $("#modalContent").load(newUrl, function () {
+                modalSize("xl");
+                $("#divModal").modal('show');
+            });
+        }
+
+    </script>
+}
+

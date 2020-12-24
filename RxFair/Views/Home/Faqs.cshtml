@@ -1,0 +1,99 @@
+﻿@model RxFair.Dto.Dtos.FaQsView
+@{
+    ViewData["Title"] = "FAQs";
+}
+
+<!-- breadcrumb-section Start -->
+<section class="breadcrumb_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / FAQ</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb-section End -->
+<!-- FAQ_info Start -->
+<section class="faq_info">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="faq_text text-center">
+                    <h2>Frequently Asked Question</h2>
+                    <p>
+                        @*Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
+                        since the 1500s, when an unknown printer took a galley of type and scramble*@
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- FAQ_info End -->
+<!-- Faq Start -->
+<section class="faq_sec pt-0">
+    <div class="container">
+        <div class="row">
+            <div class="offset-md-1 col-md-10 search_padding">
+                <div class="faq_search">
+                    <div class="signup">
+                        <form id="frmFaqs">
+                            @*<input type="text" asp-for="Question" id="qname" name="qution" class="faq-search" placeholder="Search FAQ" required>
+                            <input type="button" value="Search" id="btn">*@
+                            <div class="input-group mb-3">
+                                <input type="text" asp-for="Question" class="form-control" placeholder="Search FAQ" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary"  value="Search"  id="btn" type="button">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" id="renderFaqs">
+                <!--Tab Wrapper-->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Faq End -->
+<!-- Javascript -->
+
+@section scripts {
+    <script src="~/rxfairbackend/js/Parsley.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindFaqs("");
+        });
+
+        function bindFaqs(qution) {
+            $("#renderFaqs").html("");
+            $("#renderFaqs").load("/Home/SearchFaq", { qution: qution }, function () {
+            });
+        }
+
+        $('body').on('keypress', function (e) {
+            if (e.which === 13) {
+                var qution = $.trim($("#Question").val());
+                bindFaqs(qution);
+                e.preventDefault();
+            }
+        });
+
+        $('#btn').click(function () {
+            $('#frmFaqs').parsley().validate();
+            if ($('#frmFaqs').parsley().isValid()) {
+                var qution = $.trim($("#Question").val());
+                if (qution != "") {
+                    bindFaqs(qution);
+                }
+            }
+        });
+
+    </script>
+}

@@ -1,0 +1,272 @@
+﻿@model RxFair.Dto.Dtos.RebateProgressDto
+@{
+    ViewData["Title"] = "RebateProgress";
+}
+
+
+<style>
+    .popover-content {
+        height: 200px;
+        overflow-y: scroll;
+    }
+
+    .popover {
+        max-height: 200px;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+    .progress_data{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #container1 {
+        width: 250px;
+        height: 8px;
+    }
+    #container2 {
+        width: 250px;
+        height: 8px;
+    }
+    #container3 {
+        width: 250px;
+        height: 8px;
+    }
+
+    .rebate_card {
+        padding: 20px 20px;
+        background-color: rgba(35, 67, 138, 0.1);
+    }
+    .rebate_text{
+        margin-top: 130px;
+    }
+    .rebate_text h4 {
+        margin: 0;
+        padding: 20px 20px;
+        font-size: 20px;
+        background-color: rgba(59, 88, 152, 0.4);
+        border-radius: 10px;
+    }
+    .rebate_card_title {
+        margin-top: 40px;
+    }
+    .rebate_card_title h3{
+        margin: 0;
+        padding: 15px 20px;
+        background-color: #23438a;
+        color: white;
+        font-weight: 500;
+        font-size: 22px;
+    }
+    .rebate_card_content {
+        margin-bottom: 40px;
+    }
+    .rebate_card_content h3 {
+        font-size: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: #23438a;
+        letter-spacing: 0.00em;
+    }
+    .rebate_card_content h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .progressbar-text {
+        color: rgb(0, 0, 0) !important;
+        position: inherit !important;
+        right: inherit !important;
+        top: inherit !important;
+        margin-top: 20px !important;
+        padding-left: 20px !important;
+    }
+
+    }
+</style>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">RebateProgress</a></li>
+        </ul>
+    </div>
+
+    @*bar chart*@
+    <div class="rebate_card_title">
+        <h3>Rebate Progress</h3>
+    </div>
+    <div class="rebate_card">
+
+        <div class="rebate_card_content">
+            <h3>What is a ShopRx Rebate?</h3>
+            <h5>
+                A generic product rebate is provided on eligible Generic ShopRx purchases,up to 30 days after the end the the applicable
+                month,subject to certain contractual terms and conditions.For futher inquires ,refer to your Rebate agreement or contact
+                ShopRx Admin.
+            </h5>
+        </div>
+
+        <div class="progress_data">
+            <div id="container1"></div>
+            <div id="container2"></div>
+            <div id="container3"></div>
+        </div>
+
+        <div class="rebate_text">
+            <h4>Spend an Addional $@Model.Need on products to Hit next Tier on Monthly Medicine Purchase. Remaning Days  @Model.RemainingDays</h4>
+            
+        </div>
+    </div>
+
+
+
+</main>
+@section Scripts{
+    <script src="~/rxfairfrontend/js/Plugins/ProgressBar_v_1_.js"></script>
+    
+    <script type="text/javascript">
+        var Tier1_Percent = 0;
+        var Tier2_Percent = 0;
+        var Tier3_Percent = 0;
+
+        var Tier1_ProgressAmount = 0;
+        var Tier2_ProgressAmount = 0;
+        var Tier3_ProgressAmount = 0;
+      
+        $(document).ready(function () {
+            
+            switch (@Model.CurrentTier) {
+                case 0: Tier1_Percent =@Model.TierProgress_Percent; Tier1_ProgressAmount=@Model.CurrentMonth_OrderAmount;           break;
+                case 1: Tier2_Percent =@Model.TierProgress_Percent;
+                        Tier1_Percent = 100;
+                        Tier1_ProgressAmount=@Model.CurrentMonth_OrderAmount;
+                        break;
+                case 2: Tier3_Percent =@Model.TierProgress_Percent;
+                        Tier1_Percent = 100;
+                        Tier2_Percent = 100;
+                        Tier2_ProgressAmount=@Model.CurrentMonth_OrderAmount;
+                        break;
+                case 3: Tier1_Percent = 100;
+                        Tier2_Percent = 100;
+                        Tier3_Percent = 100;
+                        Tier3_ProgressAmount=@Model.CurrentMonth_OrderAmount;
+                        break;
+            }
+
+            // progressbar.js@1.0.0 version is used
+            // Docs: http://progressbarjs.readthedocs.org/en/1.0.0/
+
+            //   Tier 1
+            var bar = new ProgressBar.Line(container1, {
+                strokeWidth: 6,
+                easing: 'easeInOut',
+                duration: 1400,
+                color: '#FFEA82',
+                trailColor: '#eee',
+                trailWidth: 1,
+                svgStyle: { width: '100%', height: '100%' },
+                text: {
+                    style: {
+                        // Text color.
+                        // Default: same as stroke color (options.color)
+                        color: '#999',
+                        position: 'absolute',
+                        right: '0',
+                        top: '30px',
+                        padding: 0,
+                        margin: 0,
+                        transform: null
+                    },
+                    autoStyleContainer: false
+                },
+                from: { color: '#FFEA82' },
+                to: { color: '#ED6A5A' },
+                step: (state, bar) => {
+                    var msg = Tier1_ProgressAmount == 0 ? '' : '<br/> Monthly Spending <b> ' + '$' + Tier1_ProgressAmount;
+                    bar.setText(Math.round(bar.value() * 100) + ' %' + '<br/> Tier 1 ' + msg );
+                }
+            });
+
+            bar.animate(Tier1_Percent / 100);  // Number from 0.0 to 1.0
+
+
+            //Tier 2
+            var bar = new ProgressBar.Line(container2, {
+                strokeWidth: 4,
+                easing: 'easeInOut',
+                duration: 1400,
+                color: '#118c34',
+                trailColor: '#eee',
+                trailWidth: 1,
+                svgStyle: { width: '100%', height: '100%' },
+                text: {
+                    style: {
+                        // Text color.
+                        // Default: same as stroke color (options.color)
+                        color: '#999',
+                        position: 'absolute',
+                        right: '0',
+                        top: '30px',
+                        padding: 0,
+                        margin: 0,
+                        transform: null
+                    },
+                    autoStyleContainer: false
+                },
+                from: { color: '#FFEA82' },
+                to: { color: '#ED6A5A' },
+                step: (state, bar) => {
+                    var msg = Tier2_ProgressAmount == 0 ? '' : '<br/> Monthly Spending <b> ' + '$' + Tier2_ProgressAmount;
+                    bar.setText(Math.round(bar.value() * 100) + ' %' + '<br/> Tier 2' + msg);
+                }
+            });
+
+            bar.animate(Tier2_Percent / 100);  // Number from 0.0 to 1.0
+
+            //Tier 3
+            var bar = new ProgressBar.Line(container3, {
+                strokeWidth: 4,
+                easing: 'easeInOut',
+                duration: 1400,
+                color: '#8c118a',
+                trailColor: '#eee',
+                trailWidth: 1,
+                svgStyle: { width: '100%', height: '100%' },
+                text: {
+                    style: {
+                        // Text color.
+                        // Default: same as stroke color (options.color)
+                        color: '#999',
+                        position: 'absolute',
+                        right: '0',
+                        top: '30px',
+                        padding: 0,
+                        margin: 0,
+                        transform: null
+                    },
+                    autoStyleContainer: false
+                },
+                from: { color: '#FFEA82' },
+                to: { color: '#ED6A5A' },
+                step: (state, bar) => {
+                    var msg = Tier2_ProgressAmount == 0 ? '' : '<br/> Monthly Spending <b> ' + '$' + Tier2_ProgressAmount;
+                    bar.setText(Math.round(bar.value() * 100) + ' %' + '<br/> Tier 3'+msg);
+                }
+            });
+
+            bar.animate(Tier3_Percent / 100);  // Number from 0.0 to 1.0
+
+
+        });
+
+      
+
+    </script>
+
+}

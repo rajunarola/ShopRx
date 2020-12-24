@@ -1,0 +1,203 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Service.Exceptions
+@using RxFair.Utility.Extension
+@{
+    ViewData["Title"] = "System Medicines";
+}
+@section styles{
+    <style type="text/css"></style>
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">System Medicines</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    System Medicines
+                </h3>
+            </div>
+        </div>
+         <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="javascript:;" onclick="AddToMyMedicine()" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add To MyCatalog</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtSellMedicines" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Select</th>
+                                    <th>NDC</th>
+                                    <th>UPC</th>
+                                    <th>Image</th>
+                                    <th>Medicine</th>
+                                    <th>Strength</th>
+                                    <th>Pkg Size</th>
+                                    <th>Manufacturer</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                            <tbody> </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () { window.BindSystemMedicineList(); });
+        var MedicineList = new Array();   
+        function BindSystemMedicineList() {
+            var SystemMedicine = $("#dtSellMedicines").DataTable({
+                "sAjaxSource": "/Distributor/Medicine/GetSystemMedicineList",
+                "rowCallback": function (row, data, index) {
+                    if (data.distributorId === @Convert.ToInt64(User.GetClaimValue(UserClaims.DistributorId))) {
+                        $(row).css({ 'background-color': '#98FB98' });
+                    }
+                    $.each(MedicineList, function (key, value) {
+                        if (value == data.id) {
+                            $(row).find('input[type="checkbox"]').prop('checked', true);
+                        }
+                    });
+                    setTimeout(function () {
+                        ImageBroken.fixBrokenImages(ImageBroken.path.MedicineImage);
+                    },
+                        300);
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "text-center check_box",
+                        "render": function (data, type, row) {
+                            var content = "";
+                            if (row.distributorId != '@Convert.ToInt64(User.GetClaimValue(UserClaims.DistributorId))') {
+                                content = `<div class="form-group">
+                                                   <input type="checkbox" class="systemMedicine_chk" data-id="${data}" id="chk${data}" data-json='${JSON.stringify(row)}'>
+                                                   <label for="chk${data}" ></label>
+                                               </div>`;
+                                return content;
+                                    } else {
+                                  return content;
+                             }
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "searchable": true,
+                        "render": function (data, type, row) {
+                            var content = `<a href="javascript:; onclick=ViewMedicine('${row.mediPriceId}')">${data}</a>`; 
+                            return content;
+                        }   
+                    
+                    },
+                    {
+                        "data": "upc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "medicineImage",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            return showImageTooltip(data);
+                        }
+
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "packageSize",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "manufacturerName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "category",
+                        "autoWidth": false,
+                        "searchable": true
+                    }
+
+                ]
+
+            });
+
+        }
+        function AddToMyMedicine() {
+            var res = {
+                status: 0,
+                message:""
+            };
+            if (MedicineList.length <= 0) {
+                RxFair.Error("Please Select Medicine First.");
+            } else {
+                $.ajax({
+                url: "/Distributor/Medicine/AddtoDistributorMedicine",
+                data: { "medicineList": MedicineList },
+                type: "POST",
+                success: function (response) {
+
+                   //removing all MedicineId from the Array
+                    MedicineList = new Array();
+
+                    $("#dtSellMedicines").DataTable().ajax.reload();   
+                    setTimeout(function () {
+                        RxFair.HandleResponse(response);
+                    }, 3000);
+                },
+                error: function (response) {
+                    RxFair.Error(response);
+                }
+            });
+            }
+        }
+
+        $(document).on("change", ".systemMedicine_chk", function () {
+            var medicineId = $(this).attr("data-id");
+            if ($(this).prop('checked')) {
+
+                //Adding MedicineId Into MedicineList Array to Maintain Selected MedicineList.
+                MedicineList.push(medicineId);
+            } else {
+                for (var i = 0; i < MedicineList.length; i++) {
+                    if (MedicineList[i] === medicineId) {
+                        MedicineList.splice(i, 1);
+                    }
+                }
+
+            }
+        });
+    </script>
+}
+

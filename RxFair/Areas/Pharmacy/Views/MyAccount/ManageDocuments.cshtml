@@ -1,0 +1,67 @@
+﻿@using RxFair.Dto.Enum;
+@model List<RxFair.Dto.Dtos.GroupDocumentView>
+
+@{
+    ViewData["Title"] = "Manage Documents";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:window.location.reload(true)">Documents</a></li>
+        </ul>       
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title d-flex">
+                <h3 class="d-flex w-100 align-items-center">Documents</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            @*<div class="tab-content pt-0">
+            <div role="tabpanel" class="tab-pane in active" id="account">
+                @foreach (var item in Model)
+                {
+                    <div class="accordian-block mbf-2">
+                        <div class="ac-title acc-active" data-in="#tab@(item.DocumentType)">
+                            <p>@item.TypeName</p>
+                            <i class="fa fa-angle-down plus-icon cross-icon"></i>
+                        </div>
+                        <div class="acc-show documents-sec mb-0 pt-2 accordian-para " id="tab@(item.DocumentType)" style="display: block;">
+                            <ul>
+                                @foreach (var itemFile in item.Document)
+                                {
+                                    <li>@itemFile.DocumentFile  @itemFile.DocumentName </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>*@
+
+
+            @foreach (var item in Model)
+            {
+                <div class="documents-sec">
+
+                    <h4><p class="m-0">@item.TypeName</p></h4>
+                    <div>
+                        <ul>
+                            @foreach (var itemFile in item.Document)
+                            {
+                                <li>@itemFile.DocumentFile  @itemFile.DocumentName </li>
+                            }
+                        </ul>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</main>
+
+

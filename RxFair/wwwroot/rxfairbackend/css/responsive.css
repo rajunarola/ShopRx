@@ -1,0 +1,314 @@
+    @media (max-width: 1440px) {
+  
+}
+
+@media (max-width: 1366px) {
+   
+}
+
+@media (max-width: 1200px) {
+    
+}
+
+@media (max-width: 1199px) {
+    .view-cart .smartwizard .nav .nav-item {
+        padding: 0 10px;
+    }
+        .view-cart .smartwizard .nav .nav-item .nav-link:before {
+            width: 90px;
+            left: 38px;
+        }
+    .view-cart .smartwizard .nav .nav-item {
+        font-size: 14px;
+        width: 100px;
+        
+    }
+        .view-cart .smartwizard .nav .nav-item .nav-link {
+            height: 40px;
+            width: 40px;
+        }
+}
+
+@media (max-width: 1024px) {
+    .data-padding {
+        padding-right: 15px !important;
+        padding-left: 15px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .testimonials_sec .radiobtn_btn button {
+        width: 100%;
+    }
+    .testimonials_sec .radiobtn_btn button:first-child {
+        margin-right:0px !important;
+        margin-bottom:15px;
+    }
+    
+    .card_padding .radiobtn {
+        width: 100%;
+    }
+    .role-table-right {
+        width: 75%;
+    }
+    .res-m-top {
+        margin-top: 10px;
+    }
+    .over-flow-data {
+        overflow: auto;
+    }
+    .res-p-0 {
+        padding: 0 !important;
+    }
+    .mt-cust {
+        margin-top: 15px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .res_m {
+        margin: 15px 0px;
+        width: 100%;
+        display: flex !important;
+        justify-content: flex-end;
+    }
+    .view-cart .smartwizard .smartwizard_one input + label:before {
+        right: 15px;
+        top: 10px;
+    }
+    .view-cart .smartwizard .smartwizard_one input + label:after {
+        right: 10px;
+        top: 10px;
+    }
+    .res_flex .con_btn {
+        display: block;
+        margin: 10px 0px;
+    }
+    .f_wrap{
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials_sec .radiobtn_btn button {
+        width: inherit;
+    }
+
+        .testimonials_sec .radiobtn_btn button:first-child {
+            margin-right: 8px !important;
+            margin-bottom: 0px;
+        }
+    .pr-cust-3 {
+        padding-right: 0px;
+    }
+    .res-m-top{
+        margin-top: 10px;
+    }
+    .pl-cus-0 {
+        padding-left: 20px;
+        padding-right: 0;
+    }
+    .form-group.m-0.d-flex.w-50.w-sm-100 {
+        width: 100% !important;
+    }
+    .copy_btn .btn {
+        position: absolute;
+        bottom: -18px;
+    }
+
+    .con_btn i {
+        padding-left: 0;
+    }
+   
+    
+    .mt-o{
+        margin-top: 15px;
+    }
+
+
+}
+
+@media (max-width: 576px) {
+    .justify-content-sm-center {
+       justify-content:center !important;
+    }
+    .view-cart .smartwizard .nav .nav-item {
+        font-size: 14px;
+        width: 100px;
+    }
+        .view-cart .smartwizard .nav .nav-item .nav-link:before {
+            width: 65px;
+            left: 38px;
+        }
+    .mb-sm-2{
+        margin-bottom: 15px !important;
+    }
+    
+
+}
+
+@media (max-width: 480px) {
+    .database_title {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+        .database_title h3 {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    .con_btn.database_btn {
+        margin-right: 0px;
+        margin-bottom: 10px;
+        margin-top: 0px;
+    }
+    div.dataTables_wrapper div.dataTables_filter input {
+        height: 40px;
+        width: 250px;
+    }
+    .database_title {
+        margin-bottom: 15px;
+    }
+        .database_title h3 {
+            display: block;
+            width: 100%;
+            margin-bottom: 0;
+            text-align: center;
+        }
+    .con_btn {
+        padding: 5px 13px;
+        font-size: 14px;
+    }
+    .order-filter .btn {
+        padding: 5px 25px;
+    }
+    .purches_order .form-row.cust-res .form-group {
+        width: 100%;
+    }
+    .copy_btn .btn {
+        position: absolute;
+        bottom: -18px;
+    }
+
+    .con_btn i {
+        padding-left: 0;
+    }
+    .pharmacies_form .nav {
+        display: block;
+    }
+        .pharmacies_form .nav .nav-item .nav-link {
+            width: 100%;
+            display: block;
+            text-align: center;
+            padding: 10px 0px;
+        }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        color: #495057;
+        border-bottom: 1px solid #ddd;
+        background-color: #fff;
+    }
+    .pharmacies_form .tab-content {
+        padding: 20px 0px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .testimonials_sec .radiobtn_btn button {
+        width: 100%;
+    }
+
+        .testimonials_sec .radiobtn_btn button:first-child {
+            margin-right: 0px !important;
+            margin-bottom: 15px;
+        }
+    #AddEditNewBill, #AddEditNewShipping {
+        padding: 8px 20px;
+    }
+    .mb-sm-2{
+        margin-bottom: 10px!important;
+    }
+    .order-filter .filter-check .container.new-con {
+        margin-bottom: 5px;
+    }
+    .view-cart .smartwizard .nav .nav-item {
+        padding: 0 0px;
+    }
+    .view-cart .smartwizard .nav .nav-item {
+        width: 80px;
+    }
+    div#divMenuList > table {
+        height: 96%;
+    }
+    .breadcrumb-item {
+        display: block;
+        line-height: 1;
+        padding-top: 10px;
+        width: 100%;
+    }
+        .breadcrumb-item a {
+            font-size: 12px;
+       }
+    .app-breadcrumb {
+        margin-top: 10px;
+        width: 100%;
+    }
+    .breadcrumb-item + .breadcrumb-item {
+        padding-left: 0;
+        text-align: center;
+    }
+        .breadcrumb-item + .breadcrumb-item::before {
+            display: none;
+        }
+    .breadcrumb-item:first-child {
+        padding-top: 0;
+    }
+    .database_title h3 {
+        font-size: 16px;
+        justify-content: center;
+    }
+    .w-cust-50{
+        margin-top: 10px !important;
+        width: 100% !important;
+    }
+    
+
+}
+
+@media (max-width: 380px) {
+    
+   
+}
+
+@media (max-width: 340px) {
+    
+    
+}
+
+@media (max-width: 320px) {
+   
+}
+
+@media (min-width: 529px) and (max-width: 320px) {
+    #frmManageAccessPermission #divMenuList tr:nth-child(2) th {
+        height: 76px;
+        vertical-align: middle;
+    }
+    #divMenuList > table {
+        height:96%;
+    }
+}
+
+@media (min-width: 530px) and (max-width: 900px) {
+    #frmManageAccessPermission #divMenuList tr:nth-child(2) th {
+        height: 61px;
+        vertical-align: middle;
+    }
+    .role-table-left > table {
+        height: 96%;
+    }
+}
+

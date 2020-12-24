@@ -1,0 +1,181 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@{
+    var isSubscriptionExpired = Convert.ToBoolean(User.GetClaimValue(UserClaims.IsSubscriptionExpired));
+    var subscriptionTypeId = Convert.ToInt64(User.GetClaimValue(UserClaims.SubscriptionTypeId));
+}
+<html lang="en">
+<head>
+    <meta name="description" content="ShopRx">
+    <title>@ViewData["Title"] | ShopRx</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Fav icon-->
+    <link rel="shortcut icon" href="~/fav.png">
+
+    <!-- Main CSS-->
+    <link href="~/css/RxFairBackEnd.min.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/distributor-newstyle.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/responsive.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/InfoSection.css" rel="stylesheet" />
+    <style type="text/css">
+        /*main*/
+        @if (isSubscriptionExpired) {
+            @Html.Raw(".sidebar-mini.sidenav-toggled .app-content {margin-left: 0;}")
+        }
+        /*main*/
+    </style>
+    @RenderSection("Styles", required: false)
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body class="@(isSubscriptionExpired?" app sidebar-mini rtl pace-done sidenav-toggled":"app sidebar-mini rtl")">
+    <!-- Navbar-->
+    <header class="app-header">
+        <a class="app-header__logo" href="@Url.Action("Index", "Dashboard" , new { area="Distributor" })">
+            <img src="~/rxfairbackend/images/admin_logo.png" class="img-fluid" alt="logo">
+        </a>
+        <!-- Sidebar toggle button-->
+        @if (!isSubscriptionExpired)
+        {
+            <a class="app-sidebar__toggle" href="javascript:;" data-toggle="sidebar" aria-label="Hide Sidebar">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </a>
+            <!-- Navbar Right Menu-->
+        }
+        <ul class="app-nav">
+            <!-- User Menu-->
+            <li class="dropdown">
+                <a class="app-nav__item user" href="javascript:;" data-toggle="dropdown" aria-label="Open Profile Menu"><img src="@User.GetClaimValue(UserClaims.UserProfileImage)" alt="" class="img-fluid UserProfileImage"><user class="fullname">@User.GetClaimValue(UserClaims.LastName)</user><i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu settings-menu dropdown-menu-right">
+                    @if (!isSubscriptionExpired)
+                    {
+                        <li><a class="dropdown-item" href="/Distributor/MyAccount/"><i class="fa fa-user fa-lg"></i> Profile</a></li>
+                    }
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+                    </form>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <!-- Sidebar menu-->
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    @if (!isSubscriptionExpired)
+    {
+        <aside class="app-sidebar">
+            <ul class="app-menu">
+                <li><a class="app-menu__item active" mhref="" href="@Url.Action("Index", "Dashboard" , new { area="Distributor" })"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+                @if (User.IsInRole(UserRoles.DistributorPrimaryAdmin))
+                {
+                    <li><a class="app-menu__item" mhref="DistributorProfile" href="@Url.Action("Index", "DistributorProfile" , new { area="Distributor" })"><i class="app-menu__icon fa fa-user" aria-hidden="true"></i><span class="app-menu__label">Manage Distributor Profile</span></a></li>
+                }
+                @if (!User.IsInRole(UserRoles.DistributorStaff))
+                {
+                    <li><a class="app-menu__item" mhref="DistributorUser" href="@Url.Action("Index", "DistributorUser" , new { area="Distributor" })"><i class="app-menu__icon fa fa-user-o" aria-hidden="true"></i><span class="app-menu__label">Manage Users</span></a></li>
+                }
+
+                <li><a class="app-menu__item" mhref="ManageOrders" href="@Url.Action("ManageOrders", "ManageOrder" , new { area="Distributor" })"><i class="app-menu__icon fa fa-align-center" aria-hidden="true"></i><span class="app-menu__label">Manage Orders</span></a></li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-medkit" aria-hidden="true"></i><span class="app-menu__label">Medicine</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="BulkMedicine" href="@Url.Action("BulkMedicine", "Medicine" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i> Bulk Medicine File Upload</a></li>
+                        <li><a class="treeview-item" mhref="BulkMedicinePrice" href="@Url.Action("BulkMedicinePrice", "Medicine" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i> Bulk Medicine Price Upload</a></li>
+                        <li><a class="treeview-item" mhref="MedicineRequest" href="@Url.Action("MedicineRequest", "Medicine" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i> Manage Medicine Request</a></li>
+                        <li><a class="treeview-item" mhref="SystemMedicines" href="@Url.Action("SystemMedicines", "Medicine" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i> System Medicines</a></li>
+                        <li><a class="treeview-item" mhref="MyCatalog" href="@Url.Action("MySellMedicines", "Medicine" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i> My Catalog</a></li>
+                    </ul>
+                </li>
+
+                @*@switch (subscriptionTypeId)
+                    {
+                        case (long)GlobalEnums.SubscriptionTypes.Gold:
+                            <li class="treeview">
+                                <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Advertisement</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li><a class="treeview-item" mhref="DealOfTheDay" href="/Distributor/ManageAdvertisement/DealOfTheDay"><i class="icon fa fa-circle-o"></i> Deal of The Day</a></li>
+                                </ul>
+                            </li>
+
+                            break;
+                        case (long)GlobalEnums.SubscriptionTypes.Platinum:
+                            <li class="treeview">
+                                <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Advertisement</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li><a class="treeview-item" mhref="TopDeals" href="/Distributor/ManageAdvertisement/TopDeals"><i class="icon fa fa-circle-o"></i> Top Deals</a></li>
+                                    <li><a class="treeview-item" mhref="DealOfTheDay" href="/Distributor/ManageAdvertisement/DealOfTheDay"><i class="icon fa fa-circle-o"></i> Deal of The Day</a></li>
+                                    <li><a class="treeview-item" mhref="PriceIncrease" href="/Distributor/ManageAdvertisement/PriceIncrease"><i class="icon fa fa-circle-o"></i> Product Price Increase</a></li>
+                                </ul>
+                            </li>
+                            break;
+                    }*@
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Advertisement</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="TopDeals" href="/Distributor/ManageAdvertisement/TopDeals"><i class="icon fa fa-circle-o"></i> Top Deals</a></li>
+                        <li><a class="treeview-item" mhref="DealOfTheDay" href="/Distributor/ManageAdvertisement/DealOfTheDay"><i class="icon fa fa-circle-o"></i> Deal of The Day</a></li>
+                        <li><a class="treeview-item" mhref="PriceIncrease" href="/Distributor/ManageAdvertisement/PriceIncrease"><i class="icon fa fa-circle-o"></i> Product Price Increase</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-line-chart" aria-hidden="true"></i><span class="app-menu__label">Reports</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="SalesOrderReport" href="@Url.Action("SalesOrderReport", "Report" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i>Sales Order</a></li>
+                        <li><a class="treeview-item" mhref="CommissionInvoices" href="@Url.Action("CommissionInvoices", "Report" , new { area="Distributor" })"><i class="icon fa fa-circle-o"></i>Commission Invoice</a></li>
+                    </ul>
+                </li>
+                @if (User.IsInRole(UserRoles.DistributorPrimaryAdmin))
+                {
+                    <li><a class="app-menu__item" mhref="AccessPermission" href="@Url.Action("AccessPermission", "Master", new {area = "Admin"})"><i class="app-menu__icon fa fa-toggle-off" aria-hidden="true"></i><span class="app-menu__label">Manage Access Permission</span></a></li>
+                    <li><a class="app-menu__item" mhref="ManageDocuments" href="@Url.Action("ManageDocuments", "MyAccount" , new { area="Distributor" })"><i class="fa fa-outdent app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Manage Documents</span></a></li>
+                }
+            </ul>
+        </aside>
+    }
+
+    @RenderBody()
+    <!-- Modal -->
+    <div class="modal fade admin_modelpop" id="divModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+    <script src="~/rxfairbackend/js/popper.min.js"></script>
+    <script src="~/js/RxFairBackEnd.min.js"></script>
+    <script src="~/js/RxFairDatatable.min.js"></script>
+    <script src="~/lib/RxFair-Common/dialogs.js"></script>
+    <script src="~/lib/RxFair-Common/jquery-blockui.js"></script>
+    <script src="~/lib/RxFair-Common/common.js"></script>
+    <script type="text/javascript">
+        var originalModal = $("#divModal").clone();
+        $("#divModal").on("hidden.bs.modal", function () {
+            $("#divModal").remove();
+            var myClone = originalModal.clone();
+            $("body").append(myClone);
+        });
+        $(window).on("load", function () {
+         @if (!isSubscriptionExpired)
+         {
+             @Html.Raw(@"SetActiveMenu('Distributor');");
+         }
+             dataTableReSize();
+         });
+        $(window).on("resize", function () {
+            dataTableReSize();
+        });
+
+        window.onload = function () {
+            ImageBroken.fixBrokenUserProfile(ImageBroken.path.UserProfile);
+        }
+    </script>
+    <partial name="~/Views/Shared/_InfoSection.cshtml" />
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

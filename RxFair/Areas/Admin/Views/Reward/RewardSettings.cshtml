@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewData["Title"] = "Reward Settings";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward Settings</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Reward Settings
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+                @*<div class="d-flex justify-content-end">
+                    <a href="javascript:;" onclick="AddEditRewardSettings(0);" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Reward Month Days</a>
+                </div>*@
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtRewardSettings" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Month Days</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window.bindRewardSettingsList();
+        });
+        function bindRewardSettingsList() {
+            if ($.fn.DataTable.isDataTable("#dtRewardSettings")) {
+                $('#dtRewardSettings').DataTable().destroy();
+            }
+            var table = $('#dtRewardSettings')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Reward/GetRewardMonthDaysList",
+                    "columns": [
+                        {
+                            "data": "id",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data) {
+                                var content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>`;
+                                               //<a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                return dataTableAction(content);
+                            }
+                        },
+                        {
+                            "data": "noOfDays",
+                            "autoWidth": false,
+                            "searchable": true
+                        }
+                    ]
+                });
+        };
+
+        $('#dtRewardSettings').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    AddEditRewardSettings(id);
+                    break;
+                case "delete":
+                    DeleteRewardSettings(id);
+                    break;
+                default:
+            }
+        });
+
+        function AddEditRewardSettings(id) {
+            $("#modalContent").load(`/Admin/Reward/AddEditRewardMonthDays/${id}`, function () {
+                $("#divModal").modal('show');
+            });
+        }
+
+        @*function DeleteRewardSettings(id) {
+            RxFair.Confirm("Delete Reward Settings ", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!", function () {
+                    $.ajax({
+                        url: "@Url.Action("RemoveRewardMonthDays", "Reward")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function (response) {
+                            RxFair.HandleResponse(response);
+                            window.bindRewardSettingsList();
+                        },
+                        error: function(data) {
+                        }
+                    });
+                }, function () { });
+        }*@
+
+    </script>
+}
+

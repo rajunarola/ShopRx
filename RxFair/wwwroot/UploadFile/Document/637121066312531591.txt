@@ -1,0 +1,29 @@
+SELECT mv.id AS Id,ISNULL (mp.Id,0) AS MediPriceId,mv.IsActive, mv.NDC_UPC_HRI AS Ndc, '' AS Upc,ISNULL(mv.MedicineImage,''), mv.Drug_Name As MedicineName, ISNULL(mv.Strength,'') AS Strength, ISNULL(mv.Package_Size, 0) AS PackageSize, 
+					    ISNULL(mm.ManufacturerName, '') AS Manufacturer,ISNULL(d.CompanyName,'') AS Distributor, ISNULL(mcm.MedicineCategory,'') AS Category, 'Approved' AS [Status], '' AS Reason, TotalRecords = COUNT(1) OVER()
+				FROM MedicineMasters mv
+					JOIN Distributor d on mv.DistributorId = d.Id
+					LEFT JOIN MedicinePriceMasters mp on mv.Id=mp.MedicineId
+					LEFT JOIN ManufacturerMaster mm on mv.MedicineMaster_Manufacturer_Id=mm.Id
+					LEFT JOIN MedicineCategoryMaster mcm on mv.CategoryId=mcm.Id
+					where 1=1 and d.Id=25
+				
+
+			SELECT mv.id AS Id, mv.MedicinePriceId AS MediPriceId, mv.IsActive, NDC AS Ndc, '' AS Upc, MedicineImage, mv.MedicineName, ISNULL(Strength,'') AS Strength, ISNULL(PackageSize, 0) AS PackageSize, 
+					   ISNULL(ManufacturerName, '') AS Manufacturer, ISNULL(d.CompanyName,'') AS Distributor, ISNULL(MedicineCategory,'''') AS Category, 'Approved' AS [Status], '' AS Reason, TotalRecords = COUNT(1) OVER()
+				FROM MedicineMasters mv
+					JOIN Distributor d on mv.DistributorId = d.Id
+				WHERE 1 = 1 AND (d.Id = 25)
+
+				
+select * from MedicineView where DistributorId=25 And NDC='17478023835'
+
+select * from MedicineMasters mv
+JOIN Distributor d on mv.DistributorId = d.Id
+LEFT JOIN MedicinePriceMasters mp on mv.Id=mp.MedicineId
+LEFT JOIN ManufacturerMaster mm on mv.MedicineMaster_Manufacturer_Id=mm.Id
+LEFT JOIN MedicineCategoryMaster mcm on mv.CategoryId=mcm.Id
+where mv.NDC_UPC_HRI='17478023835' And  d.Id=25
+
+select * from MedicinePriceMasters where DistributorId=25
+
+select * from UploadedMedicines

@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Confirm Email Confirmation";
+}
+
+<section class="c_vh" style="height: 32vh;">
+    <div class="container">
+        <div class="row">
+            <p>
+                @*@Html.Raw($@"{TempData["Message"]} Please <a asp-action='Login'>click here to log in</a>.")*@
+                @switch (TempData["MessageType"])
+                {
+                    case 1:
+                        <center><h1>@TempData["Message"]</h1></center>
+                        break;
+                    default:
+                        <center><h1>@TempData["Message"]</h1></center>
+                        break;
+                }
+            </p>
+        </div>
+    </div>
+</section>

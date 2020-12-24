@@ -1,0 +1,77 @@
+// Configure bundling and minification for the project.
+// More info at https://go.microsoft.com/fwlink/?LinkId=808241
+[
+    {
+        "outputFileName": "wwwroot/css/RxFairFrontEnd.min.css",
+        "inputFiles": [
+            "wwwroot/rxfairfrontend/css/bootstrap.css",
+            "wwwroot/rxfairfrontend/css/bootstrap-datepicker.css",
+            "wwwroot/rxfairfrontend/css/owl.carousel.min.css",
+            "wwwroot/rxfairfrontend/css/owl.theme.default.min.css",
+            "wwwroot/rxfairfrontend/css/style.css",
+            "wwwroot/rxfairfrontend/css/responsive.css",
+            "wwwroot/rxfairfrontend/css/parsley.css"
+        ]
+    },
+    {
+        "outputFileName": "wwwroot/css/RxFairBackEnd.min.css",
+        "inputFiles": [
+            "wwwroot/rxfairbackend/css/main.css",
+            "wwwroot/rxfairbackend/css/fixedHeader.dataTables.min.css",
+            "wwwroot/rxfairbackend/css/bootstrap-datepicker.css",
+            "wwwroot/rxfairbackend/css/parsley.css",
+            "wwwroot/rxfairbackend/css/responsive.css"
+            //"wwwroot/rxfairbackend/css/admin-newstyle.css",
+            //"wwwroot/rxfairbackend/css/distributor-newstyle.css",
+            //"wwwroot/rxfairbackend/css/pharmacy-newstyle.css"
+        ]
+    },
+    {
+        "outputFileName": "wwwroot/js/RxFairFrontEnd.min.js",
+        "inputFiles": [
+            "wwwroot/rxfairfrontend/js/jquery-3.3.1.min.js",
+            "wwwroot/rxfairfrontend/js/jquery.easing.min.js",
+            "wwwroot/rxfairfrontend/js/bootstrap.min.js",
+            "wwwroot/rxfairfrontend/js/parsley.min.js",
+            "wwwroot/rxfairfrontend/js/sweetalert.min.js",
+            "wwwroot/rxfairfrontend/js/popper.min.js",
+            "wwwroot/rxfairfrontend/js/jquery.smartWizard.js",
+            "wwwroot/rxfairfrontend/js/owl.carousel.min.js",
+            "wwwroot/rxfairfrontend/js/custom.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": false
+    },
+    {
+        "outputFileName": "wwwroot/js/RxFairBackEnd.min.js",
+        "inputFiles": [
+            "wwwroot/rxfairbackend/js/jquery-3.2.1.min.js",
+            "wwwroot/rxfairbackend/js/bootstrap.min.js",
+            "wwwroot/rxfairbackend/js/parsley.min.js",
+            "wwwroot/rxfairbackend/js/sweetalert.min.js",
+            "wwwroot/rxfairbackend/js/main.js",
+            "wwwroot/rxfairbackend/js/plugins/pace.min.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": false
+    },
+    {
+        "outputFileName": "wwwroot/js/RxFairDatatable.min.js",
+        "inputFiles": [
+            "wwwroot/rxfairbackend/js/plugins/jquery.dataTables.min.js",
+            "wwwroot/rxfairbackend/js/plugins/dataTables.fixedHeader.min.js",
+            "wwwroot/rxfairbackend/js/plugins/dataTables.bootstrap.min.js"
+        ],
+        "minify": {
+            "enabled": true,
+            "renameLocals": true
+        },
+        "sourceMap": false
+    }
+]

@@ -1,0 +1,228 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+<html lang="en">
+<head>
+    <meta name="description" content="ShopRx">
+    <title>@ViewData["Title"] | ShopRx</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Fav icon-->
+    <link rel="shortcut icon" href="~/fav.png">
+
+    <!-- Font Family-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Main CSS-->
+    <link href="~/css/RxFairBackEnd.min.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/admin-newstyle.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/responsive.css" rel="stylesheet" />
+    <style type="text/css">
+        /*main*/
+
+        /*main*/
+    </style>
+    @RenderSection("Styles", required: false)
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body class="app sidebar-mini rtl">
+    <!-- Navbar-->
+    <header class="app-header">
+        <a class="app-header__logo" href="@(User.IsInRole(UserRoles.Developer)?"/Admin/Master/SystemModule": "/Admin/Dashboard/")">
+            <img src="~/rxfairbackend/images/admin_logo.png" class="img-fluid" alt="logo">
+        </a>
+        <!-- Sidebar toggle button-->
+        <a class="app-sidebar__toggle" href="javascript:;" data-toggle="sidebar" aria-label="Hide Sidebar">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </a>
+        <!-- Navbar Right Menu-->
+        <ul class="app-nav">
+            <!--Notification Menu-->
+            <li class="dropdown">
+                <a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications" aria-expanded="false"><i class="fa fa-bell-o fa-lg"></i><span class="notice_status">0</span></a>
+                <ul class="app-notification dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-222px, 50px, 0px); top: 0px; left: 0px; will-change: transform;">
+                    @*<li class="app-notification__title">You have 4 new notifications.</li>*@
+                    <div class="app-notification__content" id="DistributorInfo">
+                        @* DYNAMIC  ELEMENT *@
+                        @*<li>
+                            <a class="app-notification__item" href="javascript:;">
+                                <span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                                <div>
+                                    <p class="app-notification__message">Lisa sent you a mail</p>
+                                    <p class="app-notification__meta">2 min ago</p>
+                                </div>
+                            </a>
+                        </li>*@
+                      
+                    @*<li class="app-notification__footer"><a href="#">See all notifications.</a></li>*@
+                </ul>
+            </li>
+
+            <!-- User Menu-->
+            <li class="dropdown">
+                <a class="app-nav__item user" href="javascript:;" data-toggle="dropdown" aria-label="Open Profile Menu"><img src="@User.GetClaimValue(UserClaims.UserProfileImage)" alt="" class="img-fluid UserProfileImage">@User.GetClaimValue(UserClaims.FullName)<i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu settings-menu dropdown-menu-right">
+                    @*<li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li>*@
+
+                    <li><a class="dropdown-item" href="/Admin/MyAccount/"><i class="fa fa-user fa-lg"></i> Profile</a></li>
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+                    </form>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <!-- Sidebar menu-->
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    @if (User.IsInRole(UserRoles.Developer))
+    {
+        <aside class="app-sidebar">
+            <ul class="app-menu">
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-user" aria-hidden="true"></i><span class="app-menu__label">Permission</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="SystemModule" href="@Url.Action("SystemModule", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> System Module</a></li>
+                        <li><a class="treeview-item" mhref="Functionality" href="@Url.Action("Functionality", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Functionality</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+    }
+    else
+    {
+        <aside class="app-sidebar">
+            <ul class="app-menu">
+                <li><a class="app-menu__item active" mhref="" href="@Url.Action("Index", "Dashboard", new { area="Admin" })"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-user" aria-hidden="true"></i><span class="app-menu__label">Users</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="SystemUser" href="/ManageUsers/SystemUser"><i class="icon fa fa-circle-o"></i> Manage System Users</a></li>
+                        <li><a class="treeview-item" mhref="PharmacyUser" href="/ManageUsers/PharmacyUser" rel="noopener"><i class="icon fa fa-circle-o"></i> Manage Pharmacy Users</a></li>
+                        <li><a class="treeview-item" mhref="DistributorUser" href="/ManageUsers/DistributorUser"><i class="icon fa fa-circle-o"></i> Manage Distributor Users</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-plus-square" aria-hidden="true"></i><span class="app-menu__label">Subscription</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="SubscriptionType" href="@Url.Action("SubscriptionType", "Subscription", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Subscription Types</a></li>
+                        <li><a class="treeview-item" mhref="DistributorSubscription" href="@Url.Action("DistributorSubscription", "Subscription", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Distributor Subscription</a></li>
+                    </ul>
+                </li>
+                <li><a class="app-menu__item" mhref="ManageDistributor" href="@Url.Action("Index", "ManageDistributor", new { area="Admin" })"><i class="app-menu__icon fa fa-user-circle" aria-hidden="true"></i><span class="app-menu__label">Manage Distributors</span></a></li>
+                <li><a class="app-menu__item" mhref="ManagePharmacy" href="@Url.Action("Index", "ManagePharmacy", new { area="Admin" })"><i class="app-menu__icon fa fa-assistive-listening-systems" aria-hidden="true"></i><span class="app-menu__label">Manage Pharmacies</span></a></li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-medkit" aria-hidden="true"></i><span class="app-menu__label">Medicine</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        @*<li><a class="treeview-item" mhref="ManageDuplicate" href="@Url.Action("ManageDuplicate", "Medicine", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Duplicate</a></li>*@
+                        <li><a class="treeview-item" mhref="BulkMedicine" href="@Url.Action("BulkMedicine", "Medicine", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Bulk Medicine File Upload</a></li>
+                        <li><a class="treeview-item" mhref="BulkMedicinePrice" href="@Url.Action("BulkMedicinePrice", "Medicine", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Bulk Medicine Price Upload</a></li>
+                        <li><a class="treeview-item" mhref="ManageMedicines" href="@Url.Action("ManageMedicines", "Medicine", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Medicines</a></li>
+                        <li><a class="treeview-item" mhref="MedicineRequest" href="@Url.Action("MedicineRequest", "Medicine", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Medicine Requests</a></li>
+                        <li><a class="treeview-item" mhref="MedicineHistory" href="@Url.Action("MedicineHistory", "Medicine", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Price History</a></li>
+                    </ul>
+                </li>
+                <li><a class="app-menu__item " mhref="ManageOrder" href="@Url.Action("Index", "ManageOrder", new { area="Admin" })"><i class="app-menu__icon fa fa-shopping-cart" aria-hidden="true"></i><span class="app-menu__label">Orders</span></a></li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Manage Advertisement</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="TopDeals" href="/Admin/ManageAdvertisement/TopDeals"><i class="icon fa fa-circle-o"></i> Top Deals</a></li>
+                        <li><a class="treeview-item" mhref="DealOfTheDay" href="/Admin/ManageAdvertisement/DealOfTheDay"><i class="icon fa fa-circle-o"></i> Deal of The Day</a></li>
+                        <li><a class="treeview-item" mhref="PriceIncrease" href="/Admin/ManageAdvertisement/PriceIncrease"><i class="icon fa fa-circle-o"></i> Product Price Increase</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="fa fa-percent app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Dist. Commission Mgmt</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="index" href="/Admin/DistributorCommission/index"><i class="icon fa fa-circle-o"></i> Commission Invoice</a></li>
+                        <li><a class="treeview-item" mhref="CommissionInvoicePayment" href="/Admin/DistributorCommission/CommissionInvoicePayment"><i class="icon fa fa-circle-o"></i> Commission Invoice Payment</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="fa fa-trophy app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Reward</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="RewardMoney" href="@Url.Action("RewardMoney","Reward", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Reward Type & Money</a></li>
+                        <li><a class="treeview-item" mhref="RewardSettings" href="@Url.Action("RewardSettings","Reward", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Reward Settings</a></li>
+                        <li><a class="treeview-item" mhref="Product" href="@Url.Action("Product","Reward", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Reward Products</a></li>
+                        <li><a class="treeview-item" mhref="MoneyHistory" href="@Url.Action("MoneyHistory","Reward", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Pharmacy Reward Point History</a></li>
+                        <li><a class="treeview-item" mhref="RedeemRequest" href="@Url.Action("RedeemRequest","Reward", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Pharmacy Redeem Requests</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="fa fa-handshake-o app-menu__icon"></i><span class="app-menu__label">Masters</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="AccessPermission" href="@Url.Action("AccessPermission", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Access Permission</a></li>
+                        <li><a class="treeview-item" mhref="EmailTemplate" href="@Url.Action("EmailTemplate", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Advertise Email Template</a></li>
+                        <li><a class="treeview-item" mhref="ContactDetail" href="@Url.Action("ContactDetail", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Contact Details</a></li>
+                        <li><a class="treeview-item" mhref="Document" href="@Url.Action("Document", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Documents</a></li>
+                        <li><a class="treeview-item" mhref="DosageForm" href="@Url.Action("DosageForm", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Dosage Form</a></li>
+                        <li><a class="treeview-item" mhref="Faqs" href="@Url.Action("Faqs", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> FAQs</a></li>
+                        <li><a class="treeview-item" mhref="Manufacturer" href="@Url.Action("Manufacturer", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Manufacturer</a></li>
+                        <li><a class="treeview-item" mhref="Measurement" href="@Url.Action("Measurement", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Measurement</a></li>
+                        <li><a class="treeview-item" mhref="MedicineCategory" href="@Url.Action("MedicineCategory", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Medicine Category</a></li>
+                        <li><a class="treeview-item" mhref="NewDistributorRequest" href="@Url.Action("NewDistributorRequest", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> New Distributor Request</a></li>
+                        <li><a class="treeview-item" mhref="Testimonials" href="@Url.Action("Testimonials", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Testimonials</a></li>
+                        <li><a class="treeview-item" mhref="TermsConditions" href="@Url.Action("TermsConditions", "Master", new {area = "Admin"})"><i class="icon fa fa-circle-o"></i> Terms and Condition</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="fa fa-address-book-o app-menu__icon"></i><span class="app-menu__label">Reports</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="PharmacyPurchaseOrder" href="@Url.Action("PharmacyPurchaseOrder", "Report", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Pharmacy Purchase Orders</a></li>
+                        <li><a class="treeview-item" mhref="DistributorSalesOrder" href="@Url.Action("DistributorSalesOrder", "Report", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Distributor Sales Orders</a></li>
+                        <li><a class="treeview-item" mhref="ReviewMedicinePrice" href="@Url.Action("ReviewMedicinePrice", "Report", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Review Medicine Price</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="fa fa-newspaper-o app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Blog</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a class="treeview-item" mhref="ManageBlogCategory" href="@Url.Action("ManageBlogCategory", "Blog", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Blog Category</a></li>
+                        <li><a class="treeview-item" mhref="ManageBlog" href="@Url.Action("ManageBlog", "Blog", new { area="Admin" })"><i class="icon fa fa-circle-o"></i> Manage Blogs</a></li>
+                    </ul>
+                </li>
+                <li><a class="app-menu__item" mhref="ContactRequest" href="@Url.Action("ContactRequest", "Master", new { area="Admin" })"><i class="fa fa-address-card app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Contact Us Requests</span></a></li>
+            </ul>
+        </aside>
+    }
+
+    @RenderBody()
+
+    <!-- Modal -->
+    <div class="modal fade admin_modelpop" id="divModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/rxfairbackend/js/popper.min.js"></script>
+    <script src="~/js/RxFairBackEnd.min.js"></script>
+    <script src="~/js/RxFairDatatable.min.js"></script>
+    <script src="~/lib/RxFair-Common/dialogs.js"></script>
+    <script src="~/lib/RxFair-Common/jquery-blockui.js"></script>
+    <script src="~/lib/RxFair-Common/common.js"></script>
+    <script type="text/javascript">
+        var originalModal = $("#divModal").clone();
+        $("#divModal").on("hidden.bs.modal", function () {
+            $("#divModal").remove();
+            const myClone = originalModal.clone();
+            $("body").append(myClone);
+        });
+        $(window).on("load", function () {
+            SetActiveMenu("Admin");
+            dataTableReSize();
+        });
+        $(window).on("resize", function () {
+            dataTableReSize();
+        });
+
+        window.onload = function () {
+            ImageBroken.fixBrokenUserProfile(ImageBroken.path.UserProfile);
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

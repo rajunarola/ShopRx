@@ -1,0 +1,286 @@
+﻿@model RxFair.Dto.Dtos.RxFairHomePageModel
+@{
+    ViewData["Title"] = "Home";
+}
+<!-- About Section Start -->
+<section class="about_sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="about_text">
+                    <h3>
+                        Patient Safety Simon Medicine A Worldwide Distinction
+                    </h3>
+                    <div class="scroll_image">
+                        <img src="rxfairfrontend/images/scroll.png" alt="scroll">
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 main-wreper">
+                <div class="video-main">
+                    <div class="img-wreper">
+                        <div class="img-logo"></div>
+                        <video id="shoprxvideo" controls="controls">
+                            <source src="~/rxfairfrontend/video/ShopRX%20Edited.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="about_text">
+                    <div>
+                        @**@
+                        <p>
+                            -Friendly Market Place
+                            Shoprx allows healthcare providers in the U.S. to compare pricing on over 65,000 RX, OTC, HBA, MED-SURG, and PET Supplies from trusted wholesalers nationwide.
+                        </p>
+                        <p>
+                            -Easy to use
+                            Shoprx is easy to use. Registering takes under three minutes to complete the sign up process and get started.
+                        </p>
+                        <p>
+                            -No fees for Pharmacies
+                            Yep, you read it correctly. Shoprx can help you maximize your savings without fees, contract or commitment. Everyone deserves a gift for using Shoprx.At Shoprx we provide a reward program for your everyday purchases.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="about_btn d-flex justify-content-center mt-4">
+                    <div>
+                        <button type="button" class="btn btn-outline-primary con_btn LearnMore">Learn More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                        <span class="pulse"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+
+<!------------- Cover Start ---------------->
+<div class="main_slider owl-carousel owl-theme">
+    <div class="main-cover">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="main-cover-text">
+                        <div>
+                            <h3>
+                                We Provide Total
+                            </h3>
+                            <h1>
+                                ShopRx Solution
+                            </h1>
+                            <p>
+                                ShopRx is a platform serving independent pharmacies across the nation to shop for discounted pharmacy products. We work with accredited wholesalers and distributors to provide the most exclusive competitive pricing on brand, over-the-counter and generic medications. Our mission is to provide independent pharmacies fair pricing from wholesalers, saving money and having a fair advantage against the conglomerates.
+                                ShopRx maximizes your profit and increases your bottom line while saving time and effort. We are a team of experienced pharmacy professionals; we totally understand the headaches and issues all pharmacies encounter on a daily basis, let ShopRx help you today!
+                            </p>
+                            <button type="button" class="btn btn-outline-primary con_btn  LearnMore">Learn More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-cover cover-two">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="main-cover-text">
+                        <div>
+                            <h3>
+                                We Provide Total
+                            </h3>
+                            <h1>
+                                ShopRx Solution
+                            </h1>
+                            <p>
+                                Working together as an interdisciplinary team, many highly trained health professionals besides medical practitioners are involved in modern health care .
+                                Working together as an interdisciplinary team, many highly trained health professionals besides medical practitioners are involved in modern health care .
+                            </p>
+                            <button type="button" class="btn btn-outline-primary con_btn  LearnMore">Learn More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cover End -->
+<!-- Information Section Start -->
+<section class="info_sec">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="info_text">
+                <h2>
+                    Why Shoprx?
+                </h2>
+                <p>
+                    - Free for pharmacies -
+                </p>
+                <p>
+                    - Reward Program -
+                </p>
+                <p>
+                    - Best price ordering and Po matching -
+                </p>
+                <p>
+                    - Deals of the day special -
+                </p>
+                <p>
+                    - Short date purchasing and Inventory -
+                </p>
+                <p>
+                    - Fast,secure technology -
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Information Section End -->
+<!-- Testimonial Start -->
+<section class="testimonials">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="testimonials_cen">
+                    <div>
+                        <div class="title">
+                            <h3>Testimonials</h3>
+                        </div>
+                        <div class="scroll_image">
+                            @*<img src="rxfairfrontend/images/scroll.png" alt="scroll">*@
+                        </div>
+                        <p>
+                            @*Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                Lorem Ipsum has been the industry's standard dummy text ever since the.*@
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="testimonials_sec owl-carousel owl-theme">
+                    @foreach (var testimonial in Model.TestimonialDto)
+                    {
+                        <div class="testimonials_slider item">
+                            <span><i class="fa fa-quote-right"></i></span>
+                            <img src="@testimonial.Image" class="img-fluid" alt="">
+                            <h5>@testimonial.Name</h5>
+                            <p>@testimonial.Feedback</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial End -->
+<!-- Newsletter Start -->
+<section class="newsletter_sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="newsletter_text">
+                    <h3>
+                        Subscribe to Newsletter
+                    </h3>
+                    <p>
+                        Get healthy news and solutions to your problems from our experts!
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="news-center">
+                    <div class="signup">
+                        <form id="frmSubscribe">
+                            @*<input type="email" id="email-signup" class="email-signup" placeholder="Your Email Address ..." required>
+                                <input type="button" id="btn" value="Subscribe">*@
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" id="email-signup" placeholder="Your Email Address ..." aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" id="btn" type="button" value="Subscribe">Subscribe</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Newsletter End -->
+@section Scripts{
+    <script type="text/javascript">
+        var videoPlayer = document.getElementById('shoprxvideo');
+        // Play / pause.
+        videoPlayer.onplay = function () {
+            $(".img-logo").hide();
+        };
+
+        var unSubscribeEmail = "@(Model.EmailUnSubscribe?.Email??"")";
+        $(document).ready(function () {
+            IsEmailUnSubscribe(unSubscribeEmail);
+        });
+        $("#btn").click(function () {
+            const email = $.trim($("#email-signup").val());
+            if (email == "") {
+                $('#frmSubscribe').parsley().validate();
+            }
+            else if (IsEmail(email) == false) {
+                RxFair.Error("Error", "Please enter valid email");
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: "@Url.Action("EmailSubscription", "Home")",
+                    type: "POST",
+                    data: { email: email },
+                    success: function(response) {
+                        RxFair.HandleResponse(response);
+                    },
+                    error: function(data) {}
+                });
+            }
+        });
+
+        $(".LearnMore").on("click", function redirectAcountus() {
+            window.location.href = "/Home/AboutUs";
+        });
+
+
+        function IsEmail(email) {
+            const regex = /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
+            //const x = /^[A-Z@@~`!@@##$%^&*()_=+\\\\';:\"\\/?>.<,-]*$/;
+            if(!regex.test(email)) {
+                return false;
+            }else {
+                return true;
+            }
+        }
+
+        function IsEmailUnSubscribe(email) {
+            if (email !== "" && email != undefined) {
+                RxFair.Confirm("Are you sure you want to unsubscribe ?", RxFair.typeModel.Warning, "", RxFair.typeModel.Danger, "Yes, unsubscribe", function () {
+                        EmailUnSubscribe(email, true);
+                    }, function() {
+                        EmailUnSubscribe(email, false);
+                    }
+                );
+                RxFair.SwapModalButtons();
+            }
+        }
+        function EmailUnSubscribe(email,flag) {
+            $.ajax({
+                url: "/Home/UnSubscribeEmail/",
+                data: { email: email, flag: flag },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) {}
+            });
+        }
+    </script>
+}

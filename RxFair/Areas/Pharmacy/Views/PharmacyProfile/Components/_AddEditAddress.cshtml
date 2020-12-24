@@ -1,0 +1,72 @@
+﻿@model RxFair.Dto.Dtos.PharmacyBillOrShipAddressDto
+@{
+    Layout = null;
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"> @(Model.Id == 0 ? "Add " : "Edit ") Address Info</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="AddressForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IsBilling" />
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="PharmacyId" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label>Address 1 *</label>
+                        <input asp-for="Address1" type="text" class="form-control" data-parsley-required data-parsley-trigger="change">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-12">
+                        <label>Address 2 *</label>
+                        <input asp-for="Address2" type="text" class="form-control" data-parsley-required data-parsley-trigger="change">
+                    </div>
+                    <div class="form-group col-lg-4 col-md-12">
+                        <label>City *</label>
+                        <input asp-for="City" type="text" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z]+$">
+                    </div>
+                    <div class="form-group col-lg-4 col-md-12">
+                        <label>State *</label>
+                        @Html.DropDownListFor(m => m.StateId, ViewBag.StateList as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control ", required = "Select State" })
+                    </div>
+                    <div class="form-group col-lg-4 col-md-12">
+                        <label>Zip Code *</label>
+                        <input asp-for="ZipCode" type="text" class="form-control" data-parsley-required data-parsley-trigger="change" data-mask="99999" >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+    window.InitMaskInput();
+    $("#btnSave").click(function () {
+        $('#AddressForm').parsley().validate();
+        if ($("#AddressForm").parsley().isValid()) {
+            $.post("/Pharmacy/PharmacyProfile/AddEditBillingOrShippingAddress", $("#AddressForm").serialize(), function (response) {
+                if (response.status === 1) {
+                    closeModal();
+                    RxFair.HandleResponse(response, true, function () {
+                        if (location.href.indexOf("PlaceOrder") != -1) {
+                            generateBillAndShippingAddress();
+                        } else {
+                            window.location.href = "/Pharmacy/PharmacyProfile/Index";
+                        }
+                    });
+                } else {
+                    RxFair.HandleResponse(response);
+                }
+            });
+        }
+    });
+    
+</script>

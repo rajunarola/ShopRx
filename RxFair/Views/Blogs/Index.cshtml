@@ -1,0 +1,78 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@model List<RxFair.Dto.Dtos.BlogDto>
+@{
+    ViewData["Title"] = "Blogs";
+    string blogImagePath = "\\" + FilePathList.BlogImage;
+}
+<link href="~/rxfairfrontend/css/Pagination.css" rel="stylesheet" />
+<!-- breadcrumb-section Start -->
+<section class="breadcrumb_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / Blogs</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb-section End -->
+<!-- Blog Start -->
+<section class="blog">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 blog_sec ">
+                <div class="row" id="blogSection">
+
+                    @foreach (var item in Model)
+                    {
+
+                        <div class="col-md-4 col-sm-6  single-item">
+                            <div class="blog_detail">
+                                <h6>@item.BlogCategoryName</h6>
+                                
+                                <img src="@($@"{blogImagePath}\{item.FirstImageName}")" onerror="this.src='/UploadFile/BlogImage/default_Blog.jpg'" class="img-fluid">
+                                <div class="blog_text">
+                                    <h4>@item.Title</h4>
+                                    <div class="d-flex align-items-center mb-3 mt-3">
+                                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                        <h5>@item.BlogDate.ToDefaultDateTime("MMM, dd yyyy")</h5>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <a class="btn btn-outline-primary con_btn blog-btn" href="/Blogs/BlogDetails/@item.Id">Read More <i class="fa fa-long-arrow-right " aria-hidden="true"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+            @if (Model.Count != 0)
+            {
+
+                @(await Component.InvokeAsync("RecentlyBlogs"))
+            }
+            else
+            {
+                <h3><span>No Blogs are available</span></h3>
+            }
+        </div>
+    </div>
+</section>
+<!-- Blog End -->
+<!-- Javascript -->
+
+@section scripts {
+    <script src="~/rxfairfrontend/js/jquery.easyPaginate.js"></script>
+    <script type="text/javascript">
+            $('#blogSection').easyPaginate({
+                paginateElement: 'div.single-item',
+                elementsPerPage: 6,
+                effect: 'fade'
+            });
+        
+    </script>
+}

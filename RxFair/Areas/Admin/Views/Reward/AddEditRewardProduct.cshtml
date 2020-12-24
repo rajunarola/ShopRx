@@ -1,0 +1,161 @@
+﻿@model RxFair.Dto.Dtos.RewardProductDto
+@{
+    ViewData["Title"] = "Reward Product";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="Product">Manage Reward Products</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Add Rewards Product</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn d-inline-block float-right ml-2 btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active accordian-block" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-para acc-show">
+                        <form id="frmRewardProduct" asp-action="AddEditRewardProduct" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Id" />
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Product Name *</label>
+                                    <input asp-for="ProductName" type="text" class="form-control" data-parsley-required data-parsley-trigger="change">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Redeem Require *</label>
+                                    @if (Model.Id == 0)
+                                    {
+                                        <input asp-for="Redeem" type="text" class="form-control" data-parsley-trigger="change" value="" required data-parsley-min="1">
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Redeem" type="text" class="form-control" data-parsley-trigger="change" required data-parsley-min="1">
+                                    }
+
+                                    @*<input type="text" asp-for="Redeem" class="form-control" data-parsley-type="number" data-parsley-pattern="^[0-9]*\.[0-9]{2}$" data-parsley-required data-parsley-trigger="change">*@
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="ProductImageFile">Product Image *</label>
+                                    <label for="ProductImageFile" class="d-block">
+                                        <span class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                        <input style="display: none;" type="file" class="form-control-file" id="ProductImageFile" @(Model.Id == 0 ? "required" : "")>
+                                    </label>
+                                </div>
+                                <div class="form-group col-md-6 mb-0 ">
+                                    <div class="manage-rew-products">
+                                        <img src="@Model.ProductImage" id="RewardProductImage" alt="" class="img-fluid d-block mt-2">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label>Description *</label>
+                                    <textarea asp-for="Description" class="form-control" id="exampleTextarea" rows="6" data-parsley-required data-parsley-trigger="change"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                    <div class="btn_sec btn_sec mt-0 ml-3 mb-3">
+                        <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+                        <button type="button" class="btn btn-outline-primary con_btn mr-auto btn-back">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+
+    <script type="text/javascript">
+
+        $(document).on("focusout", "#ProductName", function (e) {
+            var productName = $.trim($("#ProductName").val());
+            $(this).val(productName);
+        });
+
+        $("#ProductImageFile").change(function () {
+            var files = $("#ProductImageFile").get(0).files;
+            if (parseInt($("#Id").val()) === 0 && files.length <= 0) {
+                RxFair.Error("Error", "please select file");
+                return false;
+            } else {
+                var fileName = $('#ProductImageFile').val();
+                var getExt = fileName.split('.');
+                getExt = getExt.reverse();
+                if ($.inArray(getExt[0].toLowerCase(), RxFair.Filetypes) === -1) {
+                    var fileTypes = RxFair.Filetypes.join();
+                    RxFair.Error("Error", "The filetype you are attempting to upload is not allowed. Allowed Types are : " + fileTypes);
+                    return false;
+                } else {
+                    readImageURL(this, "#RewardProductImage");
+                }
+            }
+        });
+
+        $("#btnSave").click(function () {
+            $('#frmRewardProduct').parsley().validate();
+            var files = $("#ProductImageFile").get(0).files;
+            var flag = false;
+            var id = parseInt($("#Id").val());
+            if (id === 0 && files.length <= 0) {
+                //RxFair.Error("Error", "please select file");
+                flag = false;
+            } else {
+                if (files.length !== 0) {
+                    var fileName = $('#ProductImageFile').val();
+                    var getExt = fileName.split('.');
+                    getExt = getExt.reverse();
+                    if ($.inArray(getExt[0].toLowerCase(), RxFair.Filetypes) === -1) {
+                        RxFair.Error("Error", "The filetype you are attempting to upload is not allowed.");
+                        flag = false;
+                    }
+                    else {
+                        flag = true;
+                    }
+                } else {
+                    flag = true;
+                }
+            }
+
+            if ($("#frmRewardProduct").parsley().isValid()) {
+                if (flag) {
+                    if (window.FormData !== undefined) {
+                        var fileData = serializeformToFormData("#frmRewardProduct");
+                        // Looping over all files and add it to FormData object
+                        fileData.append("ProductImageFile", files[0]);
+                        $.ajax({
+                            url: "/Admin/Reward/AddEditRewardProduct",
+                            type: "POST",
+                            contentType: false,
+                            processData: false,
+                            data: fileData,
+                            success: function (response) {
+                                RxFair.HandleResponse(response, true, function () {
+                                    window.location.href = "/Admin/Reward/Product";
+                                });
+                            },
+                            error: function (response) {
+                                RxFair.HandleResponse(response);
+                            }
+                        });
+                    } else {
+                        RxFair.Warning("Form Data", "FormData is not supported.");
+                    }
+                }
+            }
+        });
+
+    </script>
+}
+

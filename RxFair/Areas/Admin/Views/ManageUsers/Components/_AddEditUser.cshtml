@@ -1,0 +1,72 @@
+﻿@model RxFair.Dto.Dtos.UserBasicInfo
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Add System User</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="AddEditUser" asp-action="AddEditUser" method="post">
+                @Html.AntiForgeryToken()
+                <input asp-for="Id" type="hidden" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-6">
+                        <label>First Name *</label>
+                        <input asp-for="FirstName" type="text" class="form-control" data-parsley-required data-parsley-trigger="change">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Last Name *</label>
+                        <input asp-for="LastName" type="text" class="form-control" data-parsley-required data-parsley-trigger="change">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Email*</label>
+                        @if (Model.Id == 0)
+                        {
+                            <input asp-for="Email" type="text" class="form-control" data-parsley-type="email" data-parsley-trigger="change">
+                        }
+                        else
+                        {
+                            <input asp-for="Email" type="email" class="form-control" readonly="readonly">
+                        }
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Mobile</label>
+                        <input asp-for="Mobile" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Role *</label>
+                        @Html.DropDownListFor(x => x.Role, ViewBag.RoleList as IEnumerable<SelectListItem>, "Select Role", new { @class = "form-control ", required = "Select Role" })
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+ <script>
+     $(document).ready(function () {
+         $(document).on("click", '#btnSave', function () {
+             $('#AddEditUser').parsley().validate();
+             if ($("#AddEditUser").parsley().isValid()) {
+                 $.post("/Account/AddEditUser", $("#AddEditUser").serialize(), function (response) {
+                     RxFair.HandleResponse(response);
+                     if (response.status === 1) {
+                         closeModal();
+                         window.BindUserList();
+                     }
+                 });
+             }
+         });
+     });
+  
+
+</script>

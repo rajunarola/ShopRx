@@ -1,0 +1,118 @@
+﻿@model List<RxFair.Dto.Dtos.BlogImageDto>
+@{
+    ViewData["Title"] = "Manage Blog Images";
+}
+@section styles{
+    <link href="~/rxfairbackend/css/dropzone.css" rel="stylesheet" />
+    <style>
+        input[type="file"] {
+            display: block;
+        }
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            margin: 10px 10px 0 0;
+            padding: 1px;
+        }
+
+        .multi_img ul li img {
+            width: 190px;
+            height: 250px;
+        }
+    </style>
+}
+<h1>ManageBlogImages</h1>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Blog</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManageBlog">Manage Images</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Manage Blog Images</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn d-inline-block float-right ml-2 btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                <button onclick="AddEditBlogImage(parseInt(getLastUrlFields()));" class="btn btn-outline-primary con_btn database_btn d-inline-block float-right active"><i class="fa fa-plus" aria-hidden="true"></i> Add Blog Image</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show">
+                                <div class="accordian-block multi_img mb-3 mt-3">
+
+                                    @{ int i = 1;}
+                                    @foreach (var item in Model)
+                                    {
+                                        if (i == 1)
+                                        {
+                                            @Html.Raw("<ul>")
+                                        }
+                                        <li>
+                                            <img src="@item.ImageName" alt="" id="@item.Id">
+                                            <a href="javascript:;"><i class="fa fa-times-circle removeimg" aria-hidden="true" data-id="@item.Id"></i></a>
+                                        </li>
+                                        @Html.Raw("</ul>")
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts {
+    <script src="~/rxfairbackend/js/dropzone.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).on("click", ".removeimg", function (e) {
+            var id = parseInt($(e.currentTarget).data('id'));
+            RxFair.Confirm("Delete Blog Image",
+                RxFair.typeModel.Warning,
+                "Are you sure?",
+                RxFair.typeModel.Danger,
+                "Yes, delete it!",
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("DeleteBlogImages", "Blog")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function(response) {
+                            if (response.status === 1) {
+                                RxFair.HandleResponse(response);
+                                window.location.reload();
+                                $(e.currentTarget).parent().remove();
+                            }
+                        },
+                        error: function(data) {
+                        }
+                    });
+                },
+                function() {}
+            );
+        });
+        function AddEditBlogImage(id) {
+            $("#modalContent").load(`/Admin/Blog/AddEditBlogImage/${id}`, function () {
+                $("#divModal").modal('show');
+            });
+        }
+
+    </script>
+}
+

@@ -1,0 +1,290 @@
+﻿@model RxFair.Dto.Dtos.AllMenu
+@using System.Data
+@using System.Data.SqlClient
+@using RxFair.Dto.Enum
+@using RxFair.Service.Interface
+@using RxFair.Utility.Extension
+@inject IRolesModuleAccessService _rolesModuleAccess;
+@{
+    Layout = null;// $@"~/Areas/{User.GetClaimValue(UserClaims.UserRoleGroup)}/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .role-table {
+        display: inline-flex;
+        width: 100%;
+        overflow: hidden;
+        overflow-x: auto;
+    }
+
+    .role-table-right {
+        width: 85%;
+    }
+
+    .role-table-left table tbody tr td {
+        line-height: 22px;
+        text-align: center;
+    }
+
+    .role-table-left table.table.custom-tbale {
+        white-space: nowrap;
+    }
+
+    .role-table-right table.table-bordered.dataTable thead th {
+        border: 1px solid rgba(0,0,0,.0901960784);
+    }
+
+    .role-table-right table.table-bordered.dataTable tbody td {
+        border: 1px solid rgba(0,0,0,.0901960784);
+    }
+
+    .role-table-left table.table-bordered.dataTable thead th {
+        border: 1px solid rgba(0,0,0,.0901960784);
+    }
+
+    .role-table-left table.table-bordered.dataTable tbody td {
+        border: 1px solid rgba(0,0,0,.0901960784);
+    }
+
+    .role-table-right table.table-bordered.dataTable thead th {
+        border-right: 1px solid rgba(0,0,0,.0901960784);
+    }
+
+    .border_bt {
+        border-bottom: 1px solid #22438a !important;
+    }
+
+    .FunctionalityParent {
+    }
+
+    .FunctionalityChild {
+    }
+
+    .main-menu {
+    }
+</style>
+<div class="dataTables_wrapper no-footer">
+    <form id="frmManageAccessPermission">
+        @Html.AntiForgeryToken()
+        <div class="role-table">
+            <div class="role-table-left" id="divMenuList">
+                <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec custom-tbale" role="grid" aria-describedby="sampleTable_info">
+                    <thead>
+                        <tr>
+                            <th class="border_bt" colspan="2">&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center">Menu</th>
+                            <th class="text-center">Sub Menu & Functionality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.MenuList)
+                        {
+                            <tr>
+                                <td>@t.MenuName</td>
+                                <td>
+                                    @if (t.Functionality.Count != 0)
+                                    {
+                                        <span class=""></span>
+                                        <div class="database_liststyle" style="margin-top: 32px !important;">
+                                            <ul>
+                                                @foreach (var functionality in t.Functionality)
+                                                {
+                                                    <li>@functionality.Name</li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                            foreach (var objSubMenu in t.Childs)
+                            {
+                                <tr>
+                                    @{
+                                        var highlight = objSubMenu.IsField ? "field-highlight" : "";
+                                    }
+                                    <td></td>
+                                    <td>
+                                        <span class="@highlight">@objSubMenu.ModuleName</span>
+                                        @if (objSubMenu.Functionality.Count != 0)
+                                        {
+                                            <div class="database_liststyle">
+                                                <ul>
+                                                    @foreach (var functionality in objSubMenu.Functionality)
+                                                    {
+                                                        <li>@functionality.Name</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="role-table-right">
+                <div id="divRolesList">
+                    <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec custom-tbale" role="grid" aria-describedby="sampleTable_info">
+                        <thead>
+                            <tr>
+                                <th colspan="@Model.RoleList.Count.ToString()" class="text-center border_bt">Roles</th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+                                @for (var i = 0; i < Model.RoleList.Count; i++)
+                                {
+                                    @Html.HiddenFor(m => m.RoleList[i].Id)
+                                    @Html.HiddenFor(m => m.RoleList[i].RoleName)
+                                    <th class="text-center">@Model.RoleList[i].RoleName</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model.MenuList.Count; i++)
+                            {
+                                @Html.HiddenFor(m => m.MenuList[i].MenuId)
+                                @Html.HiddenFor(m => m.MenuList[i].MenuName)
+                                <tr>
+                                    @for (var r = 0; r < Model.RoleList.Count; r++)
+                                    {
+                                        var objRole = Model.RoleList[r];
+                                        var isChecked = Model.MenuList[i].RoleIds != null && Model.MenuList[i].RoleIds.Contains(objRole.Id) ? "checked" : "";
+                                        <td class="check_box text-center" data-main="@objRole.RoleName">
+                                            <div class="form-group">
+                                                <input type="checkbox" class="FunctionalityParent" id="@objRole.RoleName@i" name="MenuList[@i].RoleIds" @isChecked value="@objRole.Id">
+                                                <label for="@objRole.RoleName@i"></label>
+                                                @Html.HiddenFor(m => m.MenuList[i].RolesList[r].Id)
+                                                @Html.HiddenFor(m => m.MenuList[i].RolesList[r].RoleName)
+                                            </div>
+                                            @if (Model.MenuList[i].RolesList[r].Functionality.Count != 0)
+                                            {
+                                                <div class="form-group database_listcheck">
+                                                    <ul>
+                                                        @for (var k = 0; k < Model.MenuList[i].RolesList[r].Functionality.Count; k++)
+                                                        {
+                                                            var objfun = Model.MenuList[i].RolesList[r].Functionality[k];
+                                                            objfun.RoleId = objRole.Id;
+                                                            var isAccess = Model.MenuList[i].RoleFunctionalityAccess.FirstOrDefault(x => x.RoleId == objfun.RoleId && x.Functionality.ModuleId == objfun.ModuleId && x.Functionality.FunctionalityId == objfun.FunctionalityId);
+                                                            Model.MenuList[i].RolesList[r].Functionality[k].IsAccess = isAccess != null;
+                                                            <li>
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(m => m.MenuList[i].RolesList[r].Functionality[k].IsAccess, new { @class = "FunctionalityChild", id = $@"Functionality_{objRole.RoleName}{Model.MenuList[i].RolesList[r].Functionality[k].Id}" })
+                                                                    <label for="Functionality_@objRole.RoleName@Model.MenuList[i].RolesList[r].Functionality[k].Id"></label>
+
+                                                                    <input type="hidden" name="MenuList[@i].RolesList[@r].Functionality[@k].Id" value="@isAccess?.Functionality.Id" />
+                                                                    <input type="hidden" name="MenuList[@i].RolesList[@r].Functionality[@k].FunctionalityId" value="@objfun.FunctionalityId" />
+                                                                    <input type="hidden" name="MenuList[@i].RolesList[@r].Functionality[@k].ModuleId" value="@objfun.ModuleId" />
+                                                                    <input type="hidden" name="MenuList[@i].RolesList[@r].Functionality[@k].RoleId" value="@objRole.Id" />
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                                for (var j = 0; j < Model.MenuList[i].Childs.Count; j++)
+                                {
+                                    @Html.HiddenFor(m => m.MenuList[i].Childs[j].Id)
+                                    @Html.HiddenFor(m => m.MenuList[i].Childs[j].ModuleName)
+                                    <tr>
+                                        @for (var r = 0; r < Model.RoleList.Count; r++)
+                                        {
+                                            var objRole = Model.RoleList[r];
+                                            var isChecked = Model.MenuList[i].Childs[j].RoleIds != null && Model.MenuList[i].Childs[j].RoleIds.Contains(objRole.Id);
+                                            Model.MenuList[i].Childs[j].RolesList[r].IsAccess = isChecked;
+
+                                            <td class="check_box text-center" data-child="@objRole.RoleName">
+                                                <div class="form-group">
+                                                    <input type="checkbox" class="FunctionalityParent" id="@objRole.RoleName@Model.MenuList[i].Childs[j].Id" name="MenuList[@i].Childs[@j].RoleIds" @(isChecked ? "checked" : "") value="@objRole.Id">
+                                                    <label for="@objRole.RoleName@Model.MenuList[i].Childs[j].Id"></label>
+                                                    <input type="hidden" name="MenuList[@i].Childs[@j].RolesList[@r].Id" value="@objRole.Id" />
+                                                    <input type="hidden" name="MenuList[@i].Childs[@j].RolesList[@r].RoleName" value="@objRole.RoleName" />
+                                                </div>
+                                                @if (Model.MenuList[i].Childs[j].RolesList[r].Functionality.Count != 0)
+                                                {
+                                                    <div class="form-group database_listcheck">
+                                                        <ul>
+                                                            @for (var k = 0; k < Model.MenuList[i].Childs[j].RolesList[r].Functionality.Count; k++)
+                                                            {
+                                                                var objfun = Model.MenuList[i].Childs[j].RolesList[r].Functionality[k];
+                                                                objfun.RoleId = objRole.Id;
+                                                                var isAccess = Model.MenuList[i].Childs[j].RoleFunctionalityAccess.FirstOrDefault(x => x.RoleId == objfun.RoleId && x.Functionality.ModuleId == objfun.ModuleId && x.Functionality.FunctionalityId == objfun.FunctionalityId);
+                                                                Model.MenuList[i].Childs[j].RolesList[r].Functionality[k].IsAccess = isAccess != null;
+                                                                <li>
+                                                                    <div class="form-group">
+                                                                        @Html.CheckBoxFor(m => m.MenuList[i].Childs[j].RolesList[r].Functionality[k].IsAccess, new { @class = "FunctionalityChild", id = $@"Functionality_{objRole.RoleName}{Model.MenuList[i].Childs[j].Functionality[k].Id}" })
+                                                                        <label for="Functionality_@objRole.RoleName@Model.MenuList[i].Childs[j].RolesList[r].Functionality[k].Id"></label>
+
+                                                                        <input type="hidden" name="MenuList[@i].Childs[@j].RolesList[@r].Functionality[@k].Id" value="@isAccess?.Functionality.Id" />
+                                                                        <input type="hidden" name="MenuList[@i].Childs[@j].RolesList[@r].Functionality[@k].FunctionalityId" value="@objfun.FunctionalityId" />
+                                                                        <input type="hidden" name="MenuList[@i].Childs[@j].RolesList[@r].Functionality[@k].ModuleId" value="@objfun.ModuleId" />
+                                                                        <input type="hidden" name="MenuList[@i].Childs[@j].RolesList[@r].Functionality[@k].RoleId" value="@objRole.Id" />
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn_sec mtf-2">
+            <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $("#btnSave").click(function () {
+        var saveAccessPermission = {
+            UserGroupId: parseInt($("#UserGroupId").val()),
+            PageRoleDtos: []
+        };
+
+        $.post("/Admin/Master/RoleWishPermission", $("#frmManageAccessPermission").serialize(), function (response) {
+
+            if (response.status === 1) {
+                RxFair.HandleResponse(response);
+                window.loadRoleWishPermission(saveAccessPermission.UserGroupId);
+            }
+        });
+    });
+    $(document).on("change", ".FunctionalityParent,.FunctionalityChild", function (e) {
+        if ($(e.currentTarget).hasClass('FunctionalityParent')) {
+            if ($(e.currentTarget).is(':checked')) {
+            } else {
+                var parent = $(e.currentTarget);
+                var child = $(parent).parents(".text-center").find(".FunctionalityChild:checked");
+                if (child.length !== 0) {
+                    $(child).prop("checked", false);
+                }
+            }
+        } else {
+            var functionalityParent = $(e.currentTarget).parents(".text-center").find(".FunctionalityParent");
+            if ($(e.currentTarget).is(':checked')) {
+                $(functionalityParent).prop("checked", true);
+            } else {
+                var allChild = $(functionalityParent).parents(".text-center").find(".FunctionalityChild:checked");
+                if (allChild.length !== 0) {
+                    $(functionalityParent).prop("checked", true);
+                } else {
+                    $(functionalityParent).prop("checked", false);
+                }
+            }
+        }
+    });
+</script>

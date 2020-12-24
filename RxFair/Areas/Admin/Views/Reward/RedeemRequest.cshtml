@@ -1,0 +1,200 @@
+﻿@{
+    ViewData["Title"] = "Pharmacy Redeem Requests";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Pharmacy Redeem Requests</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Pharmacy Redeem Requests
+                </h3>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtRedeemRequest" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Pharmacy Name</th>
+                                    <th>Redeem</th>
+                                    <th>Delivery Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window.bindProductList();
+        });
+
+        function bindProductList() {
+            if ($.fn.DataTable.isDataTable("#dtRedeemRequest")) {
+                $('#dtRedeemRequest').DataTable().destroy();
+            }
+
+            const table = $('#dtRedeemRequest').DataTable({
+                "sAjaxSource": "/Admin/Reward/GetRedeemRequestList",
+                "rowCallback": function (row, data, index) {
+                    setTimeout(function () {
+                        ImageBroken.fixBrokenImages(ImageBroken.path.RedeemProduct);
+                    }, 300);
+                },
+                "order": [[2, ""]],
+                "columns": [{
+                    "data": "id",
+                    "width": "5%",
+                    "searchable": false,
+                    "orderable": false,
+                    "render": function (data, type, row) {
+                        var content = '';
+                        
+                        switch (row.isApprove) {
+                            case 1:
+                                content = `<a href="javascript:;" ${dataParams("Approve", "approve", data)} class="dropdown-item action"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Approve</a>`;
+                                break;
+                            case 2:
+                                content = `<div class="dropdown-item action">Request Approved.</div>`;
+                                break;
+                            case 3:
+                                content = `<a href="javascript:;" ${dataParams("Approve", "approve", data)} class="dropdown-item action"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Approve</a>
+                                               <a href="javascript:;" ${dataParams("Reject", "reject", data)} class="dropdown-item action"><i class="fa fa-window-close-o" aria-hidden="true"></i> Reject</a>`;
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                        return dataTableAction(content);
+                    }
+                },
+                {
+                    "data": "productImage",
+                    "autoWidth": false,
+                    "searchable": false,
+                    "orderable": false,
+                    "className": "database_image",
+                    "render": function (data, type, row) {
+                        return showImage(data);
+                    }
+                },
+                {
+                    "data": "productName",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "pharmacyName",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "redeem",
+                    "autoWidth": false,
+                    "searchable": true,
+                    "render": function (data, type, row) {
+                        return data.currencyFormat();
+                    }
+                },
+                {
+                    "data": "deliveryStatus",
+                    "autoWidth": false,
+                    "searchable": false,
+                    "orderable": false,
+                    "render": function (data, type, row) {
+                        return bindDeliveryTypes(row.id, data);
+                    }
+                }]
+            });
+        };
+
+        $('#dtRedeemRequest').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "approve":
+                    RedeemRequestStatus(id, true);
+                    break;
+                case "reject":
+                    RedeemRequestStatus(id, false);
+                    break;
+                default:
+            }
+        });
+
+        function ChangeDeliveryStatus(id, status) {
+
+            status = parseInt($(status).val());
+            RxFair.Confirm("Change Delivery Status", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, change it!", function () {
+                $.ajax({
+                    url: "/Admin/Reward/ChangeDeliveryStatus",
+                    data: { id: id, status: status },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response);
+                        window.location.href = "/Admin/Reward/RedeemRequest";
+                    },
+                    error: function (data) {
+                    }
+                });
+            }, function () { });
+        }
+
+        function RedeemRequestStatus(id, isApprove) {
+            var title = isApprove ? "Approve" : "Reject";
+            RxFair.Confirm(`${title} redeem request`, RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, do it!", function () {
+                $.ajax({
+                    url: "/Admin/Reward/RedeemRequestStatus",
+                    data: { id: id, isApprove: isApprove },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response);
+                        setTimeout(function () {
+                            window.location.href = "/Admin/Reward/RedeemRequest";
+                        }, 2000);
+                    },
+                    error: function (data) {
+                    }
+                });
+            }, function () { });
+        }
+
+        function bindDeliveryTypes(id, data) {
+            
+            const content = `<form>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group m-0 col-md-12">
+                                                                            <select class="form-control" onchange="ChangeDeliveryStatus(${id},this)">
+                                                                                <option value="1" ${data === 1 ? 'selected' : ''}>Pending</option>
+                                                                                <option value="2" ${data === 2 ? 'selected' : ''}>Send</option>
+                                                                                <option value="3" ${data === 3 ? 'selected' : ''}>Delivered</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>`;
+            return content;
+        }
+    </script>
+}

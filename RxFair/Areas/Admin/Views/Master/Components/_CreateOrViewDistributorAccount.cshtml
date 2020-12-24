@@ -1,0 +1,113 @@
+﻿@model RxFair.Dto.Dtos.NewDistributorRequestDto
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@(ViewBag.isView != true ? "Create" : "View") Distributor</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="tab-content invoice_data pt-0">
+        <form id="frmDistributor" asp-action="CreateNewDistributor" method="post" class="d-flex w-100">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" name="Id" />
+            <table style="width: 50%" class="roundedCorners mr-3">
+                <tbody>
+                    <tr>
+                        <th colspan="2">
+                            Distributor Info-
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="title">Company Name :</td>
+                        <td>@Model.CompanyName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Email :</td>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Mobile : </td>
+                        <td>@Model.Mobile</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Phone : </td>
+                        <td>@Model.Phone</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Address : </td>
+                        <td>@Model.Address</td>
+                    </tr>
+                    <tr>
+                        <td class="title">City : </td>
+                        <td>@Model.City</td>
+                    </tr>
+                    <tr>
+                        <td class="title">State : </td>
+                        <td>@Model.StateName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">ZipCode : </td>
+                        <td>@Model.ZipCode</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table style="width: 50%">
+                <tbody>
+                    <tr>
+                        <th colspan="2">
+                            Contact person Info
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="title">Name :</td>
+                        <td>@Model.ContactName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Email :</td>
+                        <td>@Model.ContactEmail</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Mobile : </td>
+                        <td>@Model.ContactMobile</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Address : </td>
+                        <td>@Model.ContactAddress</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+</div>
+<div class="modal-footer">
+    @if (!ViewBag.isView)
+    {
+        <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Create Distributor</button>
+    }
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+    $("#btnSave").click(function () {
+        $('#frmDistributor').parsley().validate();
+        if ($("#frmDistributor").parsley().isValid()) {
+            $.post("/Admin/Master/CreateNewDistributor", $("#frmDistributor").serialize(), function (response) {
+                RxFair.HandleResponse(response);
+                if (response.status === 1) {
+                    var status = true;
+                    if (window.DataTable.id !== "#dtNewDistributorRequest") {
+                        status = false;
+                    }
+                    window.bindNewDistributorRequest(window.DataTable.id, status);
+                    closeModal();
+                }
+            });
+        }
+    });
+</script>

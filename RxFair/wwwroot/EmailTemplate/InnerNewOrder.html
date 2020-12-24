@@ -1,0 +1,53 @@
+﻿<!--<div class="col-12">
+    <div class="smartwizard_title card-bor d-flex align-items-center">
+        <div class="d-flex align-items-center w-100">
+            
+            <div class="wizard_text">
+                
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<!--<table>
+    <tr>
+        <td><img src="{url}/UploadFile/UserProfile/{CompanyLogo}" style="width: 70px; height: 70px;"/></td>
+        <td class="" style="padding-left: 10px;">
+            <h5 style="margin-bottom:0; text-align: left; font-size: 16px;">{DistributorName}</h5>
+            <ul style="margin-top: 5px; padding: 0; margin-bottom: 5px;">
+                <li style="list-style: none; text-align: left; font-size: 14px; margin-bottom: 5px;">Order number: <span>{OrderNumber}</span></li>
+                <li style="list-style: none; text-align: left; font-size: 14px; margin-bottom: 5px;">Order Total: <span>$ {OrderTotal}</span></li>
+                <li style="list-style: none; text-align: left; font-size: 14px; margin-bottom: 5px;">{overNightChargeLable} <span>{OverNightCharge}</span></li>
+            </ul>
+           
+ 
+        </td>
+    </tr>   
+</table>-->
+<tr>
+    <td style="padding: 15px;background: #22438a;border-bottom: 1px solid #fff; font-weight: normal; font-size: 1.6em; color:#ffffff;">{Count}</td>
+    <td style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: left;">
+        <h3>
+            <a target="_blank" href="javascript:;" style="text-decoration: inherit;color: #22438a;">
+                {DistributorName}
+            </a>
+        </h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                <tr>
+            </thead>
+            <tbody>
+                {MedicineDetails}
+            </tbody>
+        </table>
+       
+            
+    </td>    
+    <td style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: right;font-size: 1.2em;">{OverNightCharge}</td>
+    <td style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: right;font-size: 1.2em;">{ShippingCharges}</td>
+    <td style="padding: 15px;background: #22438a;border-bottom: 1px solid #fff; font-weight: normal;text-align: right;font-size: 1.2em;color:#fff;">$ {OrderTotal}</td>
+</tr>

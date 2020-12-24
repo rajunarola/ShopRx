@@ -1,0 +1,61 @@
+﻿@{
+    Layout = null;
+}
+@using RxFair.Dto.Enum
+@model RxFair.Dto.Dtos.ReportDto
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">View Review Medicine Price</h5><br />
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <h3 class="modal-body" id="exampleModalLabel"><span> Medicine Name : <label id="lblmedicineName" value=""></label></span></h3>
+    </div>
+    <div class="row">
+        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicines" role="grid" aria-describedby="sampleTable_info" width="100%">
+            <thead>
+                <tr>
+                    <th>Distributor</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody> </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        BindDataTable();
+
+    });
+    function BindDataTable() {
+        var medicineList = $("#dtMedicines").DataTable({
+            "sAjaxSource": `/Admin/Report/GetReviewMedicineDistributorWise?id=${@Model.MedicineId}`,
+            "order": [[1, ""]],
+            "language": {
+                "info": "Showing _START_ to _END_ of _TOTAL_ Medicines",
+                "sInfoEmpty": "Showing 0 to 0 of 0 Medicines"
+            },
+            "columns": [
+                {
+                    "data": "distributor",
+                    "autoWidth": true,
+                    "searchable": true,
+                    "orderable": true
+                },
+                {
+                    "data": "distributorPrice",
+                    "autoWidth": true,
+                    "searchable": true,
+                    "orderable": true
+                },
+            ]
+        });
+    }
+
+</script>

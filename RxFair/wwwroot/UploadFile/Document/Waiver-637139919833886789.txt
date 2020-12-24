@@ -1,0 +1,31 @@
+DECLARE @DistributorId BIGINT=46;
+DECLARE @InputDate varchar(max)='11/07/2019'
+SELECT * from SubscriptionView
+ WHERE DistributorId=1 
+
+ SELECT * FROM [Order] WHERE Id In(24,73)
+ SELECT CAST(o.OrderDate AS date),doc.* from distributorOrderCharge doc
+ JOIN [Order] o ON doc.OrderId = o.Id
+ WHERE OrderStatus in(2,3) AND DistributorId = 1 
+
+ DECLARE @DistributorId BIGINT=1;
+ DECLARE @InputDate varchar(max)='11/07/2019';
+ DECLARE @DistributorOrderAmount decimal;
+ DECLARE @CommissionRate int;
+-- SELECT * FROM DistributorOrderCharge WHERE DistributorId=@DistributorId and OrderStatus in (2,3)and convert(date,CreatedDate)=convert(date,@InputDate)
+  SET @DistributorOrderAmount=(
+  SELECT PaymentAmount FROM DistributorOrderCharge WHERE DistributorId=@DistributorId and OrderStatus in (2,3)and Convert(date,CreatedDate)=convert(date,@InputDate)
+   );
+  SET @CommissionRate=(
+	select ChargedMonthly from SubscriptionView where DistributorId=1 and convert(date,StartDate) <=Convert(date,@InputDate) and convert(date,EndDate)>=CONVERT(date,@InputDate)
+  );
+ print @DistributorOrderAmount
+ print @CommissionRate
+ print  (@DistributorOrderAmount*@CommissionRate/100)
+ --SELECT dbo.OrderStatus(OrderStatus) FROM DistributorOrderCharge
+
+  DECLARE @InputDate varchar(max)='11/07/2019';
+ select * from DistributorOrderCharge doc 
+ join [Order] o on doc.OrderId=o.Id
+where convert(date,o.OrderDate)=convert(date,@InputDate) and doc.OrderStatus in(2,3) and doc.DistributorId=1
+ 

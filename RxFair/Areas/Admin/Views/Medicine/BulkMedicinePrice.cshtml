@@ -1,0 +1,227 @@
+﻿@{
+    ViewData["Title"] = "Bulk Medicine Price";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Bulk Medicine Price</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Upload Bulk Medicine Price
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="mbf-2 border-0">
+                        <form id="frmBulkMedicinePrice" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <div class="form-row mt-0">
+                                <div class="form-group col-md-3">
+                                    <label>Distributor *</label>
+                                    @Html.DropDownList("DistributorId", ViewBag.DistributorList as IEnumerable<SelectListItem>, "Select Distributor", new { @class = "form-control", required = "Select Distributor" })
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="bulkMedicinePrice">Upload Medicine Excel / CSV file *</label>
+                                    <label for="bulkMedicinePrice">
+                                        <span class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                        <span id="lblBulkMedicinePrice">Upload Medicine.xlsx.</span>
+                                        <input style="display: none;" type="file" name="file" class="form-control-file" id="bulkMedicinePrice">
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                    <div class="btn_sec mtf-2">
+                        <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSave">Save</button>
+                        <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                    </div>
+
+                    <div class="mt-3" id="ResponseResult">
+
+                        <div class="dash_info_sec">
+                            <div class="dash_info_title">
+                                <div class="left_text">
+                                    <img src="~/rxfairbackend/images/admin/title_one.png" alt="" class="img-fluid">
+                                    <h3>Upload File Result</h3>
+                                </div>
+                            </div>
+                            <div class="dash_info_data orders_note mt-4 row">
+                                <div class="col-12  mb-3">
+                                    <!--Tab Wrapper-->
+                                    <div class="accordian-block">
+                                        <div class="ac-title acc-active" data-in="#NotExistMedicine">
+                                            <p>Not Exist Medicine</p>
+                                            <i class="fa fa-angle-down plus-icon cross-icon"></i>
+                                        </div>
+                                        <div class="accordian-para" id="NotExistMedicine" style="display: block">
+                                            <ul class="mt-3"></ul>
+                                        </div>
+                                    </div>
+                                    <!--Tab Wrapper close-->
+                                    <!--Tab Wrapper-->
+                                    <div class="accordian-block">
+                                        <div class="ac-title" data-in="#InsertedMedicine">
+                                            <p>Inserted Medicine</p>
+                                            <i class="fa fa-angle-down plus-icon"></i>
+                                        </div>
+                                        <div class="accordian-para" id="InsertedMedicine" style="">
+                                            <ul class="mt-3"></ul>
+                                        </div>
+                                    </div>
+                                    <!--Tab Wrapper close-->
+                                    <!--Tab Wrapper-->
+                                    <div class="accordian-block">
+                                        <div class="ac-title" data-in="#UploadedMedicine">
+                                            <p>Uploaded Medicine</p>
+                                            <i class="fa fa-angle-down plus-icon"></i>
+                                        </div>
+                                        <div class="accordian-para" id="UploadedMedicine">
+                                            <ul class="mt-3"></ul>
+                                        </div>
+                                    </div>
+                                    <!--Tab Wrapper close-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $("#DistributorId").change(function () {
+            ResponseResultDisplay([], true);
+        });
+        $("#bulkMedicinePrice").change(function () {
+            ResponseResultDisplay([], true);
+            const files = $("#bulkMedicinePrice").get(0).files;
+            if (files.length <= 0) {
+                RxFair.Error("Error", "please select file");
+                return false;
+            } else {
+                const fileName = $('#bulkMedicinePrice').val();
+                var getExt = fileName.split('.');
+                getExt = getExt.reverse();
+                if ($.inArray(getExt[0].toLowerCase(), RxFair.Exceltypes) === -1) {
+                    const fileTypes = RxFair.Exceltypes.join();
+                    RxFair.Error("Error",
+                        "The filetype you are attempting to upload is not allowed. Allowed Types : " + fileTypes);
+                    return false;
+                } else {
+                    $("#lblBulkMedicinePrice").html(files[0].name);
+                }
+            }
+        });
+
+        $("#btnSave").click(function () {
+            ResponseResultDisplay([], true);
+            $('#frmBulkMedicinePrice').parsley().validate();
+            const files = $("#bulkMedicinePrice").get(0).files;
+            var flag = false;
+
+            if ($("#frmBulkMedicinePrice").parsley().isValid()) {
+                if (files.length <= 0) {
+                    RxFair.Error("Error", "please select file");
+                    flag = false;
+                } else {
+                    if (files.length !== 0) {
+                        const fileName = $('#bulkMedicinePrice').val();
+                        //$("#lblBulkMedicinePrice").html(files[0].name);
+                        var getExt = fileName.split('.');
+                        getExt = getExt.reverse();
+                        if ($.inArray(getExt[0].toLowerCase(), RxFair.Exceltypes) === -1) {
+                            RxFair.Error("Error", "The filetype you are attempting to upload is not allowed.");
+                            flag = false;
+                        } else {
+                            flag = true;
+                        }
+                    } else {
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    if (window.FormData !== undefined) {
+
+                        // Create FormData object
+                        // Adding one more key to FormData object
+                        var fileData = serializeformToFormData("#frmBulkMedicinePrice");
+                        // Looping over all files and add it to FormData object
+                        fileData.append("file", files[0]);
+                        $.ajax({
+                            url: "/Admin/Medicine/BulkMedicinePrice",
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (response) {
+                                ResponseResultDisplay(response.data);
+                                if (response.status === 1) {
+                                    RxFair.HandleResponse(response);
+                                    resetForm('frmBulkMedicinePrice');                                   
+                                    $('#lblBulkMedicinePrice').html('');
+                                } else {
+                                    RxFair.HandleResponse(response);
+                                }
+                            },
+                            error: function (response) {
+                                RxFair.HandleResponse(response);
+                            }
+                        });
+                    } else {
+                        RxFair.Warning("Form Data", "FormData is not supported.");
+                    }
+                }
+            }
+        });
+
+        function ResponseResultDisplay(data, isClear = false) {
+            if (isClear) {
+                $("#UploadedMedicine > ul").empty();
+                $("#InsertedMedicine > ul").empty();
+                $("#NotExistMedicine > ul").empty();
+                return;
+            }
+            var li;
+            if (data.notExistMedicine != null && data.notExistMedicine.length !== 0) {
+                li = "";
+                $.each(data.notExistMedicine, function (key, item) {
+                    li += `<li>${item}</li>`;
+                });
+                $("#NotExistMedicine > ul").append(li);
+            }
+            if (data.insertedMedicine != null && data.insertedMedicine.length !== 0) {
+                li = "";
+                $.each(data.insertedMedicine, function (key, item) {
+                    li += `<li>${item}</li>`;
+                });
+                $("#InsertedMedicine > ul").append(li);
+            }
+            if (data.uploadedMedicine != null && data.uploadedMedicine.length !== 0) {
+                li = "";
+                $.each(data.uploadedMedicine, function (key, item) {
+                    li += `<li>${item}</li>`;
+                });
+                $("#UploadedMedicine > ul").append(li);
+            }
+        }
+    </script>
+}

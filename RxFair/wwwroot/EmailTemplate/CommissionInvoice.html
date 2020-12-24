@@ -1,0 +1,112 @@
+﻿
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<body style="font-family: 'Arimo', sans-serif; font-size:16px; background-color:#ffffff; padding:25px 0px; width:100%">
+    <table cellpadding="0" cellspacing="0" align="center" width="100%" style="padding:25px;border-collapse: collapse; font-family: 'Muli', sans-serif; border:1px solid #ddd;">
+        <tbody>
+            <!-- Logo-->
+            <tr>
+                <td>
+                    <table width="100%" style="border-bottom: 1px solid #ddd;background-color: #22438a;">
+                        <tr>
+                            <td style="padding:15px 25px;text-align:left;">
+                                <img alt="ShopRx" src="~/rxfairfrontend/images/logo.png" />
+                            </td>
+                            <td style="padding:15px 25px;text-align:right;color: white;">
+                                <h2 style="font-size: 2rem;margin: 5px 0px;"><a href="javascript:;" target="_blank" style="color: #ffffff;text-decoration:inherit !important;">ShopRx Labs, Inc.</a></h2>
+                                <div style="font-size: 16px;line-height: 24px;">325 9th St, San Francisco,</div>
+                                <div style="font-size: 16px;line-height: 24px;">CA 94103 </div>
+                                <div style="font-size: 16px;line-height: 24px;">customerCare@ShopRx.com</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!--Logo-->
+            <!-- Invoice midlle header -->
+            <tr>
+                <td>
+                    <table width="100%">
+                        <tr>
+                            <td style="padding:15px 25px;text-align:left;">
+                                <div style="text-transform: uppercase;">INVOICE TO:</div>
+                                <h2 style="margin: 0px;font-size: 18px;font-weight: 500;">{Distributor}</h2>
+                                <div style="line-height: 24px;">Date of Invoice: {InvoiceDate}</div>
+
+                            </td>
+                            <td style="padding:15px 25px;text-align:right;">
+                                <h1 style="font-size: 18px;color: #22438a;font-weight: normal; margin: 0px 0px 8px;text-transform: uppercase;text-align:right;">Invoice No:{InvoiceId}</h1>
+                                <div style="font-size: 16px;line-height: 24px;"></div>
+                                <div style="font-size: 16px;line-height: 24px;"></div>
+                                <div style="font-size: 16px;line-height: 24px;"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!--Main content-->
+            <tr>
+                <td style="padding:0px;padding-bottom: 50px;">
+                    <table bgcolor="#ffffff" cellpadding="0" cellspacing="0" width="100%">
+                        <!-- Table design-->
+                        <tr>
+                            <td style="padding:0px;">
+                                <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-bottom: 20px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: left;">No.</th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: left;">Distributor</th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal; text-align: right;">PaymentStatus</th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal; text-align: right;">Total Commission</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 15px;background: #22438a;border-bottom: 1px solid #fff; font-weight: normal; font-size: 1.6em; color:#ffffff;">1</td>
+                                            <td style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: left;">
+                                                <h3>
+                                                    <a target="_blank" href="javascript:;" style="text-decoration: inherit;color: #22438a;">
+                                                        {Distributor}
+                                                    </a>
+                                                </h3>
+
+                                            </td>
+                                            <td style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: right;font-size: 1.2em;">{PaymentStatus}</td>
+                                            <td style="padding: 15px;background: #22438a;border-bottom: 1px solid #fff; font-weight: normal;text-align: right;font-size: 1.2em;color:#fff;">$ {InvoiceAmount}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" style="white-space: nowrap;text-align: right;padding: 50px 20px;font-size: 1.2em;border-top:1px solid #22438a;color: #22438a;">GRAND TOTAL</td>
+                                            <td style="white-space: nowrap;text-align: right;padding: 10px 20px;font-size: 1.2em;border-top: 1px solid #22438a;color:#22438a;">$ {TotalAmount}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- table design-->
+                    </table>
+                    <div style="font-size: 2em;margin-top: -100px;margin-bottom: 50px;margin-left: 15px;">Thank You!</div>
+                </td>
+            </tr>
+            <!--Main content--><!--Main content-->
+            <!-- footer-->
+            <tr>
+                <td style="padding:30px; text-align: center;border-top: 1px solid #ddd;">
+                    Invoice was created on a computer and is valid without the signature and seal.
+                </td>
+            </tr>
+            <!-- footer -->
+        </tbody>
+    </table>
+</body>
+</html>

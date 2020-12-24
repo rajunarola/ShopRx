@@ -1,0 +1,227 @@
+﻿@{
+    ViewData["Title"] = "View Order History";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Order</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ViewAllOrders">View Order History</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>View Order History</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="accordian-block border-0">
+                <div class="accordian-para acc-show purches_order">
+                    <form id="frmViewOrders">
+                        <div class="form-row mt-0">
+                            <div class="form-group ">
+                                <label>Select Distributor</label>
+                                @Html.DropDownList("DistributorId", ViewBag.OrderDistributorList as IEnumerable<SelectListItem>, "Select Distributor", new { @class = "height-45 form-control mr-2", required = "Select Distributor" })
+                            </div>
+                            <div class="form-group ">
+                                <label>Start Date *</label>
+                                @*<input id="startDate" class="form-control datepicker" type="text" required placeholder="DD/MM/YYYY">*@
+                                <input type="text" name="startDate" id="startDate" readonly value="" class="date" required placeholder="DD/MM/YYYY" />
+                            </div>
+                            <div class="form-group ">
+                                <label>End Date *</label>
+                                @*<input id="endDate" class="form-control datepicker" type="text" required placeholder="DD/MM/YYYY">*@
+                                <input type="text" name="endDate" id="endDate" readonly value="" class="date2" required placeholder="DD/MM/YYYY" />
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button type="button" id="search" class="btn btn-outline-primary con_btn database_btn back_btn active mb-0">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="OrderTable" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Total($)</th>
+                                    <th>Distributor</th>
+                                    <th>Shipping</th>
+                                    <th>Track</th>
+                                    <th>Order Status</th>
+                                    <th>Payment Status</th>
+                                    <th>Download Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+  <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        var container = $('#frmViewOrders').length > 0 ? $('#frmViewOrders').parent() : "body";
+        $(function () {
+            $(".date").datepicker({
+                container: container,
+                orientation: 'bottom',
+                onSelect: function (dateText) {
+                    $(this).change();
+                }
+            }).on("change", function () {
+                $('#endDate').datepicker('setStartDate', new Date($(this).val()));
+            });
+        });
+        
+        $('#startDate').datepicker({
+            endDate: '+0d',
+            format: "M/dd/yyyy",
+            //setDate: new Date(),
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        }).on('changeDate', function () {
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if (Date.parse(startDate) > Date.parse(endDate)) {
+                RxFair.Error("Start date cannot be greater than end date !");
+            }
+        });
+
+        myDate = new Date();
+        minusSeven = new Date(myDate.setDate(myDate.getDate() - 30));
+        $('#startDate').datepicker('setDate', minusSeven);
+  
+        $('#endDate').datepicker({
+            endDate: '+0d', // To diable all the future dates.
+            format: "M/dd/yyyy",
+            //setDate: new Date(),
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom',
+        });
+    
+        $('#endDate').datepicker('setDate', new Date());
+        
+        $(document).ready(function () {
+            $('#endDate').datepicker('setStartDate', new Date($('#startDate').val()));
+            //$('#endDate').datepicker('setEndDate', new Date());
+            BindOrderList();
+        });
+
+        function BindOrderList() {
+            var distributorId = $("#DistributorId").val();
+            distributorId = isNaN(distributorId) ? 0 : distributorId;
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if ($.fn.DataTable.isDataTable("#OrderTable")) {
+                $("#OrderTable").DataTable().destroy();
+            }
+
+        var OrderTable = $("#OrderTable").DataTable({
+        sAjaxSource: "/Pharmacy/Order/GetOrders?DistributorId=" + distributorId + "&StartDate=" + startDate + "&EndDate=" + endDate,
+            columns: [
+                {
+                    data: "uniqueOrder",
+                    autoWidth: false,
+                    searchable: true,
+                    render: function (data, type, row) {
+                        var link = `<a href="javascript:;" class="orderDetailLink datatabel-link" data-orderId="{orderId}">` + data + `</a>`;
+                        return link.replace("{orderId}", row.id);
+                    }
+                },
+                {
+                    data: "dateCreated",
+                    autoWidth: false,
+                    searchable: true
+                },
+                {
+                    data: "gTotal",
+                    className: "text-left",
+                    autoWidth: false,
+                    searchable: true,
+                    render: function (data, type, row) {
+                        return '$ ' + data;
+                    }
+                },
+                {
+                    data: "companyName",
+                    className: "text-left",
+                    autoWidth: false,
+                    searchable: true
+                },
+                {
+                    data: "shippingStatus",
+                    autoWidth: false,
+                    searchable: true
+                },
+                {
+                    data: "trackingNo",
+                    autoWidth: false,
+                    searchable: true,
+                    render: function (data, type, row) {
+                        return `<a href="https://${row.trackingLink}" target="_blank">${data}</a>`;
+                    }
+                },
+                {
+                    data: "orderStatus",
+                    autoWidth: false,
+                    searchable: true
+                },
+                {
+                     data: "paymentStatus",
+                     autoWidth: false,
+                     searchable: true
+                },
+                {
+                    data: "id",
+                     autoWidth: false,
+                    searchable: true,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `<a href="javascript:;" class="icon_btn DownloadInvoice" data-id="${data}" data-orderId="${row.uniqueOrder}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>`;
+                    }
+                }
+            ]
+            });
+        }
+
+        $(document).on("click", "#search", function () {
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if (Date.parse(startDate) > Date.parse(endDate)) {
+                RxFair.Error("Start date cannot be greater than end date !");
+            } else {
+                BindOrderList();
+            }
+        });
+
+        $(document).on("click", ".orderDetailLink", function () {
+            var id = $(this).attr("data-orderId");
+            window.location.href = "/Pharmacy/Order/ViewOrderDetails/" + id;
+        });
+
+        $(document).on("click", ".DownloadInvoice", function () {
+            var orderChargeId = $(this).attr("data-id");
+            var uniqueId = $(this).attr("data-orderId");
+            window.location.href = "/Pharmacy/Order/DownloadInvoice/" + orderChargeId + "/" + uniqueId;
+        });
+
+    </script>
+}

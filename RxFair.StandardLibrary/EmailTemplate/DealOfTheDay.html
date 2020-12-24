@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Deal of the Day</title>
+    <style type="text/css" rel="stylesheet" media="all">
+        /* Base ------------------------------ */
+        *:not(br):not(tr):not(html) {
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 50% !important;
+            height: 100%;
+            margin: 0 auto;
+            line-height: 1.4;
+            background-color: #F5F7F9;
+            color: #839197;
+            -webkit-text-size-adjust: none;
+        }
+
+        a {
+            color: #414EF9;
+        }
+
+        a[href] {
+            color: white;
+        }
+        /* Layout ------------------------------ */
+        .email-wrapper {
+            width: 50%;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #F5F7F9;
+        }
+
+        .email-content {
+            width: 50%;
+            margin: 0;
+            padding: 0;
+        }
+        /* Masthead ----------------------- */
+        .email-masthead {
+            padding: 25px 0;
+            text-align: center;
+        }
+
+        .email-masthead_logo {
+            max-width: 400px;
+            border: 0;
+        }
+
+        .email-masthead_name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #839197;
+            text-decoration: none;
+            text-shadow: 0 1px 0 white;
+        }
+        /* Body ------------------------------ */
+        .email-body {
+            width: 50%;
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid #E7EAEC;
+            border-bottom: 1px solid #E7EAEC;
+            background-color: #FFFFFF;
+        }
+
+        .email-body_inner {
+            width: 570px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .email-footer {
+            width: 570px;
+            margin: 0 auto;
+            padding: 0;
+            text-align: center;
+            background: #22438a;
+        }
+
+        .email-footer p {
+            color: #FFFFFF;
+        }
+
+        .body-action {
+            width: 100%;
+            margin: 30px auto;
+            padding: 0;
+            text-align: center;
+        }
+
+        .body-sub {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #E7EAEC;
+        }
+
+        .content-cell {
+            padding: 35px;
+        }
+        .content-cell-footer {
+            padding-top: 15px;
+            padding-bottom: 10px;
+        }
+
+        .align-right {
+            text-align: right;
+        }
+        /* Type ------------------------------ */
+        h1 {
+            margin-top: 0;
+            color: #292E31;
+            font-size: 19px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #292E31;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #292E31;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        p {
+            margin-top: 0;
+            color: #839197;
+            font-size: 16px;
+            line-height: 1.5em;
+            text-align: left;
+        }
+
+        p.sub {
+            font-size: 12px;
+        }
+
+        p.sub a {
+            color: #414EF9;
+        }
+
+        p.center {
+            text-align: center;
+        }
+        /* Buttons ------------------------------ */
+        .button {
+            display: inline-block;
+            width: 200px;
+            background-color: #414EF9;
+            border-radius: 3px;
+            color: #ffffff;
+            font-size: 15px;
+            line-height: 45px;
+            text-align: center;
+            text-decoration: none;
+            -webkit-text-size-adjust: none;
+            mso-hide: all;
+        }
+
+        .button--green {
+            background-color: #28DB67;
+        }
+
+        .button--red {
+            background-color: #FF3665;
+        }
+
+        .button--blue {
+            background-color: #22438a;
+            color: white !important;
+        }
+
+        /*Media Queries ------------------------------*/
+        @media only screen and (max-width: 600px) {
+            .email-body_inner, .email-footer {
+                width: 100% !important;
+            }
+        }
+
+        @media only screen and (max-width: 500px) {
+            .button {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body style="font-family: 'Arimo', sans-serif; font-size:16px; background-color:#ffffff; padding:25px 0px;">
+    <table cellpadding="0" cellspacing="0" align="center" width="100%" style="padding:25px;border-collapse: collapse; font-family: 'Muli', sans-serif; border:1px solid #ddd;">
+        <tbody>
+            <!-- Logo-->
+            <tr>
+                <td>
+                    <table width="100%" style="border-bottom: 1px solid #ddd;background-color: #22438a;">
+                        <tr>
+                            <td style="padding:15px 25px;text-align:left;">
+                                <img alt="ShopRx" src="{url}/rxfairfrontend/images/logo.png" />
+                            </td>
+                            <td style="padding:15px 25px;text-align:right;color: white;">
+                                <h2 style="font-size: 2rem;margin: 5px 0px;"><a href="javascript:;" target="_blank" style="color: #ffffff;text-decoration:inherit !important;">ShopRx Labs, Inc.</a></h2>
+                                <div style="font-size: 16px;line-height: 24px;">325 9th St, San Francisco,</div>
+                                <div style="font-size: 16px;line-height: 24px;">CA 94103 </div>
+                                <div style="font-size: 16px;line-height: 24px;">customerCare@ShopRx.com</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+            <!--Logo-->
+            <!-- Invoice midlle header -->
+            <tr>
+                <td>
+                    <table width="100%">
+                        <tr>
+                            <td style="padding:15px 25px;text-align:left;">
+                                <div style="text-transform: uppercase;">TO:</div>
+                                <h2 style="margin: 0px;font-size: 18px;font-weight: 500;">{Pharmacy Name}</h2>
+                                <div style="line-height: 24px;">Medicine Date: {Medicine Date}</div>
+                            </td>
+                            <td style="padding:15px 25px;text-align:right;">
+                                <div style="font-size: 16px;line-height: 24px;"></div>
+                                <div style="font-size: 16px;line-height: 24px;"></div>
+                                <div style="font-size: 16px;line-height: 24px;"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+            <!--Main content-->
+            <tr>
+                <td style="padding:0px;padding-bottom: 50px;">
+                    <table bgcolor="#ffffff" cellpadding="0" cellspacing="0" width="100%">
+                        <!-- Table design-->
+                        <tr>
+                            <td style="padding:0px;">
+                                <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-bottom: 20px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: left;">NDC</th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal;text-align: left;">Medicine Name</th>                                            
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal; text-align: right;">Distributor Name</th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal; text-align: right;">Quantity </th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal; text-align: right;">Current Price</th>
+                                            <th style="padding: 15px;background: #eee;border-bottom: 1px solid #fff; font-weight: normal; text-align: right;">Match Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {MediList}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" style="white-space: nowrap;text-align: right;padding: 50px 20px;font-size: 1.2em;border-top:1px solid #22438a;color: #22438a;">GRAND TOTAL</td>
+                                            <td style="white-space: nowrap;text-align: right;padding: 10px 20px;font-size: 1.2em;border-top: 1px solid #22438a;color:#22438a;">$ {Grand Total}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- table design-->
+
+                    </table>
+                    <div style="font-size: 2em;margin-top: -100px;margin-bottom: 50px;margin-left: 15px;">Thank You!</div>
+                </td>
+            </tr>
+            <!--Main content--><!--Main content-->
+            <!-- footer-->
+            <!--<tr>
+                <td style="padding:0px 0px 15px 15px;">
+                    <table style="" width="100%;">
+                        <tr>
+                            <td style="padding:0;border-left: 6px solid #22438a;padding-left: 15px;">
+                                <div style="text-transform: uppercase;margin-bottom: 5px;">Notice</div>
+                                <div style="">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>-->
+            <tr>
+                <td style="padding:30px; text-align: center;border-top: 1px solid #ddd;">
+                    Invoice was created on a computer and is valid without the signature and seal.
+                </td>
+            </tr>
+            <!-- footer -->
+
+        </tbody>
+    </table>
+</body>
+</html>

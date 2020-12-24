@@ -1,0 +1,436 @@
+﻿@model RxFair.Dto.Dtos.ViewPharmacyProfileDto
+@{
+    ViewData["Title"] = "Manage Pharmacy Profile";
+}
+<link href="~/rxfairfrontend/css/owl.carousel.min.css" rel="stylesheet" />
+<link href="~/rxfairfrontend/css/owl.theme.default.min.css" rel="stylesheet" />
+<style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .tooltip .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+</style>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" class="c-default" mhref="PharmacyProfile">Manage Pharmacy Profile</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Pharmacy Profile
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <div class="accordion" id="accordionExample">
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab1" aria-expanded="false" >
+                                <p>Pharmacy Info</p>
+                                <i class="fa fa-angle-down plus-icon cross-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show" id="tab1" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <form id="FormPharmacy">
+                                    <input type="hidden" asp-for="Pharmacy.Id">
+                                    <input type="hidden" asp-for="Pharmacy.UserId">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Pharmacy Name *</label>
+                                            <input asp-for="Pharmacy.PharmacyName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z _0-9]+$" data-parsley-trigger="keyup">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Pharmacy Type *</label>
+                                            @Html.DropDownListFor(m => m.Pharmacy.PharmacyTypeId, ViewBag.PharmacyTypeMaster as IEnumerable<SelectListItem>, "Select PharmacyType", new { @class = "form-control ", required = "Select PharmacyType" })
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Job Title *</label>
+                                            <input type="text" asp-for="Pharmacy.JobTitle" class="form-control" required data-parsley-trigger="keyup" parsley-pattern="^[a-zA-Z ]+$">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>First Name *</label>
+                                            <input asp-for="Pharmacy.FirstName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="keyup">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Last Name *</label>
+                                            <input asp-for="Pharmacy.LastName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="keyup">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Primary Email *</label>
+                                            @if (Model.Pharmacy.Id == 0)
+                                            {
+                                                <input asp-for="Pharmacy.PrimaryEmail" type="text" class="form-control" required data-parsley-type="email" data-parsley-trigger="change">
+                                            }
+                                            <input asp-for="Pharmacy.PrimaryEmail" type="text" class="form-control" required data-parsley-type="email" data-parsley-trigger="change" readonly>
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Phone Number</label>
+                                            <input asp-for="Pharmacy.PhoneNumber" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>Mobile Number</label>
+                                            <input asp-for="Pharmacy.MobileNumber" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab2" aria-expanded="false">
+                                <p>Choose a Default Shipping Address Info</p>
+                                <i class="fa fa-angle-down plus-icon"></i>
+                            </div>
+                            <div class=" accordian-para card_padding card_address collapse show" id="tab2" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <form>
+                                            <div class="testimonials_sec owl-carousel owl-theme  SheepingAddress">
+                                                @foreach (var address in Model.PharmacyShipAddresses)
+                                                {
+                                                    <div class="item">
+                                                        <div class="radiobtn">
+                                                            <div class="card_plan">
+                                                                <input type="radio" id="Ship@(address.Id)" data-isBilling="false" value="@address.Id" @(address.IsDefault ? "checked" : "") />
+                                                                <label for="Ship@(address.Id)">
+                                                                    <h5>@address.Address1</h5>
+                                                                    <ul>
+                                                                        <li>@address.Address1, @address.Address2</li>
+                                                                        <li>@address.City</li>
+                                                                        <li>@address.StateName</li>
+                                                                        <li>@address.ZipCode</li>
+                                                                        @*<li>@Model.Pharmacy.PharmacyName</li>*@
+                                                                    </ul>
+                                                                    <div class="btn_sec radiobtn_btn">
+                                                                        <button type="button" class="btn btn-outline-primary con_btn mr-2" onclick="AddEditBillingOrShippingAddress(@address.Id, false,@Model.Pharmacy.Id)">Update</button>
+                                                                        <button type="button" class="btn btn-outline-primary con_btn" onclick="DeleteAddress(@address.Id,false)">Delete</button>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="btn_sec card_btn mt-0">
+                                            <a href="javascript:;" id="AddEditNewShipping" onclick="AddEditBillingOrShippingAddress(0, false,@Model.Pharmacy.Id) " class="btn btn-outline-primary con_btn mr-2"><i class="fa fa-plus" aria-hidden="true"></i> Add New Shipping Address</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab3" aria-expanded="false">
+                                <p>Choose a Default Billing Address</p>
+                                <i class="fa fa-angle-down plus-icon"></i>
+                            </div>
+                            <div class=" accordian-para card_padding card_address collapse show" id="tab3" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <form>
+                                            <div class="testimonials_sec owl-carousel owl-theme  BillingAddress">
+                                                @foreach (var address in Model.PharmacyBillAddresses)
+                                                {
+                                                    <div class="item">
+                                                        <div class="radiobtn">
+                                                            <div class="card_plan">
+                                                                <input type="radio" id="Bill@(address.Id)" data-isBilling="true" value="@address.Id" @(address.IsDefault ? "checked" : "") />
+                                                                <label for="Bill@(address.Id)">
+                                                                    <h5>@address.Address1</h5>
+                                                                    <ul>
+                                                                        <li>@address.Address1,@address.Address2</li>
+                                                                        <li>@address.City</li>
+                                                                        <li>@address.StateName</li>
+                                                                        <li>@address.ZipCode</li>
+                                                                        @*<li>@Model.Pharmacy.PharmacyName</li>*@
+                                                                    </ul>
+                                                                    <div class="btn_sec radiobtn_btn">
+                                                                        <button type="button" class="btn btn-outline-primary con_btn mr-2" onclick="AddEditBillingOrShippingAddress(@address.Id, true,@Model.Pharmacy.Id)">Update</button>
+                                                                        <button type="button" class="btn btn-outline-primary con_btn" onclick="DeleteAddress(@address.Id,true)">Delete</button>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="btn_sec card_btn mt-0">
+                                            <a href="javascript:;" id="AddEditNewBill" onclick="AddEditBillingOrShippingAddress(0, true,@Model.Pharmacy.Id)" class="btn btn-outline-primary con_btn mr-2"><i class="fa fa-plus" aria-hidden="true"></i> Add New Billing Address</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active"  data-toggle="collapse" data-target="#tab4" aria-expanded="false">
+                                <p>License Info</p>
+                                <i class="fa fa-angle-down plus-icon cross-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show"  id="tab4" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <form id="FormPharmacyInfo">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>License Number *</label>
+                                            <input asp-for="Pharmacy.LicenseNumber" type="text" class="form-control" required data-mask="9999999999">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>DEA Number *</label>
+                                            <input asp-for="Pharmacy.DeaNumber" type="text" class="form-control" required data-mask="999999999">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>NPI Number *</label>
+                                            <input asp-for="Pharmacy.NpiNumber" type="text" class="form-control" required data-mask="9999999999">
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>License Expires *</label>
+                                            <input type="text" asp-for="Pharmacy.LicenseExpiresDate" class="form-control datepicker" required placeholder="DD/MM/YYYY" data-parsley-trigger="change" />
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 mbf-3">
+                                            <label>DEA Expires *</label>
+                                            <input type="text" asp-for="Pharmacy.DeaExpriesDate" class="form-control datepicker" required placeholder="DD/MM/YYYY" data-parsley-trigger="change" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab5" aria-expanded="false">
+                                <p>Refer Code</p>
+                                <i class="fa fa-angle-down plus-icon cross-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show" id="tab5" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6 mbf-3">
+                                            <label>Refer Code *</label>
+                                            <input asp-for="Pharmacy.ReferCode" type="text" id="ReferCode" class="form-control" readonly="readonly">
+                                        </div>
+                                        <div class="form-group col-md-6 mbf-3 copy_btn">
+                                            <button type="button" onclick="CopyReferCode()" class="btn btn-outline-primary con_btn" data-toggle="tooltip" data-original-title="Copy to clipboard"><i class="fa fa-files-o" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                    </div>
+                    
+                    <div class="btn_sec mtf-2">
+                        <button type="button" id="SavePharmacy" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                        <button type="button" id="CancelPharmacy" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script src="~/rxfairfrontend/js/owl.carousel.min.js"></script>
+    <script>
+        $(".accordian-block").off("click");
+        $(".accordian-block").on("click", function () {
+            var tabNumber = $(".ac-title").attr("data-in");
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            window.InitMaskInput();
+            const disableDate = new Date(2014, 10 - 1, 21);
+            $('#Pharmacy_LicenseExpiresDate,#Pharmacy_DeaExpriesDate').datepicker({
+                format: "M-dd-yyyy",
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                startDate: disableDate,
+                autoclose: true
+            });
+                var licenseExpiresDate = "@Model.Pharmacy.LicenseExpiresDate";
+                licenseExpiresDate == "Jan-01-0001" ? "" : licenseExpiresDate;
+                $("#Pharmacy_LicenseExpiresDate").val(licenseExpiresDate);
+                var deaExpiresDate = "@Model.Pharmacy.DeaExpriesDate";
+                deaExpiresDate == "Jan-01-0001" ? "" : deaExpiresDate;
+                $("#Pharmacy_DeaExpriesDate").val(deaExpiresDate);
+            //var today = new Date().format("M-dd-yyyy").toISOString().split('T')[0];
+            //$("#Pharmacy_DeaExpriesDate").val(today);
+        });
+
+        $(document).on("change",
+            "input[type='radio']",
+            function(e) {
+                const id = $(e.currentTarget).val();
+                const isBilling = $(e.currentTarget).data('isbilling');
+
+                $.ajax({
+                    url: "/Pharmacy/PharmacyProfile/ChangeDefaultAddress",
+                    data: { id: id, isBilling: isBilling },
+                    type: "POST",
+                    success: function(response) {
+                        if (response.status === 0) {
+                            RxFair.HandleResponse(response);
+                        } else {
+                            const flag = isBilling ? "Bill" : "Ship"; // set flag value based on type
+                            $(`[data-isBilling='${isBilling}']`).prop("checked", ""); // Unchecked all Radio button based on flag value.
+                            const chkElement = $(`#${flag}${parseInt(id)}`); // find element based on flag value.
+                            $(chkElement).prop("checked", true); // checked selected radio button based on falg value.
+                        }
+                    }
+                });
+            });
+
+        function AddEditBillingOrShippingAddress(id, isBilling, pharmacyId) {
+            $("#modalContent").load(`/AddEditBillingOrShippingAddress/${id}/${isBilling}/${pharmacyId}`, function() {
+                modalSize("lg");
+                    $("#divModal").modal('show');
+            });
+        }
+
+        function DeleteAddress(id, type) {
+            RxFair.Confirm("Delete Address",
+                RxFair.typeModel.Warning,
+                "Are you sure?",
+                RxFair.typeModel.Danger,
+                "Yes, delete it!",
+                function() {
+                    $.ajax({
+                        url: "/Pharmacy/PharmacyProfile/RemovePharmacyAddress",
+                        data: { id: id, isBilling: type },
+                        type: "POST",
+                        success: function(response) {
+                            RxFair.HandleResponse(response);
+                            if (response.status === 1) {
+                                closeModal();
+                                window.location.href = "/Pharmacy/PharmacyProfile/Index";
+                            }
+                        }
+                    });
+                },
+                function () { });
+        }
+
+        $("#SavePharmacy").click(function() {
+            $("#FormPharmacy").parsley().validate();
+            $("#FormPharmacyInfo").parsley().validate();
+            if ($("#FormPharmacy").parsley().isValid() && $("#FormPharmacyInfo").parsley().isValid()) {
+                $.post("/Pharmacy/PharmacyProfile/SavePharmacy",
+                    $("form").serialize(),
+                    function(response) {
+                        RxFair.HandleResponse(response);
+                    });
+            }
+        });
+
+        function CopyReferCode() {
+            const copyText = document.getElementById("ReferCode");
+            copyText.select();
+            document.execCommand("copy");
+        }
+        /* slider */
+        $('.SheepingAddress').owlCarousel({
+            loop: false,
+            autoplay:false,
+            margin: 10,
+            dots:false,
+            nav: true,
+            navText: ['<span  class="fa fa-angle-left" ></span>', '<span class="fa fa-angle-right" ></span>'],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items:2
+                },
+                992: {
+                    items: 2
+                },
+                1300: {
+                    items: 3
+                },
+                1600: {
+                    items: 4
+                },
+            }
+        })
+        $('.BillingAddress').owlCarousel({
+            loop: false,
+            autoplay: false,
+            margin: 10,
+            dots: false,
+            nav: true,
+            navText: ['<span  class="fa fa-angle-left" ></span>', '<span class="fa fa-angle-right" ></span>'],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                992: {
+                    items: 2
+                },
+                1300: {
+                    items: 3
+                },
+                1600: {
+                    items: 4
+                },
+            }
+        })
+    </script>
+}

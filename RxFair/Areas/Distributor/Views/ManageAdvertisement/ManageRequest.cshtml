@@ -1,0 +1,453 @@
+﻿@using RxFair.Dto.Enum
+@{
+    ViewData["Title"] = $@"Manage {@ViewBag.RequestLabel} Request";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Advertisement</a></li>
+            <li class="breadcrumb-item"><a mhref=@ViewBag.RequestType>@ViewBag.RequestLabel</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#new-request" role="tab" data-toggle="tab">New Request</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#approved" role="tab" data-toggle="tab">Approved</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#rejected" role="tab" data-toggle="tab">Rejected</a>
+            </li>
+        </ul>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="new-request">
+                    @if (ViewBag.IsExpire  == null || !ViewBag.IsExpire )
+                    {
+                        <div class="d-flex justify-content-end">
+                            <a href="/Distributor/ManageAdvertisement/@ViewBag.RequestType/Add/" class="btn btn-outline-primary con_btn database_btn active  addAdvertisement"><i class="fa fa-plus" aria-hidden="true"></i> Add @ViewBag.RequestLabel</a>
+                        </div>
+                    }
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table style="width: 100%" class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtPendingRequest" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        @if (ViewBag.RequestType == DealType.TopDeals)
+                                        {
+                                            <th>Action</th>
+                                            <th style="display: none">Status</th>
+                                            <th>Request No</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th style="display: none">Deal Date</th>
+                                            <th style="display: none">PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                        @if (ViewBag.RequestType == DealType.DealOfTheDay)
+                                        {
+                                            <th>Action</th>
+                                            <th style="display: none">Status</th>
+                                            <th>Request No</th>
+                                            <th style="display: none">Start Date</th>
+                                            <th style="display: none">End Date</th>
+                                            <th>Deal Date</th>
+                                            <th style="display: none">PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                        @if (ViewBag.RequestType == DealType.ProductPriceIncrease)
+                                        {
+                                            <th>Action</th>
+                                            <th style="display: none">Status</th>
+                                            <th>Request No</th>
+                                            <th style="display: none">Start Date</th>
+                                            <th style="display: none">End Date</th>
+                                            <th style="display: none">Deal Date</th>
+                                            <th>PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="approved">
+                    @if (ViewBag.IsExpire == null || !ViewBag.IsExpire)
+                    {
+                        <div class="d-flex justify-content-end">
+                            <a href="/Distributor/ManageAdvertisement/@ViewBag.RequestType/Add/" class="btn btn-outline-primary con_btn database_btn active  addAdvertisement"><i class="fa fa-plus" aria-hidden="true"></i> Add @ViewBag.RequestLabel</a>
+                        </div>
+                    }
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table style="width:100%" class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtAcceptedRequest" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        @if (ViewBag.RequestType == DealType.TopDeals)
+                                        {
+                                            <th>Action</th>
+                                            <th>Status</th>
+                                            <th>Request No</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th style="display:none">Deal Date</th>
+                                            <th style="display:none">PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                        @if (ViewBag.RequestType == DealType.DealOfTheDay)
+                                        {
+                                            <th>Action</th>
+                                            <th>Status</th>
+                                            <th>Request No</th>
+                                            <th style="display:none">Start Date</th>
+                                            <th style="display:none">End Date</th>
+                                            <th>Deal Date</th>
+                                            <th style="display:none">PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                        @if (ViewBag.RequestType == DealType.ProductPriceIncrease)
+                                        {
+                                            <th>Action</th>
+                                            <th>Status</th>
+                                            <th>Request No</th>
+                                            <th style="display:none">Start Date</th>
+                                            <th style="display:none">End Date</th>
+                                            <th style="display:none">Deal Date</th>
+                                            <th>PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="rejected">
+                    @if (ViewBag.IsExpire == null || !ViewBag.IsExpire)
+                    {
+                        <div class="d-flex justify-content-end">
+                            <a href="/Distributor/ManageAdvertisement/@ViewBag.RequestType/Add/" class="btn btn-outline-primary con_btn database_btn active  addAdvertisement"><i class="fa fa-plus" aria-hidden="true"></i> Add @ViewBag.RequestLabel</a>
+                        </div>
+                    }
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table style="width:100%" class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtRejectedRequest" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        @if (ViewBag.RequestType == DealType.TopDeals)
+                                        {
+                                            <th>Action</th>
+                                            <th style="display:none">Status</th>
+                                            <th>Request No</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th style="display:none">Deal Date</th>
+                                            <th style="display:none">PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                        @if (ViewBag.RequestType == DealType.DealOfTheDay)
+                                        {
+                                            <th>Action</th>
+                                            <th style="display:none">Status</th>
+                                            <th>Request No</th>
+                                            <th style="display:none">Start Date</th>
+                                            <th style="display:none">End Date</th>
+                                            <th>Deal Date</th>
+                                            <th style="display:none">PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                        @if (ViewBag.RequestType == DealType.ProductPriceIncrease)
+                                        {
+                                            <th>Action</th>
+                                            <th style="display:none">Status</th>
+                                            <th>Request No</th>
+                                            <th style="display:none">Start Date</th>
+                                            <th style="display:none">End Date</th>
+                                            <th style="display:none">Deal Date</th>
+                                            <th>PriceIncrease Date</th>
+                                            <th>Request</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.js"></script>
+    <script>
+        var ColorClass = {
+            Teal: "darkgreen",
+            Green: "lightgreen",
+            Red: "redgreen",
+            Yellow: "yellow"
+        };
+
+        var dynamic;
+        var Advertisement = {
+            id: "",
+            dtPending: "#dtPendingRequest",
+            dtAccept: "#dtAcceptedRequest",
+            dtReject: "#dtRejectedRequest",
+            DeleteClickAddress: "/Distributor/ManageAdvertisement/RemoveAdvertisementMedicine",
+            SetIsActive: "/Distributor/ManageAdvertisement/ManageIsActive"
+        };
+        var custom = {
+            "sLengthMenu": "Display _MENU_ records per page",
+            "sZeroRecords": "Nothing found - sorry",
+            "sInfo": "Showing _START_ to _END_ of _TOTAL_ records" + "Changes",
+            "sInfoEmpty": "Showing 0 to 0 of 0 records",
+            "sInfoFiltered": "(filtered from _MAX_ total records)"
+        };
+
+        $(document).on("click",".addAdvertisement", function() {
+            AddAdvertisement();
+        });
+
+        $(document).ready(function() {
+            BindRequest(Advertisement.dtPending, @ViewBag.DealType, null);
+        });
+        
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                var target = $(e.target).attr("href"); // activated tab
+                ActiveTab(target);
+         });
+
+        function ActiveTab(active) {
+            switch (active) {
+            case "#new-request":
+                BindRequest(Advertisement.dtPending, @ViewBag.DealType, null);
+                break;
+            case "#approved":
+                BindRequest(Advertisement.dtAccept, @ViewBag.DealType, true);
+                break;
+            case "#rejected":
+                BindRequest(Advertisement.dtReject, @ViewBag.DealType, false);
+                break;
+            }
+        }
+
+        function BindRequest(tableId, dealType, status) {
+            Advertisement.id = tableId;
+            if ($.fn.DataTable.isDataTable(Advertisement.id)) {
+                $(Advertisement.id).dataTable().fnDestroy();
+            }
+            //DataTable
+            dynamic = $(Advertisement.id).DataTable({
+                "sAjaxSource": "/Distributor/ManageAdvertisement/GetAdvertiseMentList?DealType=" +
+                    dealType +
+                    "&Status=" +
+                    status,
+                "initComplete": function(settings, json) {
+                    var api = new $.fn.dataTable.Api(settings);
+                    if (status !== true)
+                        api.columns([1]).visible(false);
+                    switch (@ViewBag.DealType) {
+                    case 1:
+                        api.columns([5, 6]).visible(false); //hide dealDate and priceIncrease Date
+                        break;
+                    case 2:
+                        api.columns([3, 4, 6]).visible(false); // hide startDate ,EndDate,priceIncreaseDate
+                        break;
+                    case 3:
+                        api.columns([3, 4, 5]).visible(false); //hide StartDate,End Date,DealDate
+                        break;
+                    }
+                },
+                "rowCallback": function(row, data, index) {
+                    $(row).attr("data-RowId", data["id"]);
+                    if (status !== true) {
+                        $(row).attr("data-RowId-OtherTab", data["id"]);
+                    }
+                    // Changing row Color When Deal is expired
+                    var currentDate = new Date(Date()).toDateString();
+                    
+                    switch (@ViewBag.DealType) {
+                    case 1:
+                        if (Date.parse(data.advEndDate) < Date.parse(currentDate)) {
+                            $('td', row).addClass(ColorClass.Red);
+                        }
+                        break;
+                    case 2:
+                        if (Date.parse(data.advDealDate) < Date.parse(currentDate)) {
+                            $('td', row).addClass(ColorClass.Red);
+                        }
+                        break;
+                    case 3:
+                        if (Date.parse(data.advPriceIncreaseDate) < Date.parse(currentDate)) {
+                            $('td', row).addClass(ColorClass.Red);
+                            break;
+                        }
+                    default:
+                    }
+                },
+                "order": [[2, ""]],
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ Advertisement ",
+                    "sInfoEmpty": "Showing 0 to 0 of 0 Advertisement "
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function(data, type, row) {
+                            var content = "";
+                            var currentDate = new Date(Date()).toDateString();
+                            var condicionalDate;
+                            switch (@ViewBag.DealType) {
+                            case 1:
+                                condicionalDate = row.advStartDate;
+                                break;
+                            case 2:
+                                condicionalDate = row.advDealDate;
+                                break;
+                            case 3:
+                                condicionalDate = row.advPriceIncreaseDate;
+                                break;
+                            default:
+                                condicionalDate = "";
+                            }
+
+                            switch (status) {
+                                case null:
+                                    if (Date.parse(currentDate) < Date.parse(condicionalDate)) {
+                                        content =
+                                            `<a href="javascript:;" onclick=EditAdvertisement(${data},"@ViewBag.RequestType") class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                                       <a href="javascript:;" onclick=DeleteAdvertisement(${data}) class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>`;
+                                    }
+                                    break;
+                                case true:
+                                    if (Date.parse(currentDate) < Date.parse(condicionalDate)) {
+                                        content = `<a href="javascript:;" onclick=EditAdvertisement(${data},"@ViewBag.RequestType") class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>`;
+                                    }
+                                    break;
+                            }
+                            content = content +`<a href="javascript:;" onclick=ViewAdvertisement(${row.id},"@ViewBag.RequestType") class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "data": "isActive",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "admin_toggle",
+                        "render": function(data, type, row) {
+                            return statusToggle(row.id, data);
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "advStartDate",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "advEndDate",
+                        "type": "datetime",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "advDealDate",
+                        "type": "datetime",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "advPriceIncreaseDate",
+                        "type": "datetime",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "request",
+                        "autoWidth": false,
+                        "searchable": true
+                    }
+                ]
+            });
+
+            $(Advertisement.id).on("change", ".admin_toggle", function(e) {
+                    const current = $(e.currentTarget).find("input");
+                    const id = $(current).data("id");
+                    $.ajax({
+                        url: Advertisement.SetIsActive + "/" + id,
+                        data: { id: id },
+                        type: "POST",
+                        success: function(response) {
+                            RxFair.HandleResponse(response);
+                        },
+                        error: function(data) {
+                        }
+                    });
+                });
+        }
+
+        function EditAdvertisement(id, requestType) {
+            window.location.href = `/Distributor/ManageAdvertisement/${requestType}/Edit/${id}`;
+        }
+
+        function ViewAdvertisement(id, requestType) {
+            window.location.href = `/Distributor/ManageAdvertisement/${requestType}/View/${id}`;
+        }
+        
+        function DeleteAdvertisement(id) {
+            RxFair.Confirm("Delete @ViewBag.RequestLabel",
+                RxFair.typeModel.Warning,
+                "Are you sure?",
+                RxFair.typeModel.Danger,
+                "Yes, delete it!",
+                function() {
+                    $.ajax({
+                        url: Advertisement.DeleteClickAddress,
+                        data: { Id: id },
+                        type: "GET",
+                        success: function(response) {
+                            RxFair.HandleResponse(response);
+                            if (response.status === 1) {
+                                refreshDatatable(Advertisement.id, id);
+                            }
+                        },
+                        error: function(data) {
+                        }
+                    });
+                }, function() {});
+        }
+
+        function AddAdvertisement() {
+            $.ajax({
+                url: "/Distributor/ManageAdvertisement/CheckSubscription",
+                type: "GET",
+                success: function(response) {
+                    if (response.status === 0)
+                        RxFair.HandleResponse(response);
+                    else
+                        window.location.href = '/Distributor/ManageAdvertisement/@ViewBag.RequestType/Add/';
+                }
+            });
+        }
+    </script>
+}
+
+
+

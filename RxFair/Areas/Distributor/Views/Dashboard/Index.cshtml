@@ -1,0 +1,173 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@model RxFair.Dto.Dtos.PharmacyDistributorDashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page_title">
+                <h2>@User.GetClaimValue(UserClaims.FullName)</h2>
+                <h5>We are glad to see you!</h5>
+            </div>
+        </div>
+    </div>
+    <!-- Statues Div Start -->
+    <div class="row dashboard_status">
+        <div class="col-1 pl-0">
+            <div class="dash_user">
+                <img src="~/rxfairbackend/images/dash_user.png" alt="" class="img-fluid">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h3 class="dash_title">Total Users</h3>
+            <div class="dash_user data_text">
+                <h2>@Model.UserDto.TotalUsers</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3 class="dash_title">Distributor Admin</h3>
+            <div class="d-flex">
+                <div class="dash_user data_text w-50 d-inline-block mr-3">
+                    <div class="status_title">
+                        <h4>Active</h4>
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </div>
+                    <h2>@Model.UserDto.AdminActive</h2>
+                </div>
+                <div class="dash_user data_text w-50 d-inline-block">
+                    <div class="status_title inactive">
+                        <h4>Inactive</h4>
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </div>
+                    <h2>@Model.UserDto.AdminInactive</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 pr-0">
+            <h3 class="dash_title">Distributor Staff</h3>
+            <div class="d-flex">
+                <div class="dash_user data_text w-50 d-inline-block mr-3">
+                    <div class="status_title">
+                        <h4>Active</h4>
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </div>
+                    <h2>@Model.UserDto.StaffActive</h2>
+                </div>
+                <div class="dash_user data_text w-50 d-inline-block">
+                    <div class="status_title inactive">
+                        <h4>Inactive</h4>
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </div>
+                    <h2>@Model.UserDto.StaffInactive</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Statues Div End -->
+    <div class="row">
+        <div class="col-12">
+            <div class="dash_info_sec mb-4">
+                <div class="dash_info_title">
+                    <div class="left_text">
+                        <img src="~/rxfairbackend/images/admin/title_one.png" alt="" class="img-fluid">
+                        <h3>Orders</h3>
+                    </div>
+                    <div class="right_text">
+                        <h3>Total Order  - <span>@Model.OrderDto.TotalOrder</span></h3>
+                    </div>
+                </div>
+                <div class="dash_info_data">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon">
+                                    <img src="~/rxfairbackend/images/admin/o1.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Pending</h5>
+                                    <h3><span>@Model.OrderDto.Pending</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon green">
+                                    <img src="~/rxfairbackend/images/admin/o2.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Confirmed</h5>
+                                    <h3><span>@Model.OrderDto.Confirmed</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon blue">
+                                    <img src="~/rxfairbackend/images/admin/o3.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Shipped</h5>
+                                    <h3><span>@Model.OrderDto.Shipped</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon green">
+                                    <img src="~/rxfairbackend/images/admin/o4.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Delivered</h5>
+                                    <h3><span>@Model.OrderDto.Delivered</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data">
+                                <div class="dash_infoicon red">
+                                    <img src="~/rxfairbackend/images/admin/o5.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Cancelled</h5>
+                                    <h3><span>@Model.OrderDto.Cancelled</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data">
+                                <div class="dash_infoicon high_red">
+                                    <img src="~/rxfairbackend/images/admin/o6.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Returned</h5>
+                                    <h3><span>@Model.OrderDto.Returned</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data">
+                                @*<div class="dash_infoicon high_red">
+                                    <img src="~/rxfairbackend/images/admin/o7.png" class="img-fluid" alt="">
+                                </div>*@
+                                @*<div class="dash_text">
+                                    <h5>Partial Returned</h5>
+                                    <h3><span>@Model.OrderDto.PartialReturned</span></h3>
+                                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

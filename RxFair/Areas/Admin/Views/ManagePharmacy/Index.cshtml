@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Manage Pharmacies";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Pharmacy</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManagePharmacy">New Pharmacy</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <ul class="nav nav-tabs" role="tablist" id="myTab1"> 
+            <li class="nav-item">
+                <a class="nav-link active" href="#PendingTab" role="tab" data-toggle="tab">New Pharmacy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#AcceptedTab" role="tab" data-toggle="tab">Accepted Pharmacy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#RejectedTab" role="tab" data-toggle="tab">Rejected Pharmacy</a>
+            </li>
+        </ul>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="PendingTab">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtPendingPharmacy" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Status</th>
+                                        <th>Email Confirmed</th>
+                                        <th>Pharmacy</th>
+                                        <th>Pharmacy Type</th>
+                                        <th>Contact Person</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        @*<th>Address</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="AcceptedTab">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtAcceptedPharmacy" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Status</th>
+                                        <th>Email Confirmed</th>
+                                        <th>Pharmacy</th>
+                                        <th>Pharmacy Type</th>
+                                        <th>Contact Person</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        @*<th>Address</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="RejectedTab">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtRejectedPharmacy" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Status</th>
+                                        <th>Email Confirmed</th>
+                                        <th>Pharmacy</th>
+                                        <th>Pharmacy Type</th>
+                                        <th>Contact Person</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        @*<th>Address</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="~/rxfairbackend/PageJs/ManagePharmacy.js"></script>
+}

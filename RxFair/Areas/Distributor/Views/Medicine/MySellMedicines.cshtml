@@ -1,0 +1,232 @@
+﻿
+@{
+    ViewData["Title"] = "My Catalog";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">My Catalog</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>My Catalog</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMySellMedicines" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Medicine</th>
+                                    <th>Price</th>
+                                    <th>Short Dated</th>
+                                    <th>In Stock</th>
+                                    <th>Stock</th>
+                                    <th>Contracted</th>
+                                    <th>NDC</th>
+                                    <th>UPC</th>
+                                    <th>Strength</th>
+                                    <th>Manufacturer</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            BindMySellMedicine();
+        });
+
+        function BindMySellMedicine() {
+            var mySellMedicine = $("#dtMySellMedicines").DataTable({
+                "sAjaxSource": "/Distributor/Medicine/GetDistributorMySellMedicineList",
+                "columns": [
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            const content = `<a href="javascript:;" onclick=ViewMedicine(${data}); class="history_tab" data-toggle="tooltip" data-original-title="view"><i class="fa fa-eye" aria-hidden="true"></i></a>`;
+                            return renderHtml(content);
+                        }
+                    },
+                    {
+                        "data": "isActive",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "admin_toggle text-center",
+                        "render": function (data, type, row) {
+                            return statusToggle(row.id, data);
+                        }
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                    },
+                    {
+                        "data": "price",
+                        "autoWidth": false,
+                        "render": function (data, type, row) {
+                            const inputBox = `<input type="number" id="price${row.id}" onchange="UpdatePrice(${row.id})"  name="tentacles" required min="1" style="text-align:center;" value="${data}">`;
+                            return inputBox;
+                        }
+                    },
+                    {
+                        "data": "isShortDated",
+                        "autoWidth": false,
+                        "className": "text-center check_box",
+                        "render": function (data, type, row) {
+                            var content = `<div class="form-group">
+                                                    <input type="checkbox"  id="ShortDated${row.id}" onclick="ManageMedicine('ShortDated',${row.id})" class="isShortDated" data-id="${row.id}" ${data ? 'checked="checked"' : ""} />
+                                                    <label for="ShortDated${row.id}"></label>
+                                               </div>`;
+                            return content;
+                        }
+                    },
+                    {
+                        "data": "inStock",
+                        "autoWidth": false,
+                        "className": "text-center check_box",
+                        "render": function (data, type, row) {
+                            var content = `<div class="form-group">
+                                                    <input type="checkbox" id="InStock${row.id}"  onclick="ManageMedicine('InStock',${row.id})" class="isShortDated" data-id="${row.id}" ${data ? 'checked="checked"' : ""} />
+                                                   <label for="InStock${row.id}"></label>
+                                               </div>`;
+                            return content;
+                        }
+                    }, {
+                        "data": "stock",
+                        "autoWidth": false,
+                        "render": function (data, type, row) {
+                            debugger;
+                            const inputBox = `<input type="number" id="stock${row.id}" onchange="UpdateStock(${row.id})"  name="tentacles" required min="1" style="text-align:center;" value="${data}">`;
+                            return inputBox;
+                        }
+                    },
+                    {
+                        "data": "isContracted",
+                        "autoWidth": false,
+                        "className": "text-center check_box",
+                        "render": function (data, type, row) {
+                            var content = `<div class="form-group">
+                                                    <input type="checkbox" id="Contracted${row.id}"  onclick="ManageMedicine('Contracted',${row.id})" class="isShortDated" data-id="${row.id}" ${data ? 'checked="checked"' : ""} />
+                                                    <label for="Contracted${row.id}"></label>
+                                                </div>`;
+                            return content;
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false
+                    },
+                    {
+                        "data": "upc",
+                        "autoWidth": false,
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                    },
+                    {
+                        "data": "manufacturerName",
+                        "autoWidth": false,
+                    },
+                    {
+                        "data": "category",
+                        "autoWidth": false,
+                    },
+                ]
+
+            });
+        };
+
+        function ManageMedicine(type, id) {
+            $.ajax({
+                url: `/Distributor/Medicine/${type}`,
+                type: "POST",
+                data: { "id": id },
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) { }
+            });
+        }
+
+        function UpdatePrice(id) {
+            $("#price" + id).parsley().validate();
+            if ($("#price" + id).parsley().isValid()) {
+                var currentPrice = $("#price" + id).val();
+                if (currentPrice == "") {
+                    RxFair.HandleResponse(0, "Invalid Price");
+                }
+
+                $.ajax({
+                    url: "/Distributor/Medicine/UpdatePrice",
+                    data: { id: id, price: currentPrice },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response);
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+        }
+
+        function UpdateStock(id) {
+            $("#stock" + id).parsley().validate();
+            if ($("#stock" + id).parsley().isValid()) {
+                var currentStock = $("#stock" + id).val();
+                if (currentStock == "") {
+                    RxFair.HandleResponse(0, "Invalid Stock");
+                }
+
+                $.ajax({
+                    url: "/Distributor/Medicine/UpdateStock",
+                    data: { id: id, stock: currentStock },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response);
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+        }
+
+        $("#dtMySellMedicines").on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+            $.ajax({
+                url: "/Distributor/Medicine/ManageIsActive",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) {
+                }
+            });
+        });
+    </script>
+}

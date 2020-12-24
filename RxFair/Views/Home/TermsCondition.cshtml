@@ -1,0 +1,39 @@
+﻿@model RxFair.Data.DbModel.TermsAndCondition
+@{
+    ViewData["Title"] = "Terms & Conditions";
+}
+
+<!-- breadcrumb-section Start -->
+<section class="breadcrumb_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / Terms & Conditions</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb-section End -->
+<!-- Terms & Conditions Start -->
+<section class="terms_info">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="terms_text text-left">
+                    <p>
+                        @Html.Raw(Model.TermsCondition)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Terms & Conditions End -->
+
+<!-- Javascript -->
+
+@section scripts {
+
+}

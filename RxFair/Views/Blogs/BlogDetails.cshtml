@@ -1,0 +1,163 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@model RxFair.Dto.Dtos.BlogDtoView
+@{
+    ViewData["Title"] = "BlogDetails";
+    string blogImagePath = "\\" + FilePathList.BlogImage;
+}
+<style>
+    .more {
+        padding-top: 20px;
+    }
+
+
+    a {
+        color: #0254EB
+    }
+
+        a:visited {
+            color: #0254EB
+        }
+
+        a.morelink {
+            text-decoration: none;
+            outline: none;
+        }
+
+    .morecontent span {
+        display: none;
+    }
+
+    .comment {
+        width: 400px;
+        background-color: #f0f0f0;
+        margin: 10px;
+    }
+
+</style>
+<!-- breadcrumb-section Start -->
+<section class="breadcrumb_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="pagi_text">
+                    <h3><span>Home</span> / Blog</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb-section End -->
+<!-- Blog-Details Start -->
+<section class="blog">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 blog_sec">
+                <div class="singel_blog_details">
+                    <div class="singel_blog_text">
+                        <div class="owl-carousel owl-theme blog_img_slider">
+                            @foreach (var item in Model.BlogDto.BlogImageNameList) {  
+                            <div class="item">
+                                <img src="@($@"{blogImagePath}\{item}")" onerror="this.src='/UploadFile/BlogImage/default_Blog.jpg'" class="blog-slider-img">
+                            </div>
+                                }
+                             @if (Model.BlogDto.BlogImageNameList.Count == 0 || Model.BlogDto.BlogImage.Count == 0)
+                             { 
+                            <div class="item">
+                                <img src="/UploadFile/BlogImage/default_Blog.jpg"  class="blog-slider-img">
+                            </div>
+                            }
+                        </div>
+                        <div class="text d-flex">
+                            <h3>@Model.BlogDto.Title</h3>
+                            <div class="date-details d-flex">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                <h5>@Model.BlogDto.BlogDate.ToDefaultDateTime("MMM, dd yyyy")</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="more">
+                        @Html.Raw(Model.BlogDto.Descriptions)
+                        
+                    </div>
+                </div>
+                @if (Model.RelatedBlogs.Any())
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="blog_singel_title">
+                                <h3>Related Blog Post</h3>
+                            </div>
+                        </div>
+                        @foreach (var item in Model.RelatedBlogs)
+                        {
+                            <div class="col-md-4 col-sm-6">
+                                <div class="blog_detail">
+                                    <h6>@item.BlogCategoryName</h6>
+                                    <img src="@($@"{blogImagePath}\{item.FirstImageName}")"  class="img-fluid" onerror="this.src='/UploadFile/MedicineImage/medi.png'">
+                                    <div class="blog_text">
+                                        <h4>@item.Title</h4>
+                                        <div class="d-flex align-items-center mb-3 mt-3">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                            <h5>@item.BlogDate.ToDefaultDateTime("MMM, dd yyyy")</h5>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <a class="btn btn-outline-primary con_btn blog-btn" href="@Url.Action("BlogDetails","blogs",new { id=item.Id})">Read More <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                }
+            </div>
+             @(await Component.InvokeAsync("RecentlyBlogs"))
+        </div>
+    </div>
+</section>
+<!-- Blog-Details End -->
+
+@section Scripts{
+<script src="~/rxfairfrontend/js/blogSlider.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var showChar = 300;
+        var ellipsestext = "...";
+        var moretext = "more";
+        var lesstext = "less";
+        $('.more').each(function () {
+            
+            //var content = $(this).html();
+            var content = $(this).text();
+            if (content.length > showChar) {
+
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar - 1, content.length - showChar);
+
+                var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+                $(this).html(html);
+            }
+
+        });
+
+        $(".morelink").click(function () {
+            if ($(this).hasClass("less")) {
+                $(this).removeClass("less");
+                $(this).html(moretext);
+            } else {
+                $(this).addClass("less");
+                $(this).html(lesstext);
+            }
+            $(this).parent().prev().toggle();
+            $(this).prev().toggle();
+            return false;
+        });
+    });
+
+</script>
+
+}

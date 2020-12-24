@@ -1,0 +1,447 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="ShopRx">
+    <title>ShopRx</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Family-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Main CSS-->
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/newstyle.css">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="app sidebar-mini rtl">
+<!-- Navbar-->
+<header class="app-header"><a class="app-header__logo" href="index.html"><img src="images/admin_logo.png" class="img-fluid" alt="logo"></a>
+    <!-- Sidebar toggle button-->
+    <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </a>
+    <!-- Navbar Right Menu-->
+    <ul class="app-nav">
+        <!--Notification Menu-->
+        <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><span>3</span><i class="fa fa-bell-o fa-lg"></i></a>
+            <ul class="app-notification dropdown-menu dropdown-menu-right">
+                <li class="app-notification__title">You have 4 new notifications.</li>
+                <div class="app-notification__content">
+                    <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                        <div>
+                            <p class="app-notification__message">Lisa sent you a mail</p>
+                            <p class="app-notification__meta">2 min ago</p>
+                        </div></a></li>
+                    <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
+                        <div>
+                            <p class="app-notification__message">Mail server not working</p>
+                            <p class="app-notification__meta">5 min ago</p>
+                        </div></a></li>
+                    <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
+                        <div>
+                            <p class="app-notification__message">Transaction complete</p>
+                            <p class="app-notification__meta">2 days ago</p>
+                        </div></a></li>
+                    <div class="app-notification__content">
+                        <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                            <div>
+                                <p class="app-notification__message">Lisa sent you a mail</p>
+                                <p class="app-notification__meta">2 min ago</p>
+                            </div></a></li>
+                        <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-danger"></i><i class="fa fa-hdd-o fa-stack-1x fa-inverse"></i></span></span>
+                            <div>
+                                <p class="app-notification__message">Mail server not working</p>
+                                <p class="app-notification__meta">5 min ago</p>
+                            </div></a></li>
+                        <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-success"></i><i class="fa fa-money fa-stack-1x fa-inverse"></i></span></span>
+                            <div>
+                                <p class="app-notification__message">Transaction complete</p>
+                                <p class="app-notification__meta">2 days ago</p>
+                            </div></a></li>
+                    </div>
+                </div>
+                <li class="app-notification__footer"><a href="#">See all notifications.</a></li>
+            </ul>
+        </li>
+        <!-- User Menu-->
+        <li class="dropdown"><a class="app-nav__item user" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><img src="images/user.png" alt="" class="img-fluid">Jhon Doe <i class="fa fa-caret-down"></i></a>
+            <ul class="dropdown-menu settings-menu dropdown-menu-right">
+                <li><a class="dropdown-item" href="myprofile.html"><i class="fa fa-user fa-lg"></i> Profile</a></li>
+                <li><a class="dropdown-item" href="page-login.html"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</header>
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+<aside class="app-sidebar">
+    <ul class="app-menu">
+        <li><a class="app-menu__item" href="index.html"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li><a class="app-menu__item" href="index.html"><i class="app-menu__icon fa fa-user" aria-hidden="true"></i><span class="app-menu__label">Manage Pharmacy Profile</span></a></li>
+        <li><a class="app-menu__item" href="index.html"><i class="app-menu__icon fa fa-user-o" aria-hidden="true"></i><span class="app-menu__label">Manage Pharmacy Users</span></a></li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-align-center" aria-hidden="true"></i><span class="app-menu__label">Order</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a class="treeview-item" href="manage-system-users-link.html"><i class="icon fa fa-circle-o"></i> Search Medicine</a></li>
+                <li><a class="treeview-item" href="manage-pharmacy-users-link.html" target="_blank" rel="noopener"><i class="icon fa fa-circle-o"></i> View Cart & Place Order</a></li>
+                <li><a class="treeview-item" href="manage-distributor-users-link.html"><i class="icon fa fa-circle-o"></i> View All Orders</a></li>
+            </ul>
+        </li>
+        <li><a class="app-menu__item" href="index.html"><i class="fa fa-outdent app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Watch List</span></a></li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-trophy" aria-hidden="true"></i><span class="app-menu__label">Reward</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a class="treeview-item" href="manage-subscription-type.html"><i class="icon fa fa-circle-o"></i> Redeem Reward Point</a></li>
+                <li><a class="treeview-item" href="manage-distributor-subscription.html"><i class="icon fa fa-circle-o"></i> Reward Point History</a></li>
+            </ul>
+        </li>
+        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-line-chart" aria-hidden="true"></i><span class="app-menu__label">Reports</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a class="treeview-item" href="add-bulk-medicine.html"><i class="icon fa fa-circle-o"></i> Order Summary</a></li>
+                <li><a class="treeview-item" href="upload-bulk-medicine-price.html"><i class="icon fa fa-circle-o"></i> Unshipped Orders</a></li>
+            </ul>
+        </li>
+        <li><a class="app-menu__item" href="index.html"><i class="app-menu__icon fa fa-toggle-off" aria-hidden="true"></i><span class="app-menu__label">Manage Access Permission</span></a></li>
+        <li><a class="app-menu__item" href="index.html"><i class="app-menu__icon fa fa-file-text-o" aria-hidden="true"></i><span class="app-menu__label">Documents</span></a></li>
+    </ul>
+</aside>
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Order</a></li>
+            <li class="breadcrumb-item"><a href="#">Medicine History</a></li>
+        </ul>
+    </div>
+
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Medicine History</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content invoice_data pt-0">
+                <table style="width: 100%" class="roundedCorners">
+                    <tr>
+                        <th colspan="6">
+                            Medicine Details
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="title w-0">Medicine Name</td>
+                        <td class="title w-0">Strength</td>
+                        <td class="title w-0">Dosage</td>
+                        <td class="title w-0">Type</td>
+                        <td class="title w-0">Manufacturer</td>
+                        <td class="title w-0">Flavour</td>
+                    </tr>
+                    <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bottom_admin_tbl pharmacies_form mt-4">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Purchase History</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="example" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                            <tr role="row" class="title_datatable">
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 50px;">Date</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 110px;">Order Id</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 110px;">NDC</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 90px;">Package Size</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 120px;">Description</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 120px;">Qty</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 155px;">Price</th>
+                                <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 155px;">Distributor</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr role="row" class="even">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>
+                                    HSI Narola
+                                </td>
+                                <td>
+                                    Info@
+                                </td>
+                                <td>
+                                    +91 1122334455
+                                </td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="odd">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2009/10/09</td>
+                                <td>$1,200,000</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="even">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2010/06/09</td>
+                                <td>$725,000</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="odd">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2009/06/25</td>
+                                <td>$675,000</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="even">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2010/03/11</td>
+                                <td>$850,000</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="odd">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2011/01/25</td>
+                                <td>$112,000</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="even">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2012/04/09</td>
+                                <td>$138,575</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="odd">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2010/07/14</td>
+                                <td>$86,500</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr><tr role="row" class="even">
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    12102
+                                </td>
+                                <td>
+                                    20/20/2019
+                                </td>
+                                <td>2013/08/11</td>
+                                <td>$98,540</td>
+                                <td>2008/11/28</td>
+                                <td>$162,700</td>
+                                <td>
+                                    E-5, 357
+                                </td>
+                            </tr></tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Address</th>
+                                <th>Address</th>
+                                <th>Mobile</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+<!-- Modal -->
+<div class="modal fade admin_modelpop" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Subscription Type</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="accordian-block border-0">
+                    <div class="accordian-para acc-show p-0">
+                        <form>
+                            <div class="form-row mt-0">
+                                <div class="form-group col-md-12">
+                                    <label>Subscription Type *</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label>Charge Monthly(%) *</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-12 mb-0">
+                                    <label>Description</label>
+                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary con_btn active">Save</button>
+                <button type="button" class="btn btn-outline-primary con_btn mr-auto">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Essential javascripts for application to work-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="js/plugins/pace.min.js"></script>
+<!-- Page specific javascripts-->
+<!-- Data table plugin-->
+<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
+<!-- Google analytics script-->
+<script>
+    $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#example tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        } );
+
+        // DataTable
+        var table = $('#example').DataTable();
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+
+    } );
+
+</script>
+<!-- Google analytics script-->
+
+
+</body>
+</html>

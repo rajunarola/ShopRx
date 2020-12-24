@@ -1,0 +1,170 @@
+@model RxFair.Dto.Dtos.WatchListDto
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a mhref="AddWatchList">Watch List</a></li>
+        </ul>
+    </div>
+    <form id="frmAddWatchList">
+        <div class="row pharmacies_form admin_tabel">
+            <div class="col-12">
+                <div class="database_title">
+                    <h3>
+                        Add Watch List
+                    </h3>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <!-- Tab panes -->
+                <div class="tab-content p-0">
+                    <div role="tabpanel" class="tab-pane in active" id="account">
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block border-0">
+
+                            <div class="accordian-block border-0">
+                                <div class="accordian-para acc-show p-0">
+
+                                    <div class="form-row mt-0">
+                                        <div class="form-group col-md-3">
+                                            <label>NDC or Name *</label>
+                                            @if (Model.MedicineId != null)
+                                            {
+                                                <input type="text" asp-for="Ndc" class="form-control" readonly="readonly">
+                                            }
+                                            else
+                                            {
+                                                <input type="text" asp-for="Ndc" class="form-control">
+                                            }
+
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <div class="btn_sec mtf-2">
+                                                <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnView"><i class="fa fa-eye p-0" aria-hidden="true"></i> View</button>
+                                                <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--Tab Wrapper close-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordian-block mbf-2 border-0">
+
+                    <div class="accordian-block border-0">
+                        <div class="accordian-para acc-show p-0">
+                            <input type="hidden" asp-for="Id">
+
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Medicine Name</label>
+                                    <input type="text" asp-for="MedicineName" class="form-control" readonly="readonly">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Manufacturer</label>
+                                    <input type="text" asp-for="Manufacturer" class="form-control" readonly="readonly">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Category</label>
+                                    <input type="text" asp-for="Category" class="form-control" readonly="readonly">
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Strength</label>
+                                    <input type="text" asp-for="Strength" class="form-control" readonly="readonly">
+                                </div>
+                                <div class="form-group col-md-2 mb-0">
+                                    <label>Qty to order *</label>
+                                    <input type="number" asp-for="Quantity" class="form-control" data-parsley-required min="1">
+                                </div>
+                                <div class="form-group col-md-2 mb-0">
+                                    <label>Match Price *</label>
+                                    <input type="number" asp-for="MatchPrice" class="form-control" data-parsley-required min="1" >
+                                </div>
+                                <div class="form-group col-md-4 mt-4 mb-0">
+                                    <div class="check_box">
+                                        @*<form>
+                                                <div class="form-group">
+                                                    <input type="checkbox" id="html">
+                                                    <label for="html">Checkbox for get notification</label>
+                                                </div>
+                                            </form>*@
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn_sec mbf-2">
+                    <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSave">Save</button>
+                    <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</main>
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        $('#btnView').on("click",
+            function () {
+                //$("#frmAddWatchList").serialize();
+                var NDC = $("#Ndc").val();
+
+                $.ajax({
+                    url: "/Pharmacy/WatchList/AddWatchList",
+                    data: { search: NDC },
+                    type: "POST",
+                    success: function (response) {
+                        
+                        console.log(response);
+                        $('#MedicineName').val(response.medicineName);
+                        $('#Manufacturer').val(response.manufacturer);
+                        $('#Category').val(response.category);
+                        $('#Strength').val(response.strength);
+                        $('#Id').val(response.id);
+
+                        // RxFair.HandleResponse(response);
+                    },
+                    error: function (data) {
+                    }
+                });
+
+            });
+
+        $('#btnSave').on('click',
+            function () {
+
+                $('#frmAddWatchList').parsley().validate();
+
+                if ($("#frmAddWatchList").parsley().isValid()) {
+
+                    //var watchList = {
+                    //    MedicineId: $('#Id').val(),
+                    //    Quantity: $('#Quantity').val(),
+                    //    MatchPrice: $('#MatchPrice').val()
+
+                    //};
+                    $.post("/Pharmacy/WatchList/InsertWatchList",
+                        $("#frmAddWatchList").serialize(),
+                        function (response) {
+                            RxFair.HandleResponse(response);
+                        });
+                }
+            });
+    </script>
+}
+

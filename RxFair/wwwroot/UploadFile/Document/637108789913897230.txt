@@ -1,0 +1,2 @@
+ select b.InternalName as RelatedBlogs from blog b
+ join blog r on b.Id=r.RelatedBlogs ;

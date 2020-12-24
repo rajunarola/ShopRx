@@ -1,0 +1,213 @@
+﻿@using RxFair.Dto.Enum
+@model RxFair.Dto.Dtos.AddEditMedicine
+@{
+    ViewData["Title"] = "AddEditMedicine";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="MedicineRequest">Manage Medicines Request</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>@(Model.Id == 0 ? "Add" : "Edit") Medicine Request</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn d-inline-block float-right ml-2 btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <div class="accordian-block border-0">
+                        <div class="accordian-para acc-show p-0">
+                            <form id="frmMedicine">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="Id" />
+                                <div class="form-row">
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>NDC No *</label>
+                                        @if (Model.Id != 0)
+                                        {<input asp-for="Ndc" type="text" class="form-control" readonly />}
+                                        else
+                                        {<input asp-for="Ndc" type="text" class="form-control" />}
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>UPC Code</label>
+                                        <input asp-for="Upc" type="text" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-3 mbf-3">
+                                        <label>Medicine Name *</label>
+                                        <input asp-for="MedicineName" type="text" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Flavour</label>
+                                        <input asp-for="Flavour" type="text" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-1 mbf-3">
+                                        <label>Strength *</label>
+                                        <input asp-for="Strength" type="text" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Strength Code</label>
+                                        @Html.DropDownListFor(m => m.StrengthId, ViewBag.StrengthList as IEnumerable<SelectListItem>, "Select Strength", new { @class = "form-control", required = "Select Strength" })
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Brand</label>
+                                        @Html.DropDownListFor(m => m.BrandId, ViewBag.BrandList as IEnumerable<SelectListItem>, "Select Brand", new { @class = "form-control", required = "Select Brand" })
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Dosage Form *</label>
+                                        @Html.DropDownListFor(m => m.DosageFormId, ViewBag.DosageFormList as IEnumerable<SelectListItem>, "Select DosageForm", new { @class = "form-control", required = "Select DosageForm" })
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Packaging Size *</label>
+                                        <input asp-for="PackageSize" type="text" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Package Size Code</label>
+                                        @Html.DropDownListFor(m => m.PackagingSizeId, ViewBag.PackageSizeList as IEnumerable<SelectListItem>, "Select Package Size", new { @class = "form-control", required = "Select Package Size" })
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Unit Code</label>
+                                        @Html.DropDownListFor(m => m.UnitId, ViewBag.DoseUnitList as IEnumerable<SelectListItem>, "Select Unit Code", new { @class = "form-control", required = "Select Unit Code" })
+                                    </div>
+                                    <div class="form-group col-md-2 mbf-3">
+                                        <label>Package Des. Code</label>
+                                        @Html.DropDownListFor(m => m.PackageDescriptionCodeId, ViewBag.PackageDesList as IEnumerable<SelectListItem>, "Select Package Des. Code", new { @class = "form-control", required = "Select Package Des. Code" })
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <div class="form-row mt-0">
+                                            <div class="form-group col-md-6 mbf-3">
+                                                <label>AWP Price </label>
+                                                <input asp-for="AwpPrice" type="text" class="form-control" onkeypress="return isNumberKey(event,this)" />
+                                            </div>
+                                            <div class="form-group col-md-6 mbf-3">
+                                                <label>Category *</label>
+                                                @Html.DropDownListFor(m => m.CategoryId, ViewBag.CategoryList as IEnumerable<SelectListItem>, "Select Category", new { @class = "form-control", required = "Select Category" })
+                                            </div>
+                                            <div class="form-group col-md-12 mbf-3">
+                                                <label>Manufacturer *</label>
+                                                @Html.DropDownListFor(m => m.ManufacturerId, ViewBag.ManufacturerList as IEnumerable<SelectListItem>, "Select Manufacturer", new { @class = "form-control", required = "Select Manufacturer" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label>Description </label>
+                                        <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                                    </div>
+                                    <div class="form-group col-md-2 mb-0 medicine_img file-upload">
+                                        <label for="MedicineImage" class="col p-0">Upload Medicine Photo *</label>
+                                        <label for="MedicineImage">
+                                            <span class="btn btn-outline-secondary upload_btn mr-2">Upload File</span>
+                                            <input style="display: none;" type="file" class="form-control-file" id="MedicineImage" name="MedicineImage">
+                                        </label>
+                                    </div>
+                                    <div class="form-group col-md-3 mb-0 medicine_img file-upload">
+                                        @{
+                                            string image = @"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=";
+                                            image = string.IsNullOrEmpty(Model.MedicineImage) ? image : $@"/{FilePathList.MedicineImage}/" + Model.MedicineImage;
+                                        }
+                                        <img src="@image" id="previewImage" alt="" style="height: 170px" class="img-fluid popup_img-test d-block mt-2">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="btn_sec mtf-2">
+                        <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSave">Save</button>
+                        <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        $("#MedicineImage").change(function () {
+            const files = $("#MedicineImage").get(0).files;
+            if (parseInt($("#Id").val()) === 0 && files.length <= 0) {
+                RxFair.Error("Error", "please select file");
+                return false;
+            } else {
+                const fileName = $('#MedicineImage').val();
+                var getExt = fileName.split('.');
+                getExt = getExt.reverse();
+                if ($.inArray(getExt[0].toLowerCase(), RxFair.Filetypes) === -1) {
+                    const fileTypes = RxFair.Filetypes.join();
+                    RxFair.Error("Error", "The filetype you are attempting to upload is not allowed. Allowed Types : " + fileTypes);
+                    return false;
+                } else {
+                    readImageURL(this, "#previewImage");
+                }
+            }
+        });
+
+        $("#btnSave").click(function () {
+            $('#frmMedicine').parsley().validate();
+
+            const files = $("#MedicineImage").get(0).files;
+            var flag = false;
+
+            if ($("#frmMedicine").parsley().isValid()) {
+                if (parseInt($("#Id").val()) === 0 && files.length <= 0) {
+                    RxFair.Error("Error", "please select file");
+                    flag = false;
+                } else {
+                    if (files.length !== 0) {
+                        const fileName = $('#MedicineImage').val();
+                        let getExt = fileName.split('.');
+                        getExt = getExt.reverse();
+                        if ($.inArray(getExt[0].toLowerCase(), RxFair.MedicineImageTypes) === -1) {
+                            const fileTypes = RxFair.MedicineImageTypes.join(",");
+                            RxFair.Error("Error", "Only " + fileTypes + " types of files are allowed.");
+                            flag = false;
+                        }
+                        else {
+                            flag = true;
+                        }
+                    } else {
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    if (window.FormData !== undefined) {
+                        var formData = new FormData();
+                        var filesData = $("#MedicineImage").get(0).files;
+                        formData.append("MedicineFile", filesData[0]);
+                        $.each($("#frmMedicine").serializeArray(), function (key, input) {
+                            formData.append(input.name, input.value);
+                        });
+                        $.ajax({
+                            url: "/Distributor/Medicine/AddEditMedicine",
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: formData,
+                            success: function (response) {
+                                if (response.status == 1) {
+                                    RxFair.HandleResponse(response, true, function () {
+                                        window.location.href = "/Distributor/Medicine/MedicineRequest";
+                                    });
+                                } else {
+                                    RxFair.HandleResponse(response);
+                                }
+                            },
+                            error: function (response) {
+                                RxFair.HandleResponse(response);
+                            }
+                        });
+                    } else {
+                        RxFair.Warning("Form Data", "FormData is not supported.");
+                    }
+                }
+            }
+        });
+    </script>
+}

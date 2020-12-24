@@ -1,0 +1,235 @@
+﻿@model RxFair.Dto.Dtos.BlogDto
+@{
+    ViewData["Title"] = "AddManageBlog";
+}
+<link href="~/rxfairfrontend/css/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/rxfairbackend/js/plugins/summernote/summernote-bs4.css" rel="stylesheet" />
+<style type="text/css">
+    .summernote {
+    }
+</style>
+<h1>AddManageBlog</h1>
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Blog</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManageBlog">Manage Blog</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                @if (Model.Id == 0)
+                {
+                    <h3>Add Blog</h3>
+                }
+                else
+                {
+                    <h3>Edit Blog</h3>
+                }
+                <button type="button" class="btn btn-outline-primary con_btn database_btn d-inline-block float-right ml-2 btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show">
+                                <form id="frmBlog">
+
+                                    <input type="hidden" asp-for="Id" />
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label>Title *</label>
+                                            <input type="text" asp-for="Title" class="form-control" data-parsley-minlength="1" data-parsley-maxlength="100" data-parsley-error-message="Title  length must be between 1 to 100 characters " data-parsley-required="true">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Internal Name *</label>
+                                            <input type="text" asp-for="InternalName" class="form-control" data-parsley-required data-parsley-trigger="change">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Blog Category *</label>
+                                            @Html.DropDownListFor(m => m.BlogCategoryId, ViewBag.categoryList as IEnumerable<SelectListItem>, "Select Category", new { @class = "form-control ", required = "Select Category" })
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Author *</label>
+                                            @Html.DropDownListFor(m => m.AuthorId, ViewBag.authorList as IEnumerable<SelectListItem>, "Select Author", new { @class = "form-control ", required = "Select Author" })
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Date *</label>
+                                            <input asp-for="DateBlog" type='text' id="DateBlog" class="form-control datepicker" required data-parsley-trigger="change" placeholder="MM/DD/YYYY" />
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label>Tags</label>
+                                            @Html.DropDownListFor(m => m.BlogTag, ViewBag.BlogTagList as IEnumerable<SelectListItem>, new { @class = "form-control select2", multiple = "multiple" })
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label>Related Blogs</label>
+                                            @Html.DropDownListFor(m => m.RelatedBlog, ViewBag.RelatedBlogList as IEnumerable<SelectListItem>, new { @class = "form-control select2", multiple = "multiple" })
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Blog Content *</label>
+                                            @Html.HiddenFor(m => m.BlogContent)
+                                            <div class="form-control summernote  comment more" id="BlogContent" data-parsley-trigger="change">
+                                                @Html.Raw(Model.BlogContent)
+                                            </div>
+                                            <div id="templateError" style="display:none;">
+                                                <ul class="parsley-errors-list filled"><li class="parsley-required">This field is required.</li></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                    <div class="btn_sec mtf-2">
+                        <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSave">Save</button>
+                        <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/rxfairbackend/js/plugins/moment.min.js"></script>
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script src="~/rxfairbackend/js/plugins/summernote/summernote-bs4.js"></script>
+    <script src="~/rxfairbackend/js/plugins/select2.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            window.InitMaskInput();
+            var startDate = new Date();
+            $('#DateBlog').datepicker({
+                setDate: startDate,
+                format: "M-dd-yyyy",
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                autoclose: true
+            }).on('changeDate',
+                function () {
+                    $("input[name=DateBlog]").parsley().reset();
+                });
+
+            $("#BlogTag").select2({
+                tags: true
+            });
+            $("#RelatedBlog").select2();
+            //Set selcted options on edit time
+            @if (Model.Id != 0)
+            {
+                <text>
+                    var selectedTag = "@Model.Tags";
+                    $("#BlogTag").val(selectedTag.split(","));
+                    $("#BlogTag > option:selected").prop("selected", "selected");
+                    $("#BlogTag").trigger("change");
+
+                    var selectedRBlog = [@Model.RelatedBlogs];
+                    $("#RelatedBlog").val(selectedRBlog);
+                    $("#RelatedBlog > option:selected").prop("selected", "selected");
+                    $("#RelatedBlog").trigger("change");
+                </text>
+            }
+        });
+
+        $('.summernote').summernote({
+            placeholder: 'Enter Template here...',
+            height: 200
+        });
+        $(document).on("keypress","div.note-editable.card-block, .note-codable", function () {
+            var body = $.trim($('.summernote').summernote("code"));
+                if (body !== "") {
+                    $("#templateError").hide();
+                }
+         });
+
+        $("#btnSave").click(function () {
+            var body = $.trim($('.summernote').summernote("code"));
+            var result = $('.summernote').summernote('isEmpty');
+
+            $("#BlogContent").val(body);
+            if (body === "") {
+                $("#BlogContent").val(body);
+                $("#templateError").show();
+            } else {
+                $("#templateError").hide();
+            }
+
+            $('#frmBlog').parsley().validate();
+            if ($("#frmBlog").parsley().isValid()) {
+                if (body === "") {
+                    $("#BlogContent").val(body);
+                    return false;
+                }
+                $.post("/Admin/Blog/AddEditBlog", $("#frmBlog").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                });
+            }
+        });
+
+        $(document).on("click", "button.confirm", function () {
+           window.location.href = "/Admin/Blog/ManageBlog";
+        });
+    </script>
+
+    @*var startDate = new Date();
+        var blogTag = '@string.Join(",", Model.BlogTag.ToArray())'.split(",");
+        $("#BlogTag").select2({
+
+            placeholder: 'Select Tags',
+            tags: true*@
+    @*//BlogTag: blogTag,
+            //selected:true,
+            //tokenSeparators: [',', ' '],
+            //createTag: function(params) {
+            //    var term = $.trim(params.term);
+            //    if (term === '') {
+            //        return null;
+            //    }
+
+            //    return {
+            //        id: term,
+            //        text: term,
+            //        newTag: true // add additional parameters
+            //    }
+            //},
+
+            //templateResult: function (BlogTag) {
+            //    return BlogTag.html;
+            //},
+            //templateSelection: function (BlogTag) {
+            //    return BlogTag.text;
+            //}
+
+        //});
+
+        //$("#RelatedBlog").select2({
+        //    placeholder: 'Select Related Blogs'
+        //});*@
+
+    @*@if (Model.Id != 0)
+        {
+            <text>
+                startDate = moment("@Model.BlogDate.ToString("MM/dd/yyyy")".replace(" ", "T"));
+                var blogTag = '@string.Join(",", Model.BlogTag.ToArray())'.split(",");
+                //$("#BlogTag").val(blogTag);
+                $("#BlogTag").val($(this).text());
+                //$("#BlogTag").text(blogTag);
+                //document.getElementById('BlogTag').value=blogTag;
+            </text>
+
+        }*@
+}
+

@@ -1,0 +1,129 @@
+﻿@using RxFair.Dto.Enum
+@model RxFair.Dto.Dtos.RewardMoneyDto
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@(Model.Id == 0 ? "Add" : "Edit") Money Range</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="frmAddEditMoneyRange" method="post">
+                @Html.AntiForgeryToken()
+                <input asp-for="Id" type="hidden" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-12">
+                        <label>Select Reward Type *</label>
+                        @Html.DropDownListFor(x => x.RewardTypeId, ViewBag.RewardTypeList as IEnumerable<SelectListItem>, "Select Reward Type", new { @class = "form-control ", required = "Select Reward Type" })
+                    </div>
+                    <div class="form-group reward col-md-6">
+                        <label>Min Range *</label>
+                        <input asp-for="MinRange" type="number" class="form-control" data-parsley-required data-parsley-trigger="change" min="0">
+                    </div>
+                    <div class="form-group reward col-md-6">
+                        <label>Max Range *</label>
+                        <input asp-for="MaxRange" type="number" class="form-control" data-parsley-required data-parsley-trigger="change" min="0">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Description *</label>
+                        <textarea asp-for="Description" type="text" class="form-control" data-parsley-required data-parsley-trigger="change"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var rewardTypeId = @Model.RewardTypeId;
+        rewardTypeId = isNaN(rewardTypeId) ? 0 : rewardTypeId;
+        if (rewardTypeId !== 0) {
+            if (rewardTypeId === @((long)GlobalEnums.RewardType.Referral)) {
+                $(".reward").hide();
+            } else {
+                $(".reward").show();
+            }
+        }
+    });
+    $(document).on('change', "#RewardTypeId", function () {
+        var value = parseInt($(this).val());
+        value = isNaN(value) ? 0 : value;
+        if (value !== 0) {
+            if (value === @((long)GlobalEnums.RewardType.Referral)) {
+                $(".reward").hide();
+            } else {
+                $(".reward").show();
+            }
+        }
+    });
+
+    // Validation on min - max price
+    function ValidateMinMax() {
+        var flag = false;
+        var value = parseInt($("#RewardTypeId").val());
+        value = isNaN(value) ? 0 : value;
+        if (value !== 0) {
+            if (value === @((long)GlobalEnums.RewardType.Referral)) {
+                flag = true;
+                return flag;
+            }
+        }
+        var min = parseInt($("#MinRange").val());
+        var max = parseInt($("#MaxRange").val());
+        min = isNaN(min) ? 0 : min;
+        max = isNaN(max) ? 0 : max;
+        if (min >= 0 && max >= 0) {
+            if (min != max) {
+                if (min < max && max > min) {
+                    flag = true;
+                    return flag;
+                }
+                else {
+                    RxFair.Warning("Warning", "Max Range value must be greater.");
+                    return flag;
+                }
+            } else {
+                RxFair.Warning("Warning", "Min Range value and Max Range value can't be same.");
+                return flag;
+            }
+        }
+        else {
+            if (min < 0) {
+                $("#MinRange").val("");
+                RxFair.Warning("Warning", "Min Range value can't be negative.");
+                return flag;
+            }
+            else if (max < 0) {
+                $("#MaxRange").val("");
+                RxFair.Warning("Warning", "Max Range value can't be negative.");
+                return flag;
+            }
+        }
+        return flag;
+    };
+
+    $("#btnSave").click(function () {
+        $('#frmAddEditMoneyRange').parsley().validate();
+        if ($("#frmAddEditMoneyRange").parsley().isValid()) {
+            if (ValidateMinMax()) {
+                $.post("/Admin/Reward/AddEditMoneyRange", $("#frmAddEditMoneyRange").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                    if (response.status === 1) {
+                        closeModal();
+                        window.bindMoneyRange();
+                    }
+                });
+            }
+        }
+    });
+</script>

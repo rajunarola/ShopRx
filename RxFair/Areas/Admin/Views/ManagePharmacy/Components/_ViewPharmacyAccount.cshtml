@@ -1,0 +1,129 @@
+﻿@model RxFair.Dto.Dtos.NewPharmacyDto
+@{
+    Layout = null;
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">View Pharmacy</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="tab-content invoice_data pt-0">
+        <form id="frmDistributor" asp-action="CreateNewDistributor" method="post" class="d-flex w-100">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" name="Id" />
+            <table style="width: 50%" class="roundedCorners mr-3">
+                <tbody>
+                    <tr>
+                        <th colspan="2">
+                            Pharmacy Info
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="title">Pharmacy Name :</td>
+                        <td>@Model.PharmacyName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Primary Email :</td>
+                        <td>@Model.PrimaryEmail</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="title">Phone : </td>
+                        <td>@Model.PhoneNumber</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Bill Address : </td>
+                        <td>@Model.BillAddress1 @Model.BillAddress2</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Bill City : </td>
+                        <td>@Model.BillCity</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Bill State : </td>
+                        <td>@Model.BillStatName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Bill ZipCode : </td>
+                        <td>@Model.BillZipCode</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Delivery Address : </td>
+                        <td>@Model.DeliveryAddress1 @Model.DeliveryAddress2</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Delivery City : </td>
+                        <td>@Model.DeliveryCity</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Delivery State : </td>
+                        <td>@Model.DeliveryStatName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Delivery ZipCode : </td>
+                        <td>@Model.DeliveryZipCode</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table style="width: 50%">
+                <tbody>
+                    <tr>
+                        <th colspan="2">
+                            Contact person Info
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="title">Pharmacy Name :</td>
+                        <td>@Model.PharmacyName</td>
+                    </tr>
+                    <tr>
+                        <td class="title">Email :</td>
+                        <td>@Model.PrimaryEmail</td>
+                    </tr>
+                    <tr>
+                        <td class="title">License Number :</td>
+                        <td>@Model.LicenseNumber</td>
+                    </tr>
+                    <tr>
+                        <td class="title">License Expires :</td>
+                        <td>@Model.LicenseExpires.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <td class="title">DEA Number :</td>
+                        <td>@Model.DeaNumber</td>
+                    </tr>
+                    <tr>
+                        <td class="title">DEA Expires :</td>
+                        <td>@Model.DeaExpries.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <td class="title">NPI Number :</td>
+                        <td>@Model.NpiNumber</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+    $("#btnSave").click(function () {
+        $('#frmDistributor').parsley().validate();
+        if ($("#frmDistributor").parsley().isValid()) {
+            $.post("/Admin/Master/CreateNewDistributor", $("#frmDistributor").serialize(), function (response) {
+                RxFair.HandleResponse(response);
+                if (response.status === 1) {
+                    closeModal();
+                    window.bindNewDistributorRequest();
+                }
+            });
+        }
+    });
+</script>

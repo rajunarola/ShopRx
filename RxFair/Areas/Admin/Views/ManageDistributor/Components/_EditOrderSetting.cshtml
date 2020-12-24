@@ -1,0 +1,265 @@
+﻿@model RxFair.Dto.Dtos.DistributerOrderSettingDto
+@{
+    Layout = null;
+}
+<link href="~/rxfairbackend/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+@*<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css"/>*@
+<style type="text/css">
+    .orderTime {
+    }
+</style>
+<!-- Modal -->
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Edit Order Setting</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="frmaddEditOrder">
+                @Html.AntiForgeryToken()
+                <input asp-for="DistributorId" type="hidden" />
+                <input asp-for="Id" type="hidden" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-6">
+                        <label>Time Zone *</label>
+                        @Html.DropDownListFor(x => x.TimeZoneId, ViewBag.TimeZoneList as IEnumerable<SelectListItem>, "Select TimeZone", new { @class = "form-control", required = "Select TimeZone" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Minimum Order Amount ($) *</label>
+                        <input asp-for="MinOrderAmount" type="text" placeholder="0" class="form-control" data-parsley-type="number" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[1-9]\d*(\.\d+)?$">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Shipping Charge ($) *</label>
+                        <input asp-for="ShippingCharge" type="text" placeholder="0" class="form-control" data-parsley-type="number" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[1-9]\d*(\.\d+)?$">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Overnight Amount ($) *</label>
+                        <input asp-for="OverNightAmount" type="text" placeholder="0" class="form-control" data-parsley-type="number" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[1-9]\d*(\.\d+)?$">
+                    </div>
+                </div>
+                <div class="order_setting">
+                    <h6>Service Days</h6>
+                    <div class="form-row d-flex justify-content-center mt-0">
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDayMonday" type="checkbox" />
+                                    <label for="ServiceDayMonday">Monday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="MondayCutOffTime" data-oldValue="@Model.MondayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDayTuesday" type="checkbox" />
+                                    <label for="ServiceDayTuesday">Tuesday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="TuesdayCutOffTime" data-oldValue="@Model.TuesdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row d-flex justify-content-center mt-0">
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDayWednesday" type="checkbox" />
+                                    <label for="ServiceDayWednesday">Wednesday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="WednesdayCutOffTime" data-oldValue="@Model.WednesdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDayThursday" type="checkbox" />
+                                    <label for="ServiceDayThursday">Thursday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="ThursdayCutOffTime" data-oldValue="@Model.ThursdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row d-flex justify-content-center mt-0">
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDayFriday" type="checkbox" />
+                                    <label for="ServiceDayFriday">Friday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="FridayCutOffTime" data-oldValue="@Model.FridayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDaySaturday" type="checkbox" />
+                                    <label for="ServiceDaySaturday">Saturday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="SaturdayCutOffTime" data-oldValue="@Model.SaturdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row d-flex mt-0">
+                        <div class="form-group-o col-md-6 d-flex mb-2 s_day">
+                            <div class="check_box w-50 d-flex align-items-center">
+                                <div class="form-group m-0">
+                                    <input asp-for="ServiceDaySunday" type="checkbox" />
+                                    <label for="ServiceDaySunday">Sunday</label>
+                                </div>
+                            </div>
+                            <div class="form-group w-50 m-0">
+                                <label class="in_text mt-1">CutOff Time</label>
+                                <input asp-for="SundayCutOffTime" data-oldValue="@Model.SundayCutOffTime" type="text" class="form-control h-50 ordertime">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-outline-primary con_btn active">Save</button>
+    <button id="btnClose" type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal" aria-label="Close">Close</button>
+</div>
+
+<script src="~/rxfairbackend/js/plugins/bootstrap-timepicker.min.js"></script>
+<script src="~/rxfairbackend/js/plugins/moment.min.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>*@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        @if (Model.Id != 0)
+        {
+            <Text>
+                checkIsSelected();
+            </Text>
+        }
+        else
+        {
+            <Text>
+                var chbox = $("#frmaddEditOrder input[type = 'checkbox']");
+                if (chbox.attr("checked", "false")) {
+                    chbox.prop('checked', false);
+                    $(".orderTime").val("");
+                }
+                $(".orderTime").prop("disabled", true);
+            </Text>
+        }
+    });
+
+    $(".orderTime").timepicker({
+        minuteStep: 15
+    }).click(function (e) { // To prevent hour from going negative.
+        $(".bootstrap-timepicker-widget").show();
+        var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+        var d = new Date();
+        var current_time = moment(d).format('hh:mm A'); // time format with moment.js
+        $(timeBox).timepicker('setTime', current_time); // setting timepicker to current time
+        $(timeBox).val(current_time); // setting input field to current time
+    }).keydown(function (event) { // To prevent from opening all timepicker by tab key
+            var code = event.keyCode || event.which;
+            if (code == '9') {
+                //$(".orderTime").prop("disabled", true);
+                $(".bootstrap-timepicker-widget").hide();
+            }
+        });
+
+    //FOR REFERENCE ONLY
+    //$(".orderTime").timepicker().click(function (e) {
+          //set current time in timepicker
+    //    $(".bootstrap-timepicker-widget").show();
+    //    var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+    //    var d = new Date();
+    //    var current_time = moment(d).format('hh:mm A'); // time format with moment.js
+    //    $(timeBox).timepicker('setTime', current_time); // setting timepicker to current time
+    //    $(timeBox).val(current_time); // setting input field to current time
+          //set current time in timepicker end
+
+    //    //var mins = $(".bootstrap-timepicker-minute").val();
+    //    var current_min = moment(d).format('mm');
+    //    var hour = ((((mins/105) + .5) | 0) +  moment(d).format('hh')) % 24;
+    //    var minutes = (Math.round(current_min / 15) * 15) % 60;
+    //    //$(".bootstrap-timepicker-minute").val(minutes);
+    //});
+
+    //valid and usable code
+    //$(".orderTime").timepicker().on('changeTime.timepicker', function (e) {
+    //    //var mins = $(".bootstrap-timepicker-minute").val();
+    //    var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+    //    var d = new Date();
+    //    var current_hour = moment(d).format('hh');
+    //    var current_mins = moment(d).format('mm');
+    //    var current_slot = moment(d).format('A');
+    //    var mins = (Math.round(current_mins / 15) * 15) % 60;
+    //    $(timeBox).timepicker('setTime("0:0:0")', current_time); // setting timepicker to current time
+    //    $(timeBox).val(current_time); // setting input field to current time
+    //});
+
+    $("#btnSave").click(function () {
+        $("#frmaddEditOrder").parsley().validate();
+        if ($("#frmaddEditOrder").parsley().isValid()) {
+            $.post("/Admin/ManageDistributor/EditOrderSetting", $("#frmaddEditOrder").serialize(), function (response) {
+                if (response.status == 1) {
+                    RxFair.HandleResponse(response, true, function () {
+                        closeModal();
+                        window.BindManageDistributerList();
+                    });
+                }
+                else {
+                    RxFair.HandleResponse(response);
+                }
+            });
+        }
+    });
+
+    $(document).on("change", "input[type='checkbox']", function (e) {
+        var currentTime = new Date().getTime();
+        var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+        var oldval = $(timeBox).data("oldvalue");
+        if ($(e.currentTarget).is(":checked")) {
+            timeBox.attr({ 'data-parsley-required': 'true','data-parsley-trigger':'change'});
+            if (oldval !== "") {
+                $(timeBox).val(oldval);
+            }
+          $(timeBox).prop("disabled", false);
+        } else {
+            if ($(timeBox).attr('data-parsley-required') && $(timeBox).attr('data-parsley-trigger')) {
+                $(timeBox).removeAttr('data-parsley-required data-parsley-trigger');
+            }
+            //timeBox.removeAttr({ 'data-parsley-required': 'true', 'data-parsley-trigger': 'change' });
+            $(timeBox).val("");
+            $(timeBox).prop("disabled", true);
+            $(timeBox).parsley().reset();
+        }
+    });
+
+    function checkIsSelected() {
+        $.each($("#frmaddEditOrder input[type='checkbox']:not(:checked)"), function (i, item) {
+            var timeBox = $(item).parents(".form-group-o").find(".orderTime");
+            $(timeBox).val("");
+            $(timeBox).prop("disabled", true);
+        });
+    }
+</script>

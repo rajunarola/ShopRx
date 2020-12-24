@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = "New Distributor Request";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="New distributor Request">New distributor Request</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#PendingTab" role="tab" data-toggle="tab">New Distributor request</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#RejectedTab" role="tab" data-toggle="tab">Rejected distributor request</a>
+            </li>
+        </ul>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="PendingTab">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtNewDistributorRequest" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Company Name</th>
+                                        <th>Company Email</th>
+                                        <th>Mobile</th>
+                                        <th>Contact Name</th>
+                                        <th>Contact Email</th>
+                                        <th>Contact Mobile</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="RejectedTab">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtRejectedDistributorRequest" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Company Name</th>
+                                        <th>Company Email</th>
+                                        <th>Mobile</th>
+                                        <th>Contact Name</th>
+                                        <th>Contact Email</th>
+                                        <th>Contact Mobile</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        var DataTable = "";
+        $(document).ready(function () {
+            DataTable = {
+                id:"",
+                pendingTableId:"#dtNewDistributorRequest",
+                rejectTableId: "#dtRejectedDistributorRequest"
+            }
+            bindNewDistributorRequest(DataTable.pendingTableId, true);
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href");// activated tab
+            ActiveTab(target);
+        });
+
+        function ActiveTab(target) {
+            switch (target) {
+                case "#PendingTab": bindNewDistributorRequest(DataTable.pendingTableId,true);
+                    break;      
+                case "#RejectedTab": bindNewDistributorRequest(DataTable.rejectTableId, false);
+                    break;
+            }
+        }
+
+        function bindNewDistributorRequest(tableId, status) {
+            DataTable.id = tableId;
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().destroy();
+            }
+            var table = $(tableId)
+                .DataTable({
+                    "sAjaxSource": "/Admin/Master/GetNewDistributorRequestList?status="+status,
+                    "columns": [
+                        {
+                            "data": "id",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                var content = `<a href="javascript:;" ${dataParams("View", "view", data)} class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View</a>`;
+                                if (status) {
+                                    content = content + `<a href="javascript:;" ${dataParams("Approve & Create Distributor Account", "create", data)} class="dropdown-item action"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Approve & Create Distributor Account</a>
+                                               <a href="javascript:;" onclick=ManageDistributorStatus(${data}) class="dropdown-item action"><i class="fa fa-window-close-o" aria-hidden="true"></i> Reject</a>`;
+                                    return dataTableAction(content);
+                                }
+                                else {
+                                    content = content+ `<a href="javascript:;" onclick=ManageDistributorStatus(${data}) class="dropdown-item action"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Approve</a>
+                                               <a href="javascript:;" onclick=DeleteDistributorRequest(${data}) class="dropdown-item action"><i class="fa fa-window-close-o" aria-hidden="true"></i> Delete</a>`;
+                                    return dataTableAction(content);
+                                }
+                            }
+                        },
+                        {
+                            "data": "companyName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "email",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "mobile",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "contactName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "contactEmail",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "contactMobile",
+                            "autoWidth": false,
+                            "searchable": true
+                        }
+                    ]
+                });
+        };
+        $("#dtNewDistributorRequest,#dtRejectedDistributorRequest").on("click", ".action", function (e) {
+            var flag = $(e.currentTarget).data("flag");
+            var id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "create":
+                    CreateOrViewDistributorAccount(id, false);
+                    break;
+                case "view":
+                    CreateOrViewDistributorAccount(id, true);
+                    break;
+                default:
+            }
+        });
+
+        function ManageDistributorStatus(id) {
+            $.ajax({
+                url: "/Admin/Master/ManageDistributorStatus",
+                type: "POST",
+                data: { id: id },
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                    refreshDatatable(DataTable.id , id);
+                }
+            });
+        }
+        function CreateOrViewDistributorAccount(id, isView) {
+            $("#modalContent").load(`/CreateOrViewDistributorAccount/${id}/${isView}`, function () {
+                modalSize("lg");
+                $("#divModal").modal('show');
+            });
+        }
+
+        function DeleteDistributorRequest(id) {
+            RxFair.Confirm("Delete distributor", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!", function () {
+                $.ajax({
+                    url: "/Admin/Master/DeleteDistributorRequest",
+                    data: { id: id },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response);
+                        if (response.status === 1) {
+                            refreshDatatable(DataTable.id, id);
+                        }
+                    },
+                    error: function (data) {
+                    }
+                });
+            }, function () { }
+            );
+        }
+
+    </script>
+}

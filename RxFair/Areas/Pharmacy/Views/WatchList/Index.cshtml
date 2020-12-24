@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "Watch List";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a mhref="Index">Watch List</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Watch List
+                </h3>
+                <div class="d-flex justify-content-end">
+                    <a href="@Url.Action("GetListOnSearch","WatchList")" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Watch List</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content p-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block border-0">
+
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show p-0">
+                                <!---->
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtWatchList" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Cart</th>
+                                    <th>Quantity</th>
+                                    <th>Ndc</th>
+                                    <th>Medicine</th>
+                                    <th>Match Price</th>
+                                    <th>Current Price</th>
+                                    <th>Distributor</th>
+                                    <th>Manufacturer</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts
+    {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            BindDataTable();
+        });
+        function BindDataTable() {
+            var f = sessionStorage.getItem("newRecord") ? [2] : "";
+            var s = sessionStorage.getItem("newRecord") ? [0, 2] : "";
+            var WatchList = $("#dtWatchList").DataTable({
+                "sAjaxSource": "/Pharmacy/WatchList/GetWatchList",
+                "order": [[0, "Desc"]],
+                "lengthMenu": [10, 25, 50, 75, 100],
+                "columns": [
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data,type,row) {
+                            const content = `<a href="javascript:;" onclick=AddEditWatchlist(${row.distributorId},${row.medicineId},false) class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                             <a href="javascript:;" onclick=DeleteWatchList(${row.id}) class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                             <a href="javascript:;" onclick=AddEditWatchlist(${row.distributorId},${row.medicineId},true) class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "orderable": false,
+                        render: function (data, type, row) {
+                            const inputcontent = `<a href="javascript:;" onclick="AddToCart(${row.distributorId},${row.medicineId},${row.quantity})" data-toggle="tooltip" data-original-title="Add to Cart" > <i class="fa fa-opencart" aria-hidden="true"></i></a>`;
+                            return renderHtml(inputcontent);
+                        }
+                    },
+                    {
+                        "data": "quantity",
+                        "autoWidth": false,
+                        "orderable": true,
+                        "searchable": false
+                    },
+                    { 
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "orderable": true,
+                        "searchable": false
+                   },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": true,
+                   },
+                    {
+                        "data": "matchPrice",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": true,
+                    },
+                    {
+                        "data": "price",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": true,
+                    },
+                    {
+                        "data": "distributorName",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": true,
+                    },
+                    {
+                        "data": "manufacturer",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": true,
+                    }
+                ]
+            });
+        }
+
+        //$('#dtWatchList').on("click", ".action", function (e) {
+        //    const flag = $(e.currentTarget).data("flag");
+        //    const id = $(e.currentTarget).data("id");
+        //    const distributorId = $(e.currentTarget).data("distributorId");
+        //    switch (flag) {
+        //    case "edit":
+        //        AddEditWatchlist(distributorId,id);
+        //        break;
+        //   case "delete":
+        //        DeleteWatchList(id);
+        //    default:
+        //    }
+        //});
+
+        function DeleteWatchList(id) {
+            RxFair.Confirm("Delete medicine", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!", function() {
+                    $.ajax({
+                        url: "@Url.Action("RemoveWatchList", "WatchList")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function(response) {
+                            RxFair.HandleResponse(response);
+                            window.BindDataTable();
+                        },
+                        error: function(data) {
+                        }
+                    });
+                },
+                function () {
+             });
+        }
+
+        function AddEditWatchlist(distributorId, id, isView, isExist = 0) {
+            $("#modalContent").load(`/Pharmacy/WatchList/AddWatchList/${distributorId}/${id}/${isView}/${isExist}`, function () {
+                if (!isView) {
+                    modalSize("xl");
+                }
+                $("#divModal").modal('show');
+            });
+        }
+
+        function AddToCart(distributorId, medicineId, quantity) {
+                var model = {
+                    DistributorId: distributorId,
+                    MedicineId: medicineId,
+                    Quantity: quantity
+                };
+                $.ajax({
+                    url: "/Pharmacy/WatchList/AddtoCart",
+                    data: model,
+                    type: "POST",
+                    success: function (response) {                        
+                        RxFair.HandleResponse(response);     
+                    },
+                    error: function (data) { }
+                });
+            }
+
+    </script>
+}

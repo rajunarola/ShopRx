@@ -1,0 +1,164 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+<html lang="en">
+<head>
+    <meta name="description" content="ShopRx">
+    <title>@ViewData["Title"] | ShopRx</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Font-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Fav icon-->
+    <link rel="shortcut icon" href="~/fav.png">
+
+    <!-- Main CSS-->
+    <link href="~/css/RxFairBackEnd.min.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/pharmacy-newstyle.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/responsive.css" rel="stylesheet" />
+    <link href="~/rxfairbackend/css/InfoSection.css" rel="stylesheet" />
+    <style type="text/css">
+        /*main*/
+
+        /*main*/
+    </style>
+    @RenderSection("Styles", required: false)
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body class="app sidebar-mini rtl">
+    <!-- Navbar-->
+    <header class="app-header">
+        <a class="app-header__logo" href="@Url.Action("Index", "Dashboard", new { area="Pharmacy" })">
+            <img src="~/rxfairbackend/images/admin_logo.png" class="img-fluid" alt="logo">
+        </a>
+        <!-- Sidebar toggle button-->
+        <a class="app-sidebar__toggle" href="javascript:;" data-toggle="sidebar" aria-label="Hide Sidebar">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </a>
+        <!-- Navbar Right Menu-->
+        <ul class="app-nav">
+
+            <!-- User Menu-->
+            <li class="dropdown">
+                @*<a class="app-nav__item user" href="javascript:;" data-toggle="dropdown" aria-label="Open Profile Menu"><img src="@User.GetClaimValue(UserClaims.UserProfileImage)" alt="" class="img-fluid UserProfileImage"><label id="UserName">@User.GetClaimValue(UserClaims.FullName)</label><i class="fa fa-caret-down"></i></a>*@
+                <a class="app-nav__item user" href="javascript:;" data-toggle="dropdown" aria-label="Open Profile Menu"><user class="fullname">@User.GetClaimValue(UserClaims.FullName)</user><i class="fa fa-caret-down"></i></a>
+                <ul class="dropdown-menu settings-menu dropdown-menu-right">
+                    <li><a class="dropdown-item" href="/Pharmacy/MyAccount/"><i class="fa fa-user fa-lg"></i> Profile</a></li>
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                        <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+                    </form>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <!-- Sidebar menu-->
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <aside class="app-sidebar">
+        <ul class="app-menu">
+            <li><a class="app-menu__item active" mhref="" href="@Url.Action("Index", "Dashboard", new { area="Pharmacy" })"><i class="app-menu__icon fa fa-sign-in"></i><span class="app-menu__label">Dashboard</span></a></li>
+           
+            @*<li class="treeview">
+            <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-align-center" aria-hidden="true"></i><span class="app-menu__label">Order</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+                <li><a class="treeview-item" mhref="SearchMedicine" href="/Pharmacy/Order/SearchMedicine"><i class="icon fa fa-circle-o"></i>Advance Search Product</a></li>
+                <li><a class="treeview-item" mhref="MedicineSearch" href="/Pharmacy/Order/MedicineSearch"><i class="icon fa fa-circle-o"></i>Search Product</a></li>
+                <li><a class="treeview-item" mhref="ViewAllOrders" href="/Pharmacy/Order/ViewAllOrders"><i class="icon fa fa-circle-o"></i>View Order History</a></li>
+            </ul>
+        </li>*@
+            
+          
+
+            <li><a class="app-menu__item" mhref="PlaceOrder" href="/Pharmacy/Order/PlaceOrder"><i class="app-menu__icon fa fa-shopping-basket" aria-hidden="true"></i><span class="app-menu__label">Cart & Checkout</span></a></li>
+            <li><a class="app-menu__item" mhref="SearchMedicine" href="/Pharmacy/Order/SearchMedicine"><i class="app-menu__icon fa fa-shopping-basket" aria-hidden="true"></i><span class="app-menu__label">Order</span></a></li>
+
+            <li><a class="app-menu__item" mhref="MedicineSearch" href="/Pharmacy/Order/MedicineSearch"><i class="app-menu__icon fa fa-shopping-basket" aria-hidden="true"></i><span class="app-menu__label">Search Product</span></a></li>
+            @if (User.IsInRole(UserRoles.PharmacyPrimaryAdmin))
+            {
+                <li><a class="app-menu__item" mhref="PharmacyProfile" href="@Url.Action("Index", "PharmacyProfile", new {area = "Pharmacy"})"><i class="app-menu__icon fa fa-user" aria-hidden="true"></i><span class="app-menu__label">Manage Pharmacy Profile</span></a></li>
+            }
+
+
+            <li><a class="app-menu__item" mhref="WatchList" href="@Url.Action("Index", "WatchList", new { area="Pharmacy" })"><i class="fa fa-outdent app-menu__icon" aria-hidden="true"></i><span class="app-menu__label">Watch List</span></a></li>
+            <li class="treeview">
+                <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-trophy" aria-hidden="true"></i><span class="app-menu__label">Reward</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" mhref="RedeemMoney" href="@Url.Action("RedeemMoney", "Reward", new { area="Pharmacy" })"><i class="icon fa fa-circle-o"></i> Redeem Reward Point</a></li>
+                    <li><a class="treeview-item" mhref="MoneyHistory" href="@Url.Action("MoneyHistory", "Reward", new { area="Pharmacy" })"><i class="icon fa fa-circle-o"></i> Reward Point History</a></li>
+                    <li><a class="treeview-item" mhref="RebateProgress" href="@Url.Action("RebateProgress", "Reward", new { area="Pharmacy" })"><i class="icon fa fa-circle-o"></i> Rebate Progress</a></li>
+
+                </ul>
+            </li>
+            <li class="treeview">
+                <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-line-chart" aria-hidden="true"></i><span class="app-menu__label">Reports</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" mhref="OrderSummary" href="@Url.Action("PharmacyOrderSummary", "Report", new { area="Pharmacy" })"><i class="icon fa fa-circle-o"></i>Order Summary </a></li>
+                    <li><a class="treeview-item" mhref="UnshippedOrders" href="@Url.Action("UnshippedOrders", "Report", new { area="Pharmacy" })"><i class="icon fa fa-circle-o"></i>Unshipped Orders </a></li>
+                </ul>
+            </li>
+            @if (User.IsInRole(UserRoles.PharmacyPrimaryAdmin))
+            {
+                <li><a class="app-menu__item" mhref="AccessPermission" href="@Url.Action("AccessPermission", "Master", new {area = "Admin"})"><i class="app-menu__icon fa fa-toggle-off" aria-hidden="true"></i><span class="app-menu__label">Manage Access Permission</span></a></li>
+                @if (!User.IsInRole(UserRoles.PharmacyStaff))
+                {
+                    <li><a class="app-menu__item" mhref="PharmacyUser" href="/Pharmacy/PharmacyUser"><i class="app-menu__icon fa fa-user-o" aria-hidden="true"></i><span class="app-menu__label">Manage Pharmacy Users</span></a></li>
+                }
+                <li><a class="app-menu__item" mhref="ManageDocuments" href="@Url.Action("ManageDocuments", "MyAccount", new {area = "Pharmacy"})"><i class="app-menu__icon fa fa-file-text-o" aria-hidden="true"></i><span class="app-menu__label">Documents</span></a></li>
+            }
+            <li class="treeview">
+                <a class="app-menu__item" href="javascript:;" data-toggle="treeview"><i class="app-menu__icon fa fa-line-chart" aria-hidden="true"></i><span class="app-menu__label">Advertisement</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a class="treeview-item" mhref="TopDeals" href="/Pharmacy/ManageAdvertisement/TopDeals"><i class="icon fa fa-circle-o"></i> Top Deals</a></li>
+                    <li><a class="treeview-item" mhref="DealOfTheDay" href="/Pharmacy/ManageAdvertisement/DealOfTheDay"><i class="icon fa fa-circle-o"></i> Deal of The Day</a></li>
+                    <li><a class="treeview-item" mhref="PriceIncrease" href="/Pharmacy/ManageAdvertisement/PriceIncrease"><i class="icon fa fa-circle-o"></i> Product Price Increase</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    @RenderBody()
+    <!-- Modal -->
+    <div class="modal fade admin_modelpop" id="divModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+    <script src="~/rxfairbackend/js/popper.min.js"></script>
+    <script src="~/js/RxFairBackEnd.min.js"></script>
+    <script src="~/js/RxFairDatatable.min.js"></script>
+    <script src="~/rxfairbackend/js/jquery.slimscroll.js"></script>
+    <script src="~/lib/RxFair-Common/dialogs.js"></script>
+    <script src="~/lib/RxFair-Common/jquery-blockui.js"></script>
+    <script src="~/lib/RxFair-Common/common.js"></script>
+    <script type="text/javascript">
+        var originalModal = $("#divModal").clone();
+        $("#divModal").on("hidden.bs.modal", function () {
+            $("#divModal").remove();
+            var myClone = originalModal.clone();
+            $("body").append(myClone);
+        });
+        //$("#divModal").on('shown.bs.modal', function (e) {
+        //    dataTableReSize();
+        //});
+        $(window).on("load", function () {
+            SetActiveMenu("Pharmacy");
+            dataTableReSize();
+        });
+        $(window).on("resize", function () {
+            dataTableReSize();
+        });
+
+        window.onload = function () {
+            ImageBroken.fixBrokenUserProfile(ImageBroken.path.UserProfile);
+        }
+    </script>
+    <partial name="~/Views/Shared/_InfoSection.cshtml" />
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

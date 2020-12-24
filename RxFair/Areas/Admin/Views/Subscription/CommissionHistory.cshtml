@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewData["Title"] = "Commission History";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Subscription</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Subscription Type</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="SubscriptionType">Commission History</a></li>
+        </ul>
+    </div>
+
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Commission History</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtCommissionHistory" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Subscription Type</th>
+                                    <th>Subscription Charge</th>
+                                    <th>Commission (%)</th>
+                                    <th>Brand (%)</th>
+                                    <th>Generic (%)</th>
+                                    <th>Otc (%)</th>
+                                    <th>Change Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        var subscriptionTypeId = parseInt(getLastUrlFields());
+        $(document).ready(function () {
+            bindCommissionHistoryList(subscriptionTypeId);
+        });
+
+        function bindCommissionHistoryList(id) {
+            if ($.fn.DataTable.isDataTable("#dtCommissionHistory")) {
+                $('#dtCommissionHistory').DataTable().destroy();
+            }
+            var table = $('#dtCommissionHistory')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Subscription/GetCommissionHistoryList/" + id,
+                    "order": [[3, "desc"]],
+                    "columns": [
+                        {
+                            "data": "subscriptionTypeName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "subscriptionCharge",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "chargedMonthly",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "brand",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "generic",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "otc",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "dateCreated",
+                            "autoWidth": false,
+                            "searchable": true
+                        }
+                    ]
+                });
+        };
+
+        $('#dtCommissionHistory').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                default:
+                    break;
+            }
+        });
+
+    </script>
+}

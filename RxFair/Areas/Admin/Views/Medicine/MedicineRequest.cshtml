@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewData["Title"] = "Medicine Requests";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="MedicineRequest">Medicine Request</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#newmedicine" role="tab" data-toggle="tab">New Medicine</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#approvedmedicine" role="tab" data-toggle="tab">Approved Medicine</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#rejectedmedicine" role="tab" data-toggle="tab">Rejected Medicine</a>
+            </li>
+        </ul>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="newmedicine">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table id="dtNewMedicine" class="table table-hover table-bordered dataTable no-footer table_bordered_sec" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Image</th>
+                                        <th>NDC</th>
+                                        <th>UPC</th>
+                                        <th>Medicine</th>
+                                        <th>Strength</th>
+                                        <th>Package Size</th>
+                                        <th>Manufacturer</th>
+                                        <th>Category</th>
+                                        <th>Distributor</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="approvedmedicine">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table id="dtApprovedMedicine" class="table table-hover table-bordered dataTable no-footer table_bordered_sec" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Image</th>
+                                        <th>NDC</th>
+                                        <th>UPC</th>
+                                        <th>Medicine</th>
+                                        <th>Strength</th>
+                                        <th>Package Size</th>
+                                        <th>Manufacturer</th>
+                                        <th>Category</th>
+                                        <th>Distributor</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="rejectedmedicine">
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table id="dtRejectedMedicine" class="table table-hover table-bordered dataTable no-footer table_bordered_sec" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Image</th>
+                                        <th>NDC</th>
+                                        <th>UPC</th>
+                                        <th>Medicine</th>
+                                        <th>Strength</th>
+                                        <th>Package Size</th>
+                                        <th>Manufacturer</th>
+                                        <th>Category</th>
+                                        <th>Distributor</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal admin_modelpop" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Medicine Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="frmReject">
+                    <input type="hidden" id="medicineId" />
+                    <div class="form-row mt-0">
+                        <div class="form-group col-md-12">
+                            <label for="Reason">Reason *</label>
+                            <textarea id="Reason" class="form-control" name="Reason" rows="4" data-parsley-trigger="keyup" data-parsley-maxlength="400" required></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary con_btn active" id="btnSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        var dynamic;
+        var table = {
+            id: "",
+            dtNewMedicine: "#dtNewMedicine",
+            dtApprovedMedicine: "#dtApprovedMedicine",
+            dtRejMedicine: "#dtRejectedMedicine"
+        };
+
+        $(document).ready(function () {
+            window.bindUploadedMedicine(table.dtNewMedicine, null);
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href"); // activated tab
+            ActiveTab(target);
+        });
+
+        function ActiveTab(active) {
+            switch (active) {
+                case "#newmedicine":
+                    bindUploadedMedicine(table.dtNewMedicine, null);
+                    break;
+                case "#approvedmedicine":
+                    bindUploadedMedicine(table.dtApprovedMedicine, true);
+                    break;
+                case "#rejectedmedicine":
+                    bindUploadedMedicine(table.dtRejMedicine, false);
+                    break;
+            }
+        }
+
+        function bindUploadedMedicine(tableId, status) {
+            table.id = tableId;
+            if ($.fn.DataTable.isDataTable(table.id)) {
+                $(table.id).dataTable().fnDestroy();
+            }
+            //DataTable
+            dynamic = $(table.id).DataTable({
+                "sAjaxSource": "/Admin/Medicine/GetMedicineRequestList?isApproved=" + status,
+                "rowCallback": function (settings, json) {
+                    setTimeout(function () {
+                        ImageBroken.fixBrokenImages(ImageBroken.path.MedicineImage);
+                    }, 300);
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var content = `<a href="javascript:;" ${dataParams("View", "view", (row.status === "Approved" ? row.mediPriceId : data))}  data-status="${row.status}" class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i>View</a>`;
+                            if (table.id === table.dtNewMedicine) {
+                                content += `<a href="javascript:;" ${dataParams("Approve", "approve", data)} class="dropdown-item action"><i class="fa fa-check-circle" aria-hidden="true"></i>Approve</a>`;
+                                content += `<a href="javascript:;" ${dataParams("Reject", "reject", data)} class="dropdown-item action"><i class="fa fa-times-circle-o" aria-hidden="true"></i>Reject</a>`;
+                            }
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "data": "medicineImage",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "database_image",
+                        "render": function (data, type, row) {
+                            return showImageTooltip(data, false);
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "upc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "packageSize",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "manufacturer",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "category",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "distributor",
+                        "autoWidth": false,
+                        "searchable": true
+                    }
+                ]
+            });
+        }
+
+        $("#dtNewMedicine,#dtApprovedMedicine,#dtRejectedMedicine").on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            const status = $(e.currentTarget).data("status");
+            var isUpload = true;
+            if (status === "Approved") {
+                isUpload = false;
+            }
+            switch (flag) {
+                case "view":
+                    ViewMedicine(id, isUpload);
+                    break;
+                case "approve":
+                    ManageStatusUploadedMedicine(id, true);
+                    break;
+                case "reject":
+                    RejectMedicine(id);
+                    break;
+            }
+        });
+
+        function ManageStatusUploadedMedicine(id, status) {
+            var title = status ? "Approve" : "Reject";
+            RxFair.Confirm(`Medicine ${title}`, RxFair.typeModel.Warning, "Are you sure you want to " + title + "?", RxFair.typeModel.Danger, "Yes, do it!", function () {
+                ManageMedicineRequestStatus(id, true, "");
+            }, function () {
+            });
+            $(".confirm").click(function () {
+                $('#dtNewMedicine').DataTable().ajax.reload();
+            });
+        }
+
+        function RejectMedicine(id) {
+            $("#medicineId").val(id);
+            $("#Reason").val("");
+            $("#rejectModal").modal('show');
+        }
+
+        $("#rejectModal").on("hidden.bs.modal", function () {
+            resetForm("frmReject");
+        });
+
+        $("#rejectModal").on("click", "#btnSave", function () {
+            $('#frmReject').parsley().validate();
+            if ($("#frmReject").parsley().isValid()) {
+                const id = $("#medicineId").val();
+                const reason = $("#Reason").val();
+                ManageMedicineRequestStatus(id, false, reason);
+            }
+        });
+
+        function ManageMedicineRequestStatus(id, status, reason) {
+            $.ajax({
+                url: "/Admin/Medicine/ManageMedicineRequestStatus",
+                data: { id: id, status: status, Reason: reason },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                    if (response.status === 1) {
+                        if (!status) {
+                            $("#rejectModal").modal('hide');
+                            $('#dtNewMedicine').DataTable().ajax.reload();
+                        }
+                        $('.nav-tabs a[href="#approvedmedicine"]').tab('show');
+                        bindUploadedMedicine(table.id, status);
+                    } else if (response.status === 2) {
+                        $("#rejectModal").modal('hide');
+                        $('.nav-tabs a[href="#rejectedmedicine"]').tab('show');
+                        ActiveTab("#rejectedmedicine");
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        }
+    </script>
+}

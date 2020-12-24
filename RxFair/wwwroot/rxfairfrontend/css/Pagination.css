@@ -1,0 +1,26 @@
+﻿.pagination {
+    padding: 20px;
+    &, *
+
+{
+    user-select: none;
+}
+
+a {
+    display: inline-block;
+    padding: 0 10px;
+    cursor: pointer;
+    &.disabled
+
+{
+    opacity: .3;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+&.current {
+    background: #f3f3f3;
+}
+
+}
+}

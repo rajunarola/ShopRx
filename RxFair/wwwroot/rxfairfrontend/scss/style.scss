@@ -1,0 +1,584 @@
+/*=====================
+    1.General CSS start
+==========================*/
+body {
+  font-family: 'Muli', sans-serif;
+  position: relative;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+section{
+  padding-top: 90px;
+  padding-bottom: 90px;
+}
+
+h1 {
+  font-size: calc(22px + (60 - 26) * ((100vw - 320px) / (1600 - 320)));
+}
+
+h2 {
+  font-size: calc(20px + (36 - 20) * ((100vw - 320px) / (1600 - 320)));
+}
+
+h3 {
+  font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1600 - 320)));
+}
+
+h4 {
+  font-size: calc(16px + (14 - 16) * ((100vw - 320px) / (1600 - 320)));
+}
+
+h5 {
+  font-size: calc(14px + (18 - 14) * ((100vw - 320px) / (1600 - 320)));
+}
+
+h6 {
+  font-size: 16px;
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.8em;
+}
+
+a{
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+.transition{
+  transition: 0.5s ease;
+}
+
+
+//---------- Button Start CSS -----------
+.con_btn {
+  padding: 10px 50px;
+  background-color: white;
+  font-size: 18px;
+  font-weight: 600;
+  transition: 0.2s ease;
+  border-color: #3b5998;
+  color: #3b5998;
+  i{
+    padding-left: 10px;
+  }
+  &:hover{
+    background-color: #3b5998;
+    transition: 0.2s ease;
+  }
+}
+//---------- Button End CSS -----------
+
+//---------- Title Start --------
+.title{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  h3{
+    text-align: center;
+    line-height: 50px;
+    font-weight: 700;
+    margin: 0;
+    font-size: calc(18px + (28 - 18) * ((100vw - 320px) / (1600 - 320)));
+  }
+}
+//---------- Title End --------
+
+
+//---------- Nav-Bar CSS Start ----------
+.navbar{
+  background-color: #3b5998;
+  padding: 0;
+  .navbar-brand{
+    margin: 0;
+    padding: 25px 30px;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .navbar-collapse{
+    .navbar-nav{
+      .nav-item{
+        padding: 0 0 0 40px;
+        .nav-link{
+          color: white;
+          padding: 0;
+          letter-spacing: 0.00em;
+          font-size: 18px;
+          text-transform: capitalize;
+          position: relative;
+          &:before, &:after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            bottom: -5px;
+            background: #fff;
+          }
+          &:before {
+            left: 0;
+          }
+          &:after {
+            right: 0;
+            background: #fff;
+            transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+          }
+          &:hover:before {
+            background: #fff;
+            width: 100%;
+            transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+          }
+          &:hover:after {
+            background: transparent;
+            width: 100%;
+            transition: 0s;
+          }
+          &.active{
+            &:before {
+              background: #fff;
+              width: 100%;
+              transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            &:after {
+              background: transparent;
+              width: 100%;
+              transition: 0s;
+            }
+          }
+        }
+      }
+    }
+  }
+  .login_btn{
+    color: white;
+    font-size: 18px;
+    text-transform: capitalize;
+    padding: 39px 40px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    i{
+      padding-right: 10px;
+    }
+  }
+}
+//---------- Nav-Bar CSS End ----------
+
+//---------- Main COver Start ------------
+.main-cover{
+  &.cover-two{
+    background-image: linear-gradient(to bottom right, rgba(255,255,255,1) 30%,rgba(255,255,255,0) 100%),url(../images/cover.jpg);
+  }
+  &.cover-three{
+    background-image: linear-gradient(to bottom right, rgba(255,255,255,1) 30%,rgba(255,255,255,0) 100%),url(../images/cover.jpg);
+  }
+  background-image: linear-gradient(to bottom right, rgba(255,255,255,1) 30%,rgba(255,255,255,0) 100%),url(../images/cover.jpg);
+  width: 100%;
+  height: calc(100vh - 105px);
+  background-repeat: no-repeat;
+  display: block;
+  background-size: cover;
+  background-position: bottom;
+  position: relative;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  .main-cover-text{
+    display: flex;
+    align-items: center;
+    height: calc(100vh - 105px);
+    h3{
+      color: #666666;
+    }
+    h1{
+      color: #3b5998;
+      font-weight: 700;
+      margin: 10px 0px;
+      font-size: calc(22px + (48 - 26) * ((100vw - 320px) / (1600 - 320)));
+    }
+    p{
+      color: #666666;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .con_btn{
+      margin-top: 20px;
+    }
+  }
+}
+//---------- Main COver End ------------
+
+//-- About-Sec start --
+.about_sec{
+  .about_text{
+    h3{
+      text-align: center;
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 50px;
+      font-weight: 700;
+      font-size: calc(18px + (28 - 18) * ((100vw - 320px) / (1600 - 320)));
+    }
+    .scroll_image{
+      display: flex;
+      justify-content: center;
+      padding: 30px 0;
+    }
+    p{
+      text-align: center;
+      padding: 0 100px;
+      font-size: 16px;
+      color: #666666;
+    }
+
+    .about_btn{
+      display: flex;
+      justify-content: center;
+      position: relative;
+      margin-top: 70px;
+      .pulse {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: -1;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #cad6fb;
+        cursor: pointer;
+        box-shadow: 0 0 0 rgba(202, 214, 251, 0.4);
+        animation: pulse 2s infinite;
+      }
+      .pulse:hover {
+        animation: none;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(202, 214, 251, 0.0);
+        }
+        70% {
+          box-shadow: 0 0 0 20px rgba(202, 214, 251, 0.4);;
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(202, 214, 251, 0.0);
+        }
+      }
+    }
+
+  }
+}
+//-- About-Sec End --
+
+//-- Information Section Start --
+.info_sec{
+  background-image: url(../images/text-cover.jpg);
+  background-color: black;
+  background-repeat: no-repeat;
+  display: block;
+  background-size: cover;
+  background-position: bottom;
+  position: relative;
+  .info_text{
+    h2{
+      text-align: center;
+      color: white;
+      font-size: calc(24px + (48 - 24) * ((100vw - 320px) / (1600 - 320)));
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      padding-bottom: 25px;
+    }
+    p{
+      font-size: 18px;
+      text-align: center;
+      color: white;
+      letter-spacing: 0.07em;
+      line-height: 1.7em;
+    }
+  }
+}
+//-- Infromation Secction End --
+
+//-- Testimonial Start --
+.testimonials{
+  .testimonials_cen{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    .scroll_image{
+      display: flex;
+      justify-content: center;
+      padding: 30px 0;
+      width: 100%;
+    }
+    p{
+      padding: 0px 220px;
+      margin: 0;
+      text-align: center;
+      color: #666666;
+      letter-spacing: 0.05em;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+  .testimonials_sec{
+    padding-top: 30px;
+    .testimonials_slider{
+      position: relative;
+      padding: 30px 30px;
+      margin: 75px auto 15px;
+      background-color: white;
+      max-width: 650px;
+      text-align: center;
+      box-shadow: 0px 0px 15px 0px rgba(136, 136, 136, 0.5);
+      img{
+        border-radius: 50%;
+        position: absolute;
+        transform: translate(-50%,-50%);
+        top: 0%;
+        left: 50%;
+        width: 100px;
+      }
+      h5{
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        padding-bottom: 10px;
+        margin-top: 35px;
+      }
+      p{
+        margin: 0;
+        color: #666666;
+        font-size: 15px;
+        letter-spacing: 0.04em;
+        font-weight: 600;
+        line-height: 30px;
+      }
+      &:before{
+        content: "\f10e";
+        font-family: fontawesome;
+        position: absolute;
+        display: inline-block;
+        transform: translate(-50%,-50%);
+        color: #3b5998;
+        left: 8%;
+        top: -15%;
+        font-size: 70px;
+      }
+    }
+    /* owl nav */
+    .owl-prev span, .owl-next span {
+      color: #ffffff;
+      font-size: 30px;
+      background-color: #3b5998;
+      padding: 10px 19px;
+      border-radius: 5px;
+    }
+    .owl-prev span{
+      padding-right: 20px;
+    }
+    .owl-next span{
+      padding-left: 20px;
+    }
+    .owl-prev span:hover,
+    .owl-next span:hover {
+    }
+    .owl-prev, .owl-next {
+      position: absolute;
+      top: 0;
+      height: 100%;
+    }
+    .owl-prev {
+      left: 7px;
+      &:hover{
+        background-color: transparent;
+      }
+    }
+    .owl-next {
+      right: 7px;
+      &:hover{
+        background-color: transparent;
+      }
+    }
+    /* removing blue outline from buttons */
+    button:focus, button:active {
+      outline: none;
+    }
+  }
+}
+//-- Testimonial End --
+
+//-- Newsletter Start --
+.newsletter_sec{
+  background-color: #3b5998;
+  padding: 60px 0;
+  .newsletter_text{
+    h3{
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin-bottom: 13px;
+    }
+    p{
+      margin: 0;
+      color: white;
+      letter-spacing: 0.05em;
+    }
+  }
+  .news-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+  }
+  .signup{
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    border: 4px solid white;
+    -webkit-box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.01);
+    box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.01);
+    border-radius: 0.2rem;
+    form {
+      display: block;
+      margin: 0;
+    }
+    #email-signup {
+      height: 45px;
+      padding: 0px 5px 0px 10px;
+      width: 76%;
+      background-color: white;
+      font-size: 16px;
+      color: #383838;
+      outline-style: none;
+      border: none;
+      border-radius: 0.2rem;
+    }
+    #btn {
+      height: 42px;
+      width: 124px;
+      background-color: #3b5998;
+      border: none;
+      font-size: 16px;
+      border-radius: 0.2rem;
+      float: right;
+      color: white;
+    }
+  }
+}
+//-- Newsletter End --
+
+//-- Footer Start --
+footer{
+  padding: 90px 0;
+  background-color: #222222;
+  .footer_title{
+    h5{
+      color: white;
+      letter-spacing: 0.05em;
+      position: relative;
+      &:after {
+        content: "";
+        position: absolute;
+        background-color: white;
+        height: 2px;
+        width: 78px;
+        left: 0;
+        bottom: -20px;
+      }
+    }
+  }
+  .footer_one{
+    padding-top: 40px;
+    ul{
+      padding: 0;
+      margin: 0;
+      li{
+        color: #666666;
+        padding-bottom: 15px;
+        list-style: none;
+        letter-spacing: 0.03em;
+        max-width: 270px;
+        font-weight: 600;
+        a{
+          color: #666666;
+          transition: 0.3s ease;
+          &:hover{
+            color: white;
+            transition: 0.3s ease;
+          }
+        }
+        i{
+          padding-right: 10px;
+        }
+      }
+    }
+  }
+  .footer_social{
+    padding-top: 40px;
+    ul{
+      padding: 0;
+      margin: 0;
+      li{
+        display: inline-block;
+        padding-right: 10px;
+        a{
+          border: 1px solid white;
+          border-radius: 50%;
+          color: #c4c4c4;
+          display: inline-block;
+          height: 40px;
+          width: 40px;
+          text-align: center;
+          transition: 0.3s ease;
+          &:hover{
+            background-color: #c4c4c4;
+            color: #666;
+            transition: 0.3s ease;
+          }
+          i{
+            line-height: 40px;
+          }
+        }
+      }
+    }
+  }
+}
+//-- Footer End --
+
+//-- copyright sec start --
+.copright_sec{
+  padding: 30px 0;
+  background-color: #222222;
+  border-top: 1px solid rgba(255, 255, 255, 0.11);
+  p{
+    margin: 0;
+    color: #666666;
+    letter-spacing: 0.05em;
+  }
+}
+//-- copyright sec End --
+
+.tap-top {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 50px;
+  right: 30px;
+  z-index: 8;
+  display: none;
+  color: #ffffff;
+  text-align: center;
+  background: #3b5998;
+  border: none;
+  font-size: 22px;
+  padding: 7px;
+  cursor: pointer;
+  box-shadow: 0 0 17px rgba(4, 4, 4, 0.3);
+  &.top-cls {
+    bottom: 30px;
+    i{
+      line-height: 35px;
+    }
+  }
+}

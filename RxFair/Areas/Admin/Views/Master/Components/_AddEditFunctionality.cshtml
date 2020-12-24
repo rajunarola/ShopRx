@@ -1,0 +1,55 @@
+﻿@model RxFair.Dto.Dtos.FunctionalityDto
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@(Model.Id == 0 ? "Add" : "Edit") Functionality</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="frmFunctionality" asp-action="AddEditFunctionality" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="IsActive" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-12">
+                        <label for="Name">Name</label>
+                        <input type="text" asp-for="Name" class="form-control" data-parsley-required data-parsley-pattern="^[a-zA-Z]+$" data-parsley-trigger="change" >
+                    </div>
+                    @*<div class="form-group col-md-2">
+                        <label for="IsField">IsActive</label>
+                        <div class="animated-checkbox">
+                            <label>
+                                <input type="checkbox" asp-for="IsActive"><span class="label-text"></span>
+                            </label>
+                        </div>
+                    </div>*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+    $("#btnSave").click(function () {
+        $('#frmFunctionality').parsley().validate();
+        if ($("#frmFunctionality").parsley().isValid()) {
+            $.post("/Admin/Master/AddEditFunctionality", $("#frmFunctionality").serialize(), function (response) {
+                RxFair.HandleResponse(response);
+                if (response.status === 1) {
+                    closeModal();
+                    window.bindFunctionalityList();
+                }
+            });
+        }
+    });
+</script>

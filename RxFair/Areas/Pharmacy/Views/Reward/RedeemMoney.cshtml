@@ -1,0 +1,129 @@
+﻿@using RxFair.Dto.Enum
+@model RxFair.Dto.Dtos.RewardEarnProductDto
+@{
+    ViewData["Title"] = "Redeemed Reward Point";
+}
+
+<style>
+    .popover-content {
+        height: 200px;
+        overflow-y: scroll;
+    }
+
+    .popover {
+        max-height: 200px;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+</style>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Redeem Reward Point</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Redeem Reward Point</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="reward-btns">
+                        <h4>Available Reward Point</h4>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <p class="rew-price">@Model.AvailableReward.AvailableRewardMoney</p>
+                            <a href="@Url.Action("MoneyHistory", "Reward", new { area="Pharmacy" })" class="btn btn-outline-primary con_btn active">View Detail</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="reward-btns">
+                        <h4>View Reward Product</h4>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <a href="@Url.Action("RedeemProduct", "Reward", new { area="Pharmacy" })" class="btn btn-outline-primary con_btn active">View Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @foreach (var item in Model.ProductDtos)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                <div class="redeem_products pharmacies_product">
+                    <img src="@($@"\{FilePathList.RewardProduct}\{item.ProductImage}")" class="img-fluid reward-con_img" alt="">
+                    <button type="button" class="btn btn-outline-primary con_btn action" id="@item.Id.ToString()" data-id="@item.Id">Redeem</button>
+                    <h5 class="title">@item.ProductName</h5>
+                    <p id="description" class="product-text-s" data-toggle="popover-click" data-content="@item.Description"> @item.Description </p>
+                    <div class="">
+                        <div class="redeem_text pt-0">
+                            <h5>Require Redeem Money : </h5>
+                            <p class="price p-0">$ @item.Redeem.ToString()</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            ImageBroken.fixBrokenImages(ImageBroken.path.RedeemProduct);
+        }
+
+        $(document).on("click", ".action", function (e) {
+            const id = $(e.currentTarget).data("id");
+            $("#" + id).hide();
+            $.ajax({
+                url: "/Pharmacy/Reward/RedeemRequest",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) {
+                }
+            });
+        });
+        $(document).on("click", ".confirm", function () {
+            window.location.href = "/Pharmacy/Reward/RedeemMoney";
+        });
+
+        $(document).on("mouseover", ".redeem_products > p", function (e) {
+            var data = $(e.currentTarget).text();
+            return redeemMoneyPopover(data, true);
+        });
+
+        $(document).on("mouseenter", ".redeem_products > p", function () {
+            // popovers initialization - on click
+            $('[data-toggle="popover-click"]').popover({
+                html: true,
+                trigger: 'hover-hover focus',
+                placement: 'bottom',
+                content: function () { return '<div"' + $(this).data('original-title') + '" />'; }
+            }).on("mouseenter", function () {
+                var _this = this;
+                $(this).popover("show");
+                $(".popover").on("mouseleave", function () {
+                    $(_this).popover('hide');
+                });
+            }).on("mouseleave", function () {
+                var _this = this;
+                setTimeout(function () {
+                    if (!$(".popover:hover").length) {
+                        $(_this).popover("hide");
+                    }
+                }, 300);
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewData["title"] = "Medicine History ";
+}
+<style>
+    /* Tooltip container */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    }
+
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+
+    td.details-control {
+        background: url('/rxfairfrontend/images/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('/rxfairfrontend/images/details_close.png') no-repeat center center;
+    }
+</style>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="MedicineHistory">Manage Medicine Price History</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Medicine Price History
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicineHistory" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Id</th>
+                                    <th>Ndc</th>
+                                    <th>Upc</th>
+                                    <th>Image</th>
+                                    <th>Drug Name</th>
+                                    <th>Distributor Name</th>
+                                    @*<th>Old Price</th>*@
+                                    <th>New Price</th>
+                                    <th>Created By</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            bindMedicineHistory();
+
+            // Add event listener for opening and closing details
+            $('#dtMedicineHistory tbody').on('click', 'td.details-control', function (e) {
+                var tr = $(e.currentTarget).closest('tr');
+              
+                    var row = $("#dtMedicineHistory").DataTable().row(tr);
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        // Open this row
+                        var rowData = row.data();
+                        getChildTable(rowData.id).done(function (response) {
+                            var innerContent = `<div>${format(response.data)}</div>`;
+                            row.child(innerContent).show(); // Render Child Table Data
+                            tr.addClass('shown');
+                        });
+                        tr.addClass('shown');
+                        //tr.find('td').attr({
+                        //    "data-toggle": "tooltip",
+                        //    "data-placement": "top",
+                        //    "title": "Shrink"
+                        //});
+                    }
+            });
+          
+        });
+   
+        function bindMedicineHistory() {
+            //if ($.fn.DataTable.isDataTable("#dtMedicineHistory")) {
+            //    historyTable.destroy();
+            //}
+            var historyTable = $('#dtMedicineHistory')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Medicine/GetMedicineHistory",
+                    "order": [[2, "DESC"]],
+                    "rowCallback": function (data, key, row) {
+                                    //add tool tip on icon
+                                    $(data.cells[0]).attr({
+                                           "data-toggle": "tooltip",
+                                           "data-placement": "top",
+                                           "title": "View Medicine  Price history"
+                                       });
+                    },    
+                    "columns": [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "autoWidth": true,
+                            "data": null,   
+                            "defaultContent": ''
+                        },
+                        {
+                            "data": "id",
+                            "visible": false,
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": false
+                        },
+                        {
+                            "data": "ndc",
+                            "width": "5%",
+                        },
+                        {
+                            "data": "upc",
+                            "width": "5%",
+                        },
+                        {
+                            "data": "medicineImage",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": false,
+                            "className": "database_image",
+                            "render": function (data, type, row) {
+                                return showImageTooltip(data);
+                            }
+                        },
+                        {
+                            "data": "medicineName",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "distributorName",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "newPrice",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "createdby",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "createddate",
+                            "width": "5%",
+                        },
+                    ]
+                });
+        };
+
+        /* Formatting function for row details - modify as you need */
+        function format(data) {
+            
+            if (data.length === 0) {
+                return "<p><b>No result found!</b></p>";
+            }
+            var tableContent = `<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">
+                                                         <thead>
+                                                            <tr>
+                                                                <th style="width: 100px; text-align: center;">Date</th>
+                                                                <th style="width: 80px; text-align: center;">Update By</th>
+                                                                <th style="width: 80px; text-align: center;">Old Price</th>
+                                                            </tr>
+                                                         </thead>
+                                                                <tbody>{body}</tbody>
+                                                        </table>`;
+            var trContent = "";
+            $.each(data,
+                function (key, item) {
+                    trContent += `<tr><td class="text-center">${item.dateCreated}</td><td class="text-center">${
+                        item.createdby}</td><td class="text-center">${item.oldPrice}</td></tr>`;
+                });
+            tableContent = tableContent.replace("{body}", trContent);
+            trContent = "";
+            // `d` is the original data object for the row
+            return tableContent;
+        }
+
+        function getChildTable(id) {
+            return $.ajax({
+                url: `/Admin/Medicine/GetMedicineHistoryById/${id}`,
+                type: "GET",
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8"
+            });
+        }
+
+
+
+
+    </script>
+}
+

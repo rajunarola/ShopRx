@@ -1,0 +1,175 @@
+﻿@{
+    ViewData["Title"] = "Distributor Subscription";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Subscription</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Distributor Subscription</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Distributor Subscription
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="javascript:;" onclick="EditDistributorSubscription(0);" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Distributor Subscription</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtDistributorSub" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Distributor</th>
+                                    <th>Subscription Plan</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindSubscriptionTypeList();
+        });
+
+        function bindSubscriptionTypeList() {
+            if ($.fn.DataTable.isDataTable("#dtDistributorSub")) {
+                $('#dtDistributorSub').DataTable().destroy();
+            }
+            var table = $('#dtDistributorSub')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Subscription/GetDistributorSubscriptionList",
+                    "order": [[2, ""]],
+                    "columns": [
+                        {
+                            "data": "id",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                var content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>`;
+                                content+= row.isExpire === 1 ? `<a href="javascript:;"  class="dropdown-item action disabled"><i class="fa fa-expeditedssl" aria-hidden="true"></i> Subscription Terminated </a>` : `<a href="javascript:;" ${dataParams("End Subscription", "endsub", data)} class="dropdown-item action "><i class="fa fa-expeditedssl" aria-hidden="true"></i> End Subscription </a>`;
+                                content += `<a href="javascript:;" ${dataParams("View subscription history", "history", row.distributorId)} class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View subscription history</a>`;
+                                return dataTableAction(content);
+                            }
+                        },
+                        {
+                            "data": "isActive",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "className": "admin_toggle",
+                            "render": function (data, type, row) {
+                                return statusToggle(row.id, data);
+                            }
+                        },
+                        {
+                            "data": "fullName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "subscriptionTypeName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "dateStart",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "dateEnd",
+                            "autoWidth": false,
+                            "searchable": true
+                        }
+                    ]
+                });
+        };
+
+        $('#dtDistributorSub').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    EditDistributorSubscription(id);
+                    break;
+                case "endsub":
+                    EndDistributorSubscription(id);
+                    break;
+                case "history":
+                    DistributorSubscriptionHistory(id);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        $('#dtDistributorSub').on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+            $.ajax({
+                url: "@Url.Action("ManageDistributorSubscriptionStatus", "Subscription")",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function(data) {}
+            });
+        });
+
+        function EditDistributorSubscription(id) {
+            if (id !== 0) {
+                window.location.href = `/Admin/Subscription/AddEditDistributorSubscription/${id}`;
+            } else {
+                window.location.href = `/Admin/Subscription/AddEditDistributorSubscription/`;
+            }
+        }
+
+        function EndDistributorSubscription(id) {
+            RxFair.Confirm("End Subscription", RxFair.typeModel.Info, "Are you sure you want to end the subscription?", RxFair.typeModel.Success, "Yes",
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("EndDistributorSubscription", "Subscription")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function (response) {
+                            RxFair.HandleResponse(response);
+                        },
+                        error: function(data) {}
+                    });
+                },
+                function () { }
+            );
+        }
+
+        function DistributorSubscriptionHistory(id) {
+            window.location.href = `/Admin/Subscription/SubscriptionHistory/${id}`;
+        }
+
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@{
+    Layout = null;
+}
+@using RxFair.Dto.Enum
+@model RxFair.Dto.Dtos.ReportDto
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">View Medicines</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicines" role="grid" aria-describedby="sampleTable_info" width="100%">
+        <thead>
+            <tr>
+                <th>Ndc</th>
+                <th>Upc</th>
+                <th>Medicine Name</th>
+                <th>Category</th>
+                <th>Package Size</th>
+                <th>Package Quantity</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody> </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        BindDataTable();
+        
+    });
+    function BindDataTable() {
+        var medicineList = $("#dtMedicines").DataTable({
+            "sAjaxSource": `/Admin/Report/GetPharmacyPurchaseDistributorOrder?id=${@Model.OrderChargeId}&startDate=@Model.startDate&endDate=@(Model.endDate??"")`,
+            "order": [[2, ""]],
+            "language": {
+                "info": "Showing _START_ to _END_ of _TOTAL_ Medicines",
+                "sInfoEmpty": "Showing 0 to 0 of 0 Medicines"
+            },
+            "columns": [
+                {
+                    data: "ndc",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    data: "upc",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "medicineName",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "category",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "packageSize",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "packageQuantity",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "quantity",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "price",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+                {
+                    "data": "totalPrice",
+                    "autoWidth": false,
+                    "searchable": true
+                },
+               
+            ]
+        });
+    }
+
+</script>

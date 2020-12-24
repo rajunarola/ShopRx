@@ -1,0 +1,53 @@
+﻿@model List<RxFair.Dto.Dtos.RecentlyBlogsView>
+<div class="col-lg-3">
+    <div class="blog_menu mr-t">
+        <div class="blog_title">
+            <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+            <h4>Recently Blog Post</h4>
+        </div>
+        <div class="blog-sec">
+            <div class="blog_headline">
+                <div class="headline_title">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <h4>@DateTime.Now.Year</h4>
+                </div>
+                <ul>
+                    @foreach (var item in Model.Where(x => x.Year == DateTime.Now.Year))
+                    {
+                        <li>
+                            <a class="d-inline-block text-truncate w-100" href="/Blogs/BlogDetails/@item.BlogId"><i class="fa fa-long-arrow-right"></i>@item.Title</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="blog_headline">
+                <div class="headline_title">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <h4>@DateTime.Now.AddYears(-1).Year</h4>
+                </div>
+                <ul>
+                    @foreach (var item in Model.Where(x => x.Year == DateTime.Now.AddYears(-1).Year))
+                    {
+                        <li>
+                            <a class="d-inline-block text-truncate w-100" href="/Blogs/BlogDetails/@item.BlogId"><i class="fa fa-long-arrow-right"></i>@item.Title</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="blog_headline">
+                <div class="headline_title">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <h4>Older</h4>
+                </div>
+                <ul>
+                    @foreach (var item in Model.Where(x => x.Year < DateTime.Now.AddYears(-1).Year))
+                    {
+                        <li>
+                            <a class="d-inline-block text-truncate w-100" href="/Blogs/BlogDetails/@item.BlogId"><i class="fa fa-long-arrow-right"></i>@item.Title</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

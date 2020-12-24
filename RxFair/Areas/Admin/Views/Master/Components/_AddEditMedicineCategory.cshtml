@@ -1,0 +1,46 @@
+﻿@model RxFair.Dto.Dtos.MedicineCategoryView
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@(Model.Id == 0 ? "Add" : "Edit") Medicine Category</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form id="frmFaqs" asp-action="AddEditMedicineCategory" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" name="Id" />
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-12">
+                        <label for="MedicineCategoryName">Medicine Category *</label>
+                        <input type="text" asp-for="MedicineCategory" id="MedicineCategory" name="MedicineCategory" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z0-9_ ]+$">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active">Save</button>
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+
+<script type="text/javascript">
+    $("#btnSave").click(function () {
+        $('#frmFaqs').parsley().validate();
+        if ($("#frmFaqs").parsley().isValid()) {
+            $.post("/Admin/Master/AddEditMedicineCategory", $("#frmFaqs").serialize(), function (response) {
+                RxFair.HandleResponse(response);
+                if (response.status === 1) {
+                    closeModal();
+                    window.bindMedicineCategoryList();
+                }
+            });
+        }
+    });
+</script>

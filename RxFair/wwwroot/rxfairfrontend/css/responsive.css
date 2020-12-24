@@ -1,0 +1,973 @@
+@media (max-width: 1440px) {
+    .navbar .navbar-collapse .navbar-nav .nav-item {
+        padding: 0 0 0 30px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .modal-content {
+        width: 80%;
+    }
+
+    .login_model .login_form {
+        padding: 30px 25px;
+    }
+
+    .login_model .info_model {
+        padding: 30px 25px;
+    }
+
+    .login_model .login_form .note {
+        padding: 10px 10px;
+        margin-top: 15px;
+    }
+
+    .termsandcon .turms_con ul li {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .termsandcon .turms_con ul {
+        margin-top: 12px;
+        padding-left: 30px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .pharmacies_form .smartwizard ul {
+        margin-bottom: 30px;
+    }
+
+        .pharmacies_form .smartwizard ul li {
+            padding: 0 30px;
+        }
+
+            .pharmacies_form .smartwizard ul li a:before {
+                width: 160px;
+            }
+
+    .navbar .navbar-collapse .navbar-nav .nav-item {
+        padding: 0 0 0 15px;
+    }
+
+        .navbar .navbar-collapse .navbar-nav .nav-item .nav-link {
+            font-size: 17px;
+        }
+
+    .model_data svg {
+        width: 100px;
+    }
+
+    .model_data h2 {
+        font-size: 25px;
+    }
+
+    .model_data {
+        padding: 20px 10px;
+    }
+
+    .error .modal-body {
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+
+    .terms_info .terms_text p {
+        padding: 0px 100px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .blog .blog_detail .blog_text .blog-btn {
+        padding: 5px 30px;
+    }
+
+    .blog .blog_menu .blog_title i {
+        width: 40px;
+        height: 40px;
+    }
+
+    .blog .blog_menu .blog_title h4 {
+        font-size: 14px;
+    }
+
+    .services_sec .service_text {
+        height: 250px;
+    }
+
+    .faq_info .faq_text p {
+        padding: 0px 60px;
+    }
+
+    .con_btn {
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .navbar .login_btn {
+        padding: 44px 20px;
+    }
+
+    .navbar .navbar-brand {
+        padding: 30px 10px;
+    }
+
+    .navbar.fixed .navbar-brand {
+        padding: 25px 10px;
+    }
+
+    .navbar.fixed .login_btn {
+        padding: 38px 20px;
+    }
+
+    section {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .newsletter_sec .signup #email-signup {
+        width: 70%;
+    }
+
+    footer {
+        padding: 60px 0;
+    }
+
+    .copright_sec {
+        padding: 20px 0;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar .navbar-collapse {
+        -webkit-box-ordinal-group: 5;
+        -ms-flex-order: 4;
+        order: 4;
+    }
+
+        .navbar .navbar-collapse .navbar-nav {
+            padding: 15px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+            .navbar .navbar-collapse .navbar-nav .nav-item {
+                padding: 10px 30px;
+            }
+
+    .navbar .navbar-brand {
+        padding: 20px 20px;
+    }
+
+    .navbar .navbar-toggler {
+        -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+        order: 3;
+        margin-right: 40px;
+        color: rgba(255, 255, 255, 0.5);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+        .navbar .navbar-toggler i {
+            padding: 5px 4px;
+        }
+
+    .navbar .login_btn {
+        -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+        order: 2;
+        padding: 34px 30px;
+    }
+
+    .about_sec .about_text p {
+        padding: 0;
+    }
+
+    .testimonials .testimonials_cen p {
+        padding: 0;
+    }
+
+    .info_sec .info_text p {
+        font-size: 16px;
+        letter-spacing: 0.05em;
+        line-height: 1.7em;
+    }
+
+    .newsletter_sec .signup #email-signup {
+        width: 60%;
+    }
+
+    .testimonials .testimonials_sec .owl-next {
+        right: -90px;
+    }
+
+    .order-value {
+        order: 2;
+    }
+
+    .pharmacies_text {
+        margin-top: 30px;
+    }
+
+    .testimonials .testimonials_sec .owl-prev {
+        left: -90px;
+    }
+
+    .pagination_sec .pagination {
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+
+        .pagination_sec .pagination ul li a {
+            font-size: 18px;
+            height: 40px;
+            width: 40px;
+        }
+
+    .mrf_b {
+        margin-bottom: 25px;
+    }
+
+    .or_t {
+        -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+        order: 2;
+    }
+
+    .mr-t {
+        margin-top: 30px;
+    }
+
+    .blog_singel_title {
+        margin-top: 20px;
+    }
+
+    .faq_info {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+        .faq_info .faq_text p {
+            padding: 0;
+        }
+
+    .search_padding .faq_search .signup {
+        height: 53px;
+    }
+
+        .search_padding .faq_search .signup #email-signup {
+            height: 45px;
+            width: 70%;
+        }
+
+        .search_padding .faq_search .signup #btn {
+            height: 45px;
+        }
+
+    .search_padding {
+        padding: 30px 0;
+    }
+
+    .faq_sec .ac-title p {
+        padding: 11px 20px;
+    }
+
+    .faq_sec .ac-title i {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
+
+    .faq_sec .commn-para-sm {
+        padding: 10px 15px;
+    }
+
+    .model_data .con_btn_pop {
+        width: 170px;
+    }
+
+    .error .modal-content {
+        width: 90%;
+    }
+
+    .modal-content {
+        width: 60%;
+    }
+
+    .login_model .info_model {
+        display: none;
+    }
+
+    .terms_info .terms_text p {
+        padding: 0px 30px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_one form .form-row .form_btn .con_btn {
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    /*.testimonials .testimonials_sec .testimonials_slider {
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }*/
+    .testimonials .testimonials_sec .owl-prev {
+        left: -40px;
+    }
+
+    .testimonials .testimonials_sec .owl-next {
+        right: -40px;
+    }
+
+    .testimonials .testimonials_sec .testimonials_slider p {
+        line-height: 25px;
+    }
+
+    footer .footer_one ul li {
+        max-width: none;
+    }
+
+    .pharmacies_form .smartwizard ul li {
+        padding: 0 10px;
+        font-size: 16px;
+        width: 130px;
+    }
+
+        .pharmacies_form .smartwizard ul li a {
+            height: 50px;
+            width: 50px;
+        }
+
+            .pharmacies_form .smartwizard ul li a:before {
+                width: 110px;
+            }
+
+    .blog .blog_sec .row > div:nth-last-child(-n + 4) .blog_detail {
+        margin-top: 30px;
+    }
+
+    .services_sec .service_text {
+        height: 230px;
+    }
+
+    .singel_blog_details .singel_blog_text .text h3 {
+        font-size: 14px;
+    }
+
+    .singel_blog_details .singel_blog_text .text .date-details h5 {
+        font-size: 14px;
+    }
+
+    .faq_info .faq_text p {
+        line-height: 1.5em;
+    }
+
+    .search_padding .faq_search .signup #email-signup {
+        font-size: 16px;
+    }
+
+    .search_padding .faq_search .signup #btn {
+        font-size: 16px;
+    }
+
+    .faq_sec .ac-title p {
+        padding: 9px 15px;
+        font-size: 15px;
+    }
+
+    .model_data svg {
+        width: 80px;
+    }
+
+    .model_data .con_btn_pop {
+        width: 150px;
+    }
+
+    .error .modal-content {
+        width: 80%;
+    }
+
+    .model_data h2 {
+        font-size: 22px;
+        line-height: 29px;
+    }
+
+    .login_model .model_title h3 {
+        padding-bottom: 10px;
+    }
+
+    .login_model .login_form {
+        padding: 20px 20px;
+    }
+
+    .terms_info .terms_text p {
+        padding: 0;
+        line-height: 1.4em;
+    }
+
+    .terms_info {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .search_padding .faq_search .signup .faq-search {
+        height: 45px;
+        width: 70%;
+    }
+    /*.testimonials .testimonials_sec .owl-next {
+        left: -40px;
+    }
+    .testimonials .testimonials_sec .owl-prev {
+        left: -40px;
+    }*/
+    .main_slider .main-cover .main-cover-text p {
+        color: #666;
+        font-size: 16px;
+        line-height: 1.4em;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: .03em;
+        font-weight: 600;
+    }
+
+    .main_slider .main-cover {
+        height: calc(100vh - 95px);
+    }
+
+    footer .margin_t {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    footer .footer_one {
+        padding-top: 30px;
+    }
+
+    footer .footer_social {
+        padding-top: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .con_btn {
+        padding: 10px 30px;
+        font-size: 14px;
+    }
+
+    section {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    footer .margin_t {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .navbar .navbar-brand img {
+        width: 185px;
+    }
+
+    .navbar .login_btn {
+        padding: 29px 30px;
+    }
+
+    .about_sec .about_text h3 {
+        max-width: 420px;
+        line-height: 30px;
+    }
+
+    .info_sec .info_text p {
+        font-size: 16px;
+        line-height: 1.5em;
+    }
+    /*.testimonials .testimonials_sec .owl-prev {
+        display: none;
+    }
+
+    .testimonials .testimonials_sec .owl-next {
+        display: none;
+    }*/
+    .testimonials .owl-theme .owl-nav {
+        position: absolute;
+        left: 50%;
+        bottom: 20px;
+    }
+
+    .testimonials .testimonials_sec .owl-prev span,
+    .testimonials .testimonials_sec .owl-next span {
+        color: #fff;
+        background-color: #3b5998;
+        padding: 2px 10px;
+        font-size: 25px;
+        margin: 0 2px;
+        border-radius: 5px;
+    }
+
+    .testimonials .testimonials_sec .testimonials_slider span {
+        position: absolute;
+        left: 80px;
+        top: -85px;
+        font-size: 50px;
+        color: #3b5998;
+        z-index: 999;
+    }
+
+    .navbar.fixed .login_btn {
+        padding: 25px 26px;
+    }
+
+    .about_sec .about_text p {
+        padding: 0px 15px;
+    }
+
+    .about_sec .about_text .about_btn {
+        margin-bottom: 30px;
+    }
+
+    .navbar.fixed .navbar-brand {
+        padding: 19px 30px;
+    }
+
+    .pharmacies_sec .pharmacies_text h4 {
+        margin-bottom: 10px;
+    }
+
+    .pharmacies_sec .pharmacies_text p {
+        margin-bottom: 5px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_title {
+        padding: 10px 10px;
+    }
+
+        .pharmacies_form .smartwizard .smartwizard_title .wizard_text i {
+            margin-right: 15px;
+        }
+
+    .pharmacies_form .smartwizard .smartwizard_one form {
+        padding: 15px 15px;
+        margin: 0;
+    }
+
+        .pharmacies_form .smartwizard .smartwizard_one form h4 {
+            margin-top: 15px;
+        }
+
+    .modal-content {
+        width: 75%;
+    }
+
+    .model_data .con_btn_pop {
+        width: 140px;
+        height: 40px;
+    }
+
+    .model_data h2 {
+        font-size: 18px;
+        line-height: 25px;
+    }
+
+    .termsandcon .turms_con h3 {
+        margin-bottom: 13px;
+    }
+
+    .termsandcon .turms_con p {
+        font-size: 16px;
+    }
+
+    .tap-top {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+    }
+
+        .tap-top.top-cls i {
+            line-height: 0;
+        }
+
+    .testimonials .testimonials_sec .testimonials_slider {
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar .navbar-brand {
+        border-right: none;
+    }
+
+    .navbar .login_btn {
+        padding: 19px 20px;
+        border-left: none;
+    }
+
+    .navbar .navbar-toggler {
+        margin-right: 20px;
+    }
+
+    .info_sec .info_text h2 {
+        padding-bottom: 15px;
+    }
+
+    .info_sec .info_text p {
+        font-size: 15px;
+        line-height: 1.4em;
+        padding: 0 30px;
+    }
+
+    .testimonials .testimonials_cen .scroll_image {
+        padding: 10px 0;
+    }
+
+    .testimonials .testimonials_sec .testimonials_slider p {
+        line-height: 23px;
+    }
+
+    .testimonials .testimonials_sec .testimonials_slider {
+        padding: 10px 10px;
+    }
+
+        .testimonials .testimonials_sec .testimonials_slider h5 {
+            margin-top: 45px;
+        }
+
+    .blog .blog_sec .row > div:nth-last-child(-n + 5) .blog_detail {
+        margin-top: 30px;
+    }
+
+    .search_padding .faq_search .signup #email-signup {
+        width: 65%;
+    }
+
+    .search_padding .faq_search {
+        padding: 0 20px;
+    }
+
+        .search_padding .faq_search .signup #btn {
+            height: 42px;
+            width: 115px;
+        }
+
+        .search_padding .faq_search .signup #email-signup {
+            height: 42px;
+        }
+
+        .search_padding .faq_search .signup {
+            height: 50px;
+        }
+
+    .faq_sec .commn-para-sm {
+        padding: 10px 15px;
+        line-height: 1.5em;
+        font-size: 14px;
+    }
+
+    .faq_sec .ac-title i {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    .search_padding {
+        padding: 18px 0;
+    }
+
+    .breadcrumb_section {
+        padding: 30px 0px;
+    }
+
+    .error .modal-body {
+        padding: 0;
+    }
+
+    .login_model .login_form .note p {
+        line-height: 1.3em;
+    }
+
+    .login_model .login_form {
+        padding: 15px 13px;
+    }
+
+    .login_model .model_title {
+        margin-bottom: 15px;
+    }
+
+    .login_model .login_form .form-group .form-control {
+        padding: 5px 10px;
+    }
+
+    .login_model .form-group {
+        margin-bottom: 5px;
+    }
+
+    .mtf-4 {
+        margin-top: 20px;
+    }
+
+    .faq_sec .ac-title p {
+        width: 85%;
+        font-size: 14px;
+    }
+
+    .search_padding .faq_search .signup .faq-search {
+        height: 35px;
+        font-size: 16px;
+        width: 65%;
+    }
+}
+
+@media (max-width: 420px) {
+    section {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .main_slider .main-cover .main-cover-text p {
+        letter-spacing: 0.02em;
+        line-height: 1.4em;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: .03em;
+    }
+
+    .main_slider .main-cover .main-cover-text .con_btn {
+        margin-top: 0px;
+    }
+
+    .navbar .navbar-brand {
+        padding: 14px 10px;
+    }
+
+    .navbar .login_btn {
+        padding: 15px 10px;
+        border-left: none;
+    }
+
+    .navbar .navbar-toggler i {
+        padding: 2px 1px;
+    }
+
+    .newsletter_sec {
+        background-color: #3b5998;
+        padding: 30px 0;
+    }
+
+    .about_sec .about_text p {
+        line-height: 1.5em;
+    }
+
+    footer {
+        padding: 30px 0;
+    }
+
+    .navbar .navbar-collapse .navbar-nav .nav-item {
+        padding: 9px 15px;
+    }
+
+        .navbar .navbar-collapse .navbar-nav .nav-item .nav-link {
+            font-size: 16px;
+        }
+
+    .navbar .navbar-collapse .navbar-nav {
+        padding: 0;
+    }
+
+    .newsletter_sec .signup #btn {
+        width: 98px;
+    }
+
+    .newsletter_sec .signup #email-signup {
+        font-size: 14px;
+    }
+
+    .pharmacies_form .smartwizard ul li {
+        padding: 0 5px;
+        width: 75px;
+        font-size: 12px;
+    }
+
+        .pharmacies_form .smartwizard ul li a {
+            height: 40px;
+            width: 40px;
+        }
+
+            .pharmacies_form .smartwizard ul li a:before {
+                width: 70px;
+            }
+
+        .pharmacies_form .smartwizard ul li a {
+            font-size: 15px;
+        }
+
+    .navbar.fixed .login_btn {
+        padding: 20px 20px;
+    }
+
+    .navbar.fixed .navbar-brand {
+        padding: 9px 10px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_title .wizard_text i {
+        width: 40px;
+        height: 40px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_one form .form-row .form-group .form-control {
+        padding: 5px 10px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_one form .form-row .form-group select {
+        height: 35px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_one form .form-row .form-group {
+        margin-bottom: 9px;
+    }
+
+    .mbf-3 {
+        margin-bottom: 20px;
+    }
+
+    .pharmacies_form .smartwizard .sw-toolbar-bottom .sw-btn-group .sw-btn-prev {
+        padding: 5px 35px;
+    }
+
+    .pharmacies_form .smartwizard .sw-toolbar-bottom .sw-btn-group .sw-btn-next {
+        padding: 5px 35px;
+    }
+
+    .pharmacies_form .smartwizard .sw-toolbar-bottom {
+        margin-top: 25px;
+    }
+
+    .pharmacies_form .smartwizard .smartwizard_one form h4 {
+        font-size: 16px;
+    }
+
+    .model_data .con_btn_pop {
+        width: 120px;
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .model_data h2 {
+        font-size: 17px;
+    }
+
+    .login_model .model_title h3:before {
+        width: 170px;
+    }
+
+    .con_btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 380px) {
+    .navbar.fixed .login_btn {
+        padding: 20px 10px;
+    }
+
+    .navbar .navbar-brand img {
+        width: 165px;
+    }
+
+    .navbar.fixed .navbar-brand {
+        padding: 9px 8px;
+    }
+
+    .navbar.fixed .login_btn {
+        padding: 20px 10px;
+    }
+
+    .navbar .login_btn {
+        font-size: 14px;
+    }
+
+    .navbar .navbar-toggler {
+        margin-right: 10px;
+    }
+
+    .search_padding .faq_search .signup #btn {
+        height: 42px;
+        width: 100px;
+    }
+
+    .search_padding .faq_search .signup #email-signup {
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .search_padding .faq_search .signup {
+        height: 43px;
+    }
+
+        .search_padding .faq_search .signup #btn {
+            height: 36px;
+            font-size: 14px;
+            width: 90px;
+        }
+
+    .faq_sec .accordian-block {
+        margin: 0 0 10px 0;
+    }
+}
+
+@media (max-width: 340px) {
+    .pharmacies_form .smartwizard ul li a {
+        height: 34px;
+        width: 20px;
+    }
+
+    .main-cover .main-cover-text .con_btn {
+        margin-top: 5px;
+    }
+
+    .pharmacies_form .smartwizard ul li {
+        padding: 0 3px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 320px) {
+    .navbar .navbar-brand img {
+        width: 155px;
+    }
+
+    .navbar .navbar-brand {
+        padding: 13px 5px;
+    }
+
+    .navbar .login_btn i {
+        padding-right: 4px;
+    }
+
+    .navbar .navbar-toggler {
+        margin-right: 10px;
+    }
+
+    .navbar .login_btn {
+        padding: 5px 9px;
+        border-left: none;
+        font-size: 16px;
+    }
+
+    .pharmacies_form .smartwizard ul li {
+        padding: 0 3px;
+        font-size: 11px;
+    }
+
+        .pharmacies_form .smartwizard ul li a:before {
+            width: 50px;
+        }
+
+    .search_padding {
+        padding: 8px 0;
+    }
+
+    .main_slider .main-cover .main-cover-text p {
+        line-height: 1.1em;
+    }
+}

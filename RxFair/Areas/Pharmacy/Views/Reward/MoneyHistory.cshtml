@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Money History";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Pharmacy">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Reward Point History</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Reward Point History</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtEarnMoney" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Date</th>
+                                    <th>Reward Type</th>
+                                    <th>Pharmacy Name</th>
+                                    <th>Reward Point</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindEarnMoney(parseInt(getLastUrlFields()));
+        });
+        function bindEarnMoney(id) {
+            if ($.fn.DataTable.isDataTable("#dtEarnMoney")) {
+                $('#dtEarnMoney').DataTable().destroy();
+            }
+            var table = $('#dtEarnMoney')
+                .DataTable({
+                    "sAjaxSource": "/Pharmacy/Reward/GetEarnMoneyList",
+                    "columns": [
+                        {
+                            "data": "dateCreated",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "typeName",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "rewardBy",
+                            "autoWidth": false,
+                            "searchable": true
+                        },
+                        {
+                            "data": "rewardMoney",
+                            "autoWidth": false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return data;
+                            }
+                        }
+                    ]
+                });
+        }
+
+    </script>
+}

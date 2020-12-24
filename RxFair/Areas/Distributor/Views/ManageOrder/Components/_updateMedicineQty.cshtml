@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Edit Item</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="accordian-block border-0">
+        <div class="accordian-para acc-show p-0">
+            <form>
+                <div class="form-row mt-0">
+                    <div class="form-group col-md-12">
+                        <label>Item Qty *</label>
+                        <input type="number" id="medQty" data-ditributorOrderId="@ViewBag.distributorOrderId" class="form-control" value="@ViewBag.currentQty" required min="1" max="@ViewBag.currentQty"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-outline-primary con_btn active">Save</button>
+    <button id="btnClose" type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal" aria-label="Close">Close</button>
+    <script type="text/javascript">
+        $(document).on("click", "#btnSave", function () {
+            $("#medQty").parsley().validate();
+            if ($("#medQty").parsley().isValid()) {
+                var distributorOrderId = $("#medQty").attr("data-ditributorOrderId");
+                var newQty = $("#medQty").val();
+                $.ajax({
+                    url: "/Distributor/ManageOrder/UpdateMedicineQty",
+                    data: { id: distributorOrderId, qty: newQty },
+                    type: "POST",
+                    success: function (response) {
+                        if (response.status == 1)
+                            RxFair.HandleResponse(response);
+                        $("#dtMedicineList").DataTable().ajax.reload();
+                        var id = $("#uniqueOrder").attr("data-OrderId");
+                        window.location.href = "/Distributor/ManageOrder/ViewOrderDetails/" + id
+                        closeModal();
+                    }
+                });
+            }
+        });
+
+    </script>

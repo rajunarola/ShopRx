@@ -1,0 +1,147 @@
+﻿@using System.Security.Policy
+@model RxFair.Dto.Dtos.AdvertiseTemplateDto
+
+<link href="~/rxfairbackend/js/plugins/summernote/summernote-bs4.css" rel="stylesheet" />
+<style type="text/css">
+    .summernote {
+    }
+</style>
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="EmailTemplate">Manage Email Templates</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    @(Model.Id == 0 ? "Add" : "Edit") Email Templates
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show">
+                                <form id="frmEmailTemplate">
+                                    <div class="form-row">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" asp-for="Id" name="Id" />
+                                        <div class="form-group col-md-4">
+                                            <label>Template Name *</label>
+                                            <input type="text" placeholder="Template Name" asp-for="TemplateName" class="form-control" data-parsley-required data-parsley-trigger="change keyup" data-parsley-pattern="^[a-zA-Z0-9-_ ]+$">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label>Content *</label>
+                                            @Html.HiddenFor(m => m.Template)
+                                            <div class="form-control summernote">
+                                                @Html.Raw(Model.Template)
+                                            </div>
+                                            <div id="templateError" style="display:none;">
+                                                <ul class="parsley-errors-list filled"><li class="parsley-required">This field is required.</li></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                    <div class="btn_sec mtf-2">
+                        <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                        <button type="button" id="btnCancel" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script src="~/rxfairbackend/js/plugins/summernote/summernote-bs4.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+              $('.summernote').summernote({
+                placeholder: 'Enter Template here...',
+                height: 200
+            });
+        });
+
+        $("#btnSave").click(function () {
+            var templateName = $('#TemplateName').val();
+            var replacedname = ReplaceHtml(templateName);
+            const body = $.trim($('.summernote').summernote("code"));
+            var newbody = body.replace(/&nbsp;/g, '');
+            const newbodyafterspace = ReplaceHtml(newbody);
+            const result = $('.summernote').summernote('isEmpty');
+            $("#Template").val(newbody);
+
+
+            if (/\S/.test(newbodyafterspace)) {
+                // string is not empty and not just whitespace
+                $("#templateError").hide();
+                $('#frmEmailTemplate').parsley().validate();
+                if ($("#frmEmailTemplate").parsley().isValid()) {
+                    if (newbody === "") {
+                        $("#Template").val(newbody);
+                        //RxFair.Error("Please provide with template first");
+                        return false;
+                    }
+                    else {
+                        var model = { Id: $('#Id').val(), TemplateName: replacedname, Template: newbody };
+                        $.ajax({
+                            url: "/Admin/Master/EmailTemplateAddEdit",
+                            type: "POST",
+                            data: model,
+                            success: function (response) {
+                                RxFair.HandleResponse(response);
+                                if (response.status === 1) {
+                                    window.location.href = "/Admin/Master/EmailTemplate";
+                                }
+                            }
+                        });
+                    }
+
+
+                }
+            }
+            else{    
+                $("#Template").val(newbody);
+                $("#templateError").show();
+            } 
+           
+        });
+
+        //function IsValid(templateName) {
+
+        //    var regex = /^[A-Za-z@@~`!@@##$%^&*,-]*$/;
+        //    if (!regex.test(templateName)) {
+        //        return false;
+        //    } else {
+        //        return true;
+        //    }
+        //}
+
+        function ReplaceHtml(templateName) {
+            var regex = /(<([^>]+)>)/ig;
+            var name = templateName;
+            if (regex.test(templateName)) {
+                var replacedName = name.replace(regex, "");
+                return replacedName;
+            }
+            else {
+                return templateName;
+            }
+        }
+    </script>
+}

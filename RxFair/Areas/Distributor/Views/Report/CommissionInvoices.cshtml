@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["title"] = "Commission Invoices";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Report</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="CommissionInvoices">Commission Invoice</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Commission Invoice
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtCommissionInvoiceTable" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Invoice ID</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Paid By</th>
+                                    <th>Payment Status</th>
+                                    <th>Download Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            BindDistributorCommissionInvoiceList();
+        });
+        function BindDistributorCommissionInvoiceList() {
+            var commissionInvoiceTable = $("#dtCommissionInvoiceTable").DataTable({
+                sAjaxSource: "/Distributor/Report/GetDistributorCommissionInvoiceList",
+                columns: [
+                    {
+                        data: "invoiceId",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "invoiceDate",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "invoiceAmount",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "paidAmount",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "paidby",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "paymentStatus",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            var paymentStatus = "";
+                            switch (parseInt(data)) {
+                                case 1: paymentStatus = "Pending"; break;
+                                case 2: paymentStatus = "Partial"; break;
+                                case 3: paymentStatus = "Completed"; break;
+                            }
+                            return paymentStatus;
+                        }
+                    },
+                    {
+                        data: "invoiceId",
+                        autoWidth: true,
+                        searchable: true,
+                        visible: false,
+                        render: function (data, type, row) {
+                            var content = `<a href="javascript:;" class="icon_btn"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>`;
+                            return content;
+                        }
+                    },
+                ]
+            });
+        }
+
+    </script>
+
+}

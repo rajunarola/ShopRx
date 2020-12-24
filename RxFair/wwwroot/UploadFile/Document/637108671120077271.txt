@@ -1,0 +1,98 @@
+ try
+                {
+                    Order orderObj = new Order();
+
+                    foreach (var item in model.distributorOrders)
+                    {
+                        foreach (var element in item.MedicineList)
+                        {
+                            var medicineId = element.MedicineId;
+                            var medicinePrice = _medicinePrice.GetSingle(x => x.MedicineId == medicineId && x.DistributorId == item.DistributorId).WacpackagePrice;
+                            var medicinePrieTotal = medicinePrice * element.Quantity;
+                            orderObj.OrderSubTotal += Convert.ToDecimal(medicinePrieTotal);
+                        }
+
+                        orderObj.OrderShippingTotal += _distributor.GetSingle(x => x.Id == item.DistributorId).DistributorOrderSettings.ShippingCharge;
+                        // OverNight charge implementation Pending......
+                        //var isOvernight = GetCurrentCuttOffTime(item.DistributorId)?.CompareTo(DateTime.Now.TimeOfDay);
+                        //if (isOvernight < 0)
+                        //{
+                        //    orderObj.IsOverNight = true;
+                        //    orderObj.OrderGrandTotal += _distributor.GetSingle(x => x.Id == item.DistributorId).DistributorOrderSettings.OverNightAmount;
+                        //}
+                    }
+
+                    orderObj.IsOverNight = false;
+                    orderObj.DeliveryDate = Convert.ToDateTime(DateTime.Now.Date).AddDays(1);
+                    orderObj.DeliveryStatus = false;
+                    orderObj.OrderGrandTotal += orderObj.OrderSubTotal + orderObj.OrderShippingTotal;
+                    orderObj.OrderDate = Convert.ToDateTime(DateTime.Now.Date);
+                    orderObj.PharmacyId = Convert.ToInt64(User.GetClaimValue(UserClaims.PharmacyId));
+                    orderObj.UniqueOrder = DateTime.Now.Ticks.ToString();
+
+                       var OrderInsertResult=await _order.InsertAsync(orderObj, Accessor, User.GetUserId());
+                           if (OrderInsertResult != null)
+                           { 
+                                                    
+                                   bool orderChargeInsertResult = false;
+                                    foreach (var item in model.distributorOrders)
+                                    {
+                                    DistributorOrderCharge orderChargeObj = new DistributorOrderCharge();
+                                        foreach (var element in item.MedicineList)
+                                        {
+                                            var medicineId = element.MedicineId;
+                                            var medicinePrice = _medicinePrice.GetSingle(x => x.MedicineId == medicineId && x.DistributorId == item.DistributorId).WacpackagePrice;
+                                            var medicinePrieTotal = medicinePrice * element.Quantity;
+                                            orderChargeObj.SubTotal += Convert.ToDecimal(medicinePrieTotal);
+                            
+                                        }
+                                        orderChargeObj.OrderId = orderObj.Id;
+                                        orderChargeObj.OrderStatus = (short)GlobalEnums.OrderStatus.Pending;
+                                        orderChargeObj.DistributorId = item.DistributorId;
+                                        orderChargeObj.ShippingTotal = _distributerOrderSetting.GetSingle(x => x.DistributorId == item.DistributorId).ShippingCharge;
+                                        orderChargeObj.GrandTotal = orderChargeObj.SubTotal + orderChargeObj.ShippingTotal;
+                                        var orderChargeResult = await _orderCharge.InsertAsync(orderChargeObj, Accessor, User.GetUserId());
+                                        orderChargeInsertResult = orderChargeResult == null ? false : true;
+                                       }
+
+                                    if (orderChargeInsertResult)
+                                    {
+                                        DistributorOrder distributorOrderObj = new DistributorOrder();
+                                            foreach (var item in model.distributorOrders)
+                                            {
+                                                foreach (var element in item.MedicineList)
+                                                {
+                                                    var medicineId = element.MedicineId;
+                                                    var medicinePrice = _medicinePrice.GetSingle(x => x.MedicineId == medicineId && x.DistributorId == item.DistributorId).WacpackagePrice;
+                                                    var medicinePrieTotal = medicinePrice * element.Quantity;
+                                                    distributorOrderObj.DistributorId = item.DistributorId;
+                                                    distributorOrderObj.OrderChargeId = orderChargeObj.Id;
+                                                    distributorOrderObj.MedicineId = medicineId;
+                                                    distributorOrderObj.Quantity = element.Quantity;
+                                                    distributorOrderObj.Price = Convert.ToDecimal(medicinePrice);
+                                                    distributorOrderObj.TotalPrice = Convert.ToDecimal(medicinePrieTotal);
+                                                        await _distributorOrder.InsertAsync(distributorOrderObj, Accessor, User.GetUserId());
+                                                    }
+                                                    
+
+                                            }
+
+                                    }
+                                    else {
+                                        txscope.Dispose();
+                                        return JsonResponse.GenerateJsonResult(0, "Error Insertion in OrderCharge Table");
+                                    }                                               
+
+                                    txscope.Complete();
+                           } else {
+                               txscope.Dispose();
+                               return JsonResponse.GenerateJsonResult(0, "Error Insertion in Order Table");
+                           }  
+                    return JsonResponse.GenerateJsonResult(1, GlobalConstant.OrderPlaced);
+                }
+                catch (Exception ex)
+                {
+                    txscope.Dispose();
+                    ErrorLog.AddErrorLog(ex, "Post/AddNewOrder");
+                    return JsonResponse.GenerateJsonResult(0, GlobalConstant.SomethingWrong);
+                }

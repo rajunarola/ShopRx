@@ -1,0 +1,60 @@
+USE [RxFair]
+GO
+/****** Object:  StoredProcedure [dbo].[GetMedicineList]    Script Date: 10/17/2019 9:58:39 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Aman Sharma>
+-- Create date: <10/16/2019>
+-- Description:	<Listing Available Medicine For Advertisement>
+-- =============================================
+
+
+ALTER PROCEDURE [dbo].[GetMedicineList]  
+( 
+ @DistributorId BIGINT,
+ @AdvertisementId BIGINT =null,
+ @MedicineIdList VARCHAR(MAX)=null,
+ @iDisplayStart  INT,
+ @iDisplayLength INT,
+ @SortColumn     VARCHAR(MAX),
+ @SortDir        VARCHAR(MAX),
+ @Search         VARCHAR(MAX),
+@SearchRecords  INT OUT  )
+AS  
+BEGIN  
+    SET NOCOUNT ON  
+ DECLARE @Finalquery NVARCHAR(MAX), @QueryCount NVARCHAR(MAX);  
+  
+ SET @Finalquery = 'select d.MedicineId as Id,m.NDC_UPC_HRI as NDC, m.Drug_Name as MedicineName, m.Package_Size as PackageSize, m.Strength as Strength,
+p.AWPPackage_Price as Price,ds.DosageForm as Dosage,TotalRecords = COUNT(1) OVER()
+ from DistributorMedicines d
+join MedicineMasters m on d.MedicineId=m.id
+JOIN MedicinePriceMasters p ON d.MedicineId = p.MedicineId AND (p.DistributorId = @DistributorId)
+JOIN DosageFormMaster ds ON m.Dosage_Form_Id = ds.Id
+ where d.MedicineId not in (select MedicineId from AdvertisementMedicines where AdvertisementId = @AdvertisementId)';  
+  IF @MedicineIdList != ''
+  BEGIN
+  SET @Finalquery=@Finalquery+'AND  dm.MedicineId NOT IN (SELECT [value] FROM Fn_Split (@MedicineIdList,'',''))';
+  END;  
+ IF @Search != ''
+     BEGIN
+         SET @Finalquery = @Finalquery+' AND ( m.NDC_UPC_HRI LIKE ''%''+@Search+''%'' OR  m.Drug_Name LIKE ''%''+@Search+''%'' OR m.Strength LIKE ''%''+@Search+''%'' OR  ds.DosageForm LIKE ''%''+@Search+''%'' OR m.Package_Size LIKE ''%''+@Search+''%'')';
+ END; 
+ SET @Finalquery = @Finalquery+' ORDER BY '+REPLACE(@SortColumn, '''', '');  
+      
+ IF @SortDir = 'desc'  
+ BEGIN  
+     SET @Finalquery = @Finalquery+' DESC';  
+ END;  
+  
+ SET @Finalquery = @Finalquery+' OFFSET @iDisplayStart ROWS FETCH NEXT @iDisplayLength ROWS ONLY;';  
+ SET @Finalquery = @Finalquery+'      SELECT @SearchRecords = @@ROWCOUNT;';  
+   print @Finalquery;
+    EXEC sp_executesql @Finalquery, N'@DistributorId BIGINT, @AdvertisementId INT,@MedicineIdList VARCHAR(MAX),@Search VARCHAR(MAX), @iDisplayStart INT, @iDisplayLength INT, @SortColumn VARCHAR(1000), @SearchRecords INT OUTPUT',  
+         @DistributorId, @AdvertisementId,@MedicineIdList , @Search, @iDisplayStart, @iDisplayLength, @SortColumn, @SearchRecords OUTPUT;  
+  
+END  
+

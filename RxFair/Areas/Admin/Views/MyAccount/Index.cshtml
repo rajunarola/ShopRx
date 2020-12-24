@@ -1,0 +1,221 @@
+﻿@model RxFair.Dto.Dtos.UserProfileDto
+@{
+    ViewData["Title"] = "My Profile";
+}
+<main class="app-content">
+
+    <div class="app-title pharmacies_img">
+        <div class="avatar-upload">
+            <div class="avatar-edit">
+                <input type="file" asp-for="ProfileImage" id="profileImage" />
+                <label for="profileImage"></label>
+            </div>
+            <div class="avatar-preview">
+                <div id="imagePreview" modelvalue="@Model.UserProfileImage" style="background-image: url('/UploadFile/UserProfile/@Model.UserProfileImage');">
+                </div>
+            </div>
+        </div>
+        <h3>@Model.FirstName @Model.LastName</h3>
+    </div>
+    <div class="row pharmacies_form">
+        <div class="col-12">
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#account" role="tab" data-toggle="tab">My Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#security" role="tab" data-toggle="tab">Password & Security</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            @*<form id="frmRequest">*@
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <form id="frmRequest">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordian-block mbf-2">
+                                <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab1" aria-expanded="false" aria-controls="collapseThree">
+                                    <p>Basic Info</p>
+                                    <i class="fa fa-angle-up plus-icon cross-icon"></i>
+                                </div>
+                                <div class="accordian-para collapse show" id="tab1" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>First Name *</label>
+                                            <input type="text" asp-for="FirstName" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$" >
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Last Name *</label>
+                                            <input type="text" asp-for="LastName" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$" >
+                                        </div>
+                                        <div class="form-group col-md-4 mbf-3">
+                                            <label>Job Title *</label>
+                                            <input type="text" asp-for="JobTitle" class="form-control" data-parsley-required data-parsley-trigger="change">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordian-block">
+                                <div class="ac-title" data-toggle="collapse" data-target="#tab2" aria-expanded="false" aria-controls="collapseThree">
+                                    <p>Contact Info</p>
+                                    <i class="fa fa-angle-up plus-icon cross-icon"></i>
+                                </div>
+                                <div class="accordian-para collapse show" id="tab2" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>City *</label>
+                                            <input type="text" asp-for="City" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>State *</label>
+                                            @Html.DropDownListFor(m => m.StateId, ViewBag.StateList as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control ", required = "Select state" })
+                                        </div>
+                                        <div class="form-group col-md-2 mbf-3">
+                                            <label>Zip</label>
+                                            <input type="text" asp-for="ZipCode" data-mask="99999" class="form-control" data-parsley-trigger="change">
+                                        </div>
+                                        <div class="form-group col-md-3 mbf-3">
+                                            <label>Email</label>
+                                            <input asp-for="Email" type="email" class="form-control" readonly="readonly">
+                                        </div>
+                                        <div class="form-group col-md-3 mbf-3">
+                                            <label>Mobile *</label>
+                                            <input type="text" asp-for="Mobile" data-mask="999-999-9999" class="form-control" data-parsley-required data-parsley-trigger="change">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                            <!--Tab Wrapper close-->
+                            <!--Tab Wrapper-->
+                           
+                            <!--Tab Wrapper close-->
+                            <div class="btn_sec mtf-2">
+                                <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnMyAccount">Save</button>
+                                <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                            </div>
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="security">
+                    <!--Tab Wrapper-->
+                    <div class="admin_form">
+                        <div class="admin_formtitle">
+                            <h4>Change Password</h4>
+                        </div>
+                        <div class="admin_formsec" style="display: block">
+                            <form id="frmChangePassword">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Old Password *</label>
+                                        <input type="text" asp-for="OldPassword" class="form-control" data-parsley-required data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>New Password *</label>
+                                        <input type="text" asp-for="NewPassword" class="form-control" data-parsley-required data-parsley-pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$" data-parsley-pattern-message="Password must be at least 8 characters, not more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit." data-parsley-trigger="change">
+                                     
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Confirm Password *</label>
+                                        <input type="text" asp-for="ConfirmPassword" class="form-control" data-parsley-required data-parsley-equalto="#NewPassword" data-parsley-equalto-message="This password must match with the new password" data-parsley-trigger="change">
+                                    </div>
+                                </div>
+                                <div class="btn_sec mtf-2">
+                                    <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSecurity">Save</button>
+                                    <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts {
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#frmRequest,#frmChangePassword').parsley();
+        });
+        window.InitMaskInput();
+        $("#btnMyAccount").click(function() {
+            $('#frmRequest').parsley().validate();
+            if ($("#frmRequest").parsley().isValid()) {
+                $.post("@Url.Action("MyProfile", "MyAccount")", $("#frmRequest").serialize(), function (response) {
+                    var fullName = `${$.trim($("#FirstName").val())} ${$.trim($("#LastName").val())}`;
+                    $("user.fullname").text($.trim($("#LastName").val()));
+                    $("h3.fullname").text(fullName);
+                    RxFair.HandleResponse(response);
+                });
+            }
+        });
+
+        $("#btnSecurity").click(function () {
+           
+
+            $('#frmChangePassword').parsley().validate();
+            if ($("#frmChangePassword").parsley().isValid()) {
+                $.post("@Url.Action("ChangePassword", "MyAccount")",$("#frmChangePassword").serialize(), function (response) {
+                    if (response.status === 1) {
+                        RxFair.HandleResponse(response, true, function() {
+                            window.location.href = "/Account/Login";
+                        });
+                    } else {
+                        RxFair.HandleResponse(response);
+                    }
+                });
+            }
+        });
+        
+        $("#profileImage").on('change', function() {
+            var formData = new FormData();
+            var files = $("#profileImage").get(0).files;
+
+            if (files.length <= 0) {
+                RxFair.Error("Error", "please select file");
+                return false;
+            }
+            else {
+                var fileName = $('#profileImage').val();
+                var getExt = fileName.split('.');
+                getExt = getExt.reverse();
+                if ($.inArray(getExt[0].toLowerCase(), RxFair.Filetypes) === -1) {
+                    RxFair.Error("Error", "The filetype you are attempting to upload is not allowed.");
+                    return false;
+                } else {
+                    readImageURL(this, "#imagePreview");
+
+                    formData.append("profileImage", files[0]);
+                    $.ajax({
+                        url: 'UploadProfile',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: formData,
+                        success: function (response) {
+                            RxFair.HandleResponse(response);
+                            if (response.status === 1) {
+                                const imgPath = response.data.replace(/\\/g, "/");
+                                $("#imagePreview").css('background-image', "");
+                                $("#imagePreview").css('background-image', 'url("'+ imgPath+'")');
+                                $(".UserProfileImage").attr("src", imgPath);
+                            }
+                        },
+                        error: function(response) {
+                        }
+                    });
+                    return true;
+                }
+            }
+        });
+    </script>
+}
+

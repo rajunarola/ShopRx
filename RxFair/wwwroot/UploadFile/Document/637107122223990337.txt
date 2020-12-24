@@ -1,0 +1,15 @@
+5.1.6.2 Bulk Medicine Price Upload
+
+If medicine is missing from Distributor's Medicine list, it will be linked there automatically while uploading price.
+
+
+If medicine is missing from system Medicine list, then that record will be rejected.
+
+Here commission percentage will be take the percentage from system which is there at the time order and it will be different for each order. So when an order is placed commission is 10% but later it is changed to 12%, calculation will consider 10% only at the end of month not 12%.
+
+
+When pharmaceutical manufacturers and suppliers have overstock with limited expiration dates, RxOneShop can identify and offer these short dated products to pharmacies in need of these drugs. Short dated pharmaceuticals become available when an excess supply of a specific drug is manufactured, or in instances when the products have short-term expiration dates, as in the case of some pre-mixed antibiotics. 
+
+
+DistributorSubscriptionHistory-startdate
+Status-MF2DFDRG_R

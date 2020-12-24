@@ -1,0 +1,237 @@
+﻿
+@{ ViewData["Title"] = "Document";
+}
+@using Castle.Core.Internal
+@using RxFair.Dto.Enum
+@using RxFair.Service.Exceptions
+@model RxFair.Dto.Dtos.DistributorDocumentMasterView
+
+<h1>Document</h1>
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Documents</a></li>
+        </ul>
+    </div>
+    <form id="frmDocument" method="post" asp-action="ManageDocuments" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="DistributorId" />
+        <input type="hidden" asp-for="LicenseCertificateFile" />
+        <input type="hidden" asp-for="ReturnPolicyFile" />
+        <input type="hidden" asp-for="WaiverFile" />
+        <div class="row pharmacies_form admin_tabel">
+            <div class="col-12">
+                <div class="database_title">
+                    <h3>
+                        My Documents
+                    </h3>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <!-- Tab panes -->
+                <div class="tab-content pt-0">
+                    <div role="tabpanel" class="tab-pane in active" id="account">
+
+                        <!--Tab Wrapper-->
+                        <div class="accordian-block mbf-2 documents-upload">
+                            <div class="accordian-block border-0">
+                                <div class="accordian-para acc-show p-0">
+                                    <div class="form-row mt-0">
+                                        <div class="form-group col-md-4 mb-0">
+                                            <label for="ReturnPolicy">Return Policy *</label>
+                                            <label for="ReturnPolicy" class="d-block">
+                                                <span class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                                <input asp-for="ReturnPolicy" style="display: none;" type="file" class="form-control-file">
+                                            </label>
+                                        </div>
+                                        <div class="form-group col-md-8 d-flex align-items-center mb-0 returnpolicyDiv">
+                                            @if (!Model.ReturnPolicyFile.IsNullOrEmpty())
+                                            {
+                                                <div class="file-upload-distri returnPolicy">
+                                                    <h5 class="file-name" data-path="@($@"{FilePathList.Document}\{Model.ReturnPolicyFile}")">@Model.ReturnPolicyFile</h5>
+                                                    <button type="button" id="btnReturnPolicy" class="btn btn-primary download"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    <button type="button" class="btn btn-danger removeimg"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordian-block mbf-2 documents-upload">
+                            <div class="accordian-block border-0">
+                                <div class="accordian-para acc-show p-0">
+                                    <div class="form-row mt-0">
+                                        <div class="form-group col-md-4 mb-0">
+                                            <label for="LicenseCertificate">License Certificate *</label>
+                                            <label for="LicenseCertificate" class="d-block">
+                                                <span class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                                <input asp-for="LicenseCertificate" style="display: none;" type="file" class="form-control-file">
+                                            </label>
+                                        </div>
+                                        <div class="form-group col-md-8 d-flex align-items-center mb-0 licenseDiv">
+                                            @if (!Model.LicenseCertificateFile.IsNullOrEmpty())
+                                            {
+                                                <div class="file-upload-distri license">
+                                                    <h5 class="file-name" data-path="@($@"{FilePathList.Document}\{Model.LicenseCertificateFile}")">@Model.LicenseCertificateFile</h5>
+                                                    <button type="button" class="btn btn-primary download"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    <button type="button" class="btn btn-danger removeimg"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordian-block mbf-2 documents-upload">
+                            <div class="accordian-block border-0">
+                                <div class="accordian-para acc-show p-0">
+                                    <div class="form-row mt-0">
+                                        <div class="form-group col-md-4 mb-0">
+                                            <label for="Waiver">Waiver</label>
+                                            <label for="Waiver" class="d-block">
+                                                <span class="btn btn-outline-secondary upload_btn mr-2">File Upload</span>
+                                                <input asp-for="Waiver" style="display: none;" type="file" class="form-control-file">
+                                            </label>
+                                        </div>
+                                        <div class="form-group col-md-8 d-flex align-items-center mb-0 waiverDiv">
+                                            @if (!Model.WaiverFile.IsNullOrEmpty())
+                                            {
+                                                <div class="file-upload-distri waiver">
+                                                    <h5 class="file-name" data-path="@($@"{FilePathList.Document}\{Model.WaiverFile}")">@Model.WaiverFile</h5>
+                                                    <button type="button" id="btnReturnPolicy" class="btn btn-primary download"><i class="fa fa-download" aria-hidden="true"></i></button>
+                                                    <button type="button" class="btn btn-danger removeimg"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tab Wrapper close-->
+                        <div class="btn_sec mtf-2">
+                            <button type="button" class="btn btn-outline-primary con_btn active mr-2 save" id="btnSave">Save</button>
+                            <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        $('#LicenseCertificate').change(function (e) {
+            var fileName = e.target.files[0].name;
+            if (CheckValidFile(fileName) != false)
+            $(".licenseDiv").html(`<div class="file-upload-distri license">
+                                     <h5 class="file-name" data-path="UploadFile\Document\"${fileName}">${fileName}</h5>
+                                     <button type="button" class="btn btn-danger removeimg"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                   </div>`);
+        });
+
+        $('#ReturnPolicy').change(function (e) {
+            var fileName = e.target.files[0].name;
+            if (CheckValidFile(fileName) != false)
+            $(".returnpolicyDiv").html(`<div class="file-upload-distri returnPolicy">
+                                          <h5 class="file-name" data-path="UploadFile\Document\"${fileName}">${fileName}</h5>
+                                          <button type="button" class="btn btn-danger removeimg"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                        </div>`);
+        });
+        
+        $('#Waiver').change(function (e) {
+            var fileName = e.target.files[0].name;
+            if (CheckValidFile(fileName) != false)
+            $(".waiverDiv").html(`<div class="file-upload-distri waiver">
+                                    <h5 class="file-name" data-path="UploadFile\Document\"${fileName}">${fileName}</h5>
+                                    <button type="button" class="btn btn-danger removeimg"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                  </div>`);
+        });
+
+        $(document).ready(function() {
+            const message = '@TempData["Message"]';
+            if (message !== "") {
+                RxFair.Success("Success", message);
+            }
+       });
+
+        $(document).on("click", ".download", function (e) {
+                var control = $(this).parent("div").find("h5");
+                var path = $(control).data("path");
+                DownloadFile(path);
+            });
+       
+        $(document).on("click", ".removeimg", function (e) {
+                var id = $('#Id').val();
+                var path = "UploadFile\\Document";
+                var file = $(e.currentTarget).parent(".file-upload-distri");
+                var fileName = $(file).find(".file-name");
+                var FileName = `${$(fileName).html()}`;
+
+                $.ajax({
+                    url: "@Url.Action("DeleteDocumentFile", "MyAccount")",
+                    data: { Id: id, file: FileName },
+                    type: "POST",
+                    success: function(response) {
+                        if (response.status === 1) {
+                            RxFair.HandleResponse(response, true, function () {
+                                window.location.reload();
+                                //$(this).parent().remove();
+                            });
+                        } else {
+                            RxFair.HandleResponse(response);
+                        }
+                    },
+                    error: function (data) {
+                    }
+                });
+        });
+
+        $(document).on('click', '#btnSave', function (e) {
+                var LicenseFile = $("#LicenseCertificate")[0].files.length;
+                var LicenseFileExist = $("#LicenseCertificateFile").val();
+                var ReturnPolicyFile = $("#ReturnPolicy")[0].files.length;
+                var ReturnPolicyFileExist = $("#ReturnPolicyFile").val();
+
+                if (ReturnPolicyFile <= 0 && ReturnPolicyFileExist === "") {
+                    RxFair.Error("Please select Return Policy file first !");
+                } else if (LicenseFile <= 0 && LicenseFileExist === "") {
+                    RxFair.Error("Please select License file first !");
+                } else {
+                    $("#frmDocument").submit();
+                }
+            });
+
+        function CheckValidFile(fileName) {
+            //const files = $("#Document").get(0).files;
+            //var file = $(e.currentTarget).parent(".file-upload-distri");
+            if (parseInt($("#Id").val()) === 0 && fileName.length <= 0) {
+                    RxFair.Error("Error", "please select file");
+                    return false;
+                } else {
+                    //const fileName = $(this).val();
+                    let getExt = fileName.split('.');
+                    getExt = getExt.reverse();
+                    if ($.inArray(getExt[0].toLowerCase(), RxFair.DocumentTypes) === -1) {
+                        const fileTypes = RxFair.DocumentTypes.join();
+                        RxFair.Error("Error", "Only " + fileTypes + " types of files are allowed.");
+                        return false;
+                    }   
+             }
+        }
+    </script>
+}
+
+
+
+
+

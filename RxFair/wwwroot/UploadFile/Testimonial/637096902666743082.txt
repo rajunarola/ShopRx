@@ -1,0 +1,7 @@
+Changes in RxFair : 
+
+--> Pharmacy : Change username to email. 
+--> Distributor : Manage Medicine Request - Not able to edit approved medicines. Shown error of something went wrong.
+--> Distributor : System Medicine - Add functionality of adding multiple medicines at the same time. To do this, add checkboxes.
+--> Distributor : My sell medicine - Admin is not able to change the distributor medicine image. Admin should be able to change the image that has been uploaded by the distributor. Admin should have over all control.
+ --> ADMIN SHOULD HAVE CONTROL ALL OVER THE SYSTEM.

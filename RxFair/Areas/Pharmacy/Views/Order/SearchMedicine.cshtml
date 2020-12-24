@@ -1,0 +1,519 @@
+﻿
+@{
+    ViewData["Title"] = "Search Medicine";
+}
+<style type="text/css">
+    .app-title.admin_breadcrumb {
+        padding: 25px 30px 10px 30px;
+    }
+
+    .database_title {
+        margin-top: 5px;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+    }
+
+    .pharmacies_form .order-filter .fil-sec {
+        padding: 5px 10px;
+    }
+
+    .app-title.admin_breadcrumb {
+        padding: 10px 30px 10px 30px;
+    }
+
+    .app-content {
+        min-height: calc(100vh - 190px);
+        padding-bottom: 10px;
+    }
+
+    .database-filter.filter-check.pl-0.pr-0 {
+        align-items: flex-start;
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+    .order-filter .filter-check .checkmark {
+        height: 18px;
+        width: 18px;
+    }
+
+    .app-sidebar__toggle {
+        height: 40px;
+    }
+
+    .app-nav__item {
+        height: 40px !important;
+    }
+
+    header.app-header {
+        height: 40px;
+    }
+
+    .tab-content label {
+        margin-bottom: 0 !important;
+    }
+
+    .search_custom_class .order-filter .btn {
+        padding: 1px 10px;
+    }
+
+    .table_bordered_sec.table-bordered th {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .mr_top_25 {
+        margin-top: -25px;
+    }
+
+    @@media (min-width: 768px) {
+        .app-content {
+            margin-top: 40px;
+        }
+    }
+</style>
+<main class="app-content search_custom_class">
+    @*<div class="app-title admin_breadcrumb">
+            <ul class="app-breadcrumb breadcrumb">
+                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+                <li class="breadcrumb-item"><a href="/Pharmacy">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript:;">Order</a></li>
+                <li class="breadcrumb-item"><a mhref="SearchMedicine">Search Medicine</a></li>
+            </ul>
+        </div>*@
+    <div class="row pharmacies_form admin_tabel mr_top_25">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Search Medicine</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="order-filter mb-1">
+                <div class="fil-sec">
+                    <div class="form-row mt-0 mb-1">
+                        <div class="form-group col-lg-2 mb-0 d-flex">
+                            @Html.DropDownList("DistributorId", ViewBag.DistributorList as IEnumerable<SelectListItem>, "Select Distributor", new { @class = "form-control mr-lg-2", required = "Select Distributor" })
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="database-filter filter-check pl-0 pr-0">
+                                <label class="container">
+                                    Brand
+                                    <input type="checkbox" id="Brand">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container">
+                                    Generic
+                                    <input type="checkbox" id="Generic">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container">
+                                    OTC
+                                    <input type="checkbox" id="OTC">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container width-d darkgreen">
+                                    Contracted
+                                    <input type="checkbox" id="Contracted">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container width-d yellow">
+                                    Previously Purchased
+                                    <input type="checkbox" id="PrevioslyPurchased">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container width-d lightgreen">
+                                    Best Deal
+                                    <input type="checkbox" id="BestDeal">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label class="container width-d redgreen">
+                                    Short Dated
+                                    <input type="checkbox" id="ShortDated">
+                                    <span class="checkmark"></span>
+                                </label>
+
+                                <div class="bata-cart ml-auto">
+                                    <a href="/Pharmacy/Order/PlaceOrder"><i class="fa fa-opencart" aria-hidden="true"></i><p id="CartCount">  @ViewBag.CartItem </p></a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="database-filter w-100 pt-0">
+
+                    <a class="btn btn-outline-primary con_btn active mr-2" href="/Pharmacy/Order/PlaceOrder">Check Out  <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+
+                    <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="AddToCart">Add To Cart</button>
+
+                    <a data-toggle="modal" data-target="#exampleModalCenter" class="mb-0 ml-auto mr-2 btn btn-outline-primary con_btn database_btn active" id="Search">Search</a>
+
+                    <a data-toggle="modal" data-target="#exampleModalCenter" class="mb-0 btn btn-outline-primary con_btn database_btn" onclick="reset()">Reset</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-1 pb-2">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec over-flow-data" id="dtSearchMedicine" role="grid" aria-describedby="sampleTable_info">
+                            <thead class="fixedHeader">
+                                <tr role="row" class="title_datatable">
+                                    @*<th>Add.</th>*@
+                                    <th>Image</th>
+                                    <th>Qty.</th>
+                                    <th>Medicine Name</th>
+                                    <th>Strength</th>
+                                    <th>Size</th>
+                                    <th>Form</th>
+                                    <th>NDC/UPC</th>
+                                    <th>Hx</th>
+                                    <th>Stock</th>
+                                    <th>Type</th>
+                                    <th>AWP Price</th>
+                                    <th>Package Price</th>
+                                    <th>Distributor</th>
+                                </tr>
+                            </thead>
+                            <thead class="text-thead thefilter fixedHeader">
+                                <tr role="row">
+                                    <th class="text-center">
+                                        <a href="javascript:;"><i id="iconFilter" class="fa fa-2x fa-filter"></i></a>
+                                    </th>
+                                    @*<th></th>*@
+                                    <th></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="3" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="4" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="5" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="6" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="7" /></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="10" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="11" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="12" /></th>
+                                    <th><input type="text" class="form-control filter-text" data-Column="13" /></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script src="~/lib/jquery/dist/select2.min.js"></script>
+    <script type="text/javascript">
+
+        var searchMedicine;
+        window.InitMaskInput();
+
+        var ColorClass = {
+            Teal: "darkgreen",
+            Green: "lightgreen",
+            Red: "redgreen",
+            Yellow: "yellow"
+        };
+
+        $(document).ready(function () {
+            BindSearchMedicine();
+        });
+
+        function BindSearchMedicine() {
+            searchMedicine = $("#dtSearchMedicine").DataTable({
+                "fixedHeader": {
+                    header: true,
+                },
+                //sDom: 'lrtip', 
+                bLengthChange: false,
+                sAjaxSource: "/Pharmacy/Order/SearchMedicineList",
+                initComplete: function (settings, json) { },
+                aLengthMenu: [[50, 100, 150, -1], [50, 100, 150, "All"]],
+                language: {
+                    searchPlaceholder: "Search Product"
+                },
+                pageLength: 50,
+                fnServerParams: function (aoData) {
+                    var brand = $("#Brand").prop('checked') ? 2 : 0;
+                    var generic = $("#Generic").prop('checked') ? 3 : 0;
+                    var otc = $("#OTC").prop('checked') ? 4 : 0;
+                    var distributorId = parseInt($("#DistributorId").val());
+                    distributorId = isNaN(distributorId) ? 0 : distributorId;
+
+                    aoData.push(
+                        //{ "name": "MedicineName", "value": $.trim($("#Medicine").text()) },
+                        { "name": "Category", "value": `${brand},${generic},${otc}` },
+                        { "name": "IsContracted", "value": $("#Contracted").prop('checked') },
+                        { "name": "IsPrevioslyPurchased", "value": $("#PrevioslyPurchased").prop('checked') },
+                        { "name": "IsBestDeal", "value": $("#BestDeal").prop('checked') },
+                        { "name": "IsCheap", "value": $("#PrevioslyPurchased").prop('checked') },
+                        { "name": "IsShortDated", "value": $("#ShortDated").prop('checked') },
+                        //{ "name": "ndc", "value": $.trim($("#NDC").val()) },
+                        { "name": "distributorId", "value": distributorId }
+                    );
+                },
+                rowCallback: function (row, data, index) {
+                    //assigning  Color accourding the conditions
+                    if (data.isCheap)
+                        $('td', row).addClass(ColorClass.Yellow);
+                    else {
+                        // if 1 Medicine fullfiled more then 2 conditions
+                        if (data.isShortDated && data.isContracted && data.isBestDeal)
+                            $('td', row).addClass(ColorClass.Teal);
+
+                        //if 1 medicine fullfiled more then 1 conditions
+                        if (data.isContracted && data.isBestDeal)
+                            $('td', row).addClass(ColorClass.Teal);
+                        if (data.isShortDated && data.isBestDeal)
+                            $('td', row).addClass(ColorClass.Green);
+                        if (data.isShortDated && data.isContracted)
+                            $('td', row).addClass(ColorClass.Teal);
+
+                        //if 1 medicine fullfiled only 1 conditions
+                        if (data.isContracted) {
+                            $('td', row).addClass(ColorClass.Teal);
+                        }
+                        if (data.isShortDated) {
+                            $('td', row).addClass(ColorClass.Red);
+                        }
+                        if (data.isBestDeal) {
+                            $('td', row).addClass(ColorClass.Green);
+                        }
+                    }
+                },
+                columns: [
+                    //{
+                    //    data: "id",
+                    //    autoWidth: false,
+                    //    className: "text-center check_box",
+                    //    render: function (data, type, row) {
+                    //        var content = `<div class="form-group">
+                    //                            <input type="checkbox"  id="chk${row.uniqueId}" data-json='${JSON.stringify(row)}' onchange="setQuantity('#chk${row.uniqueId}','#q${row.uniqueId}')">
+                    //                            <label for="chk${row.uniqueId}" ></label>
+                    //                        </div>`;
+                    //        return content;
+                    //    }
+                    //},
+                    {
+                        data: "medicineImage",
+                        autoWidth: false,
+                        searchable: false,
+                        orderable: false,
+                        className: "database_image",
+                        render: function (data, type, row) {
+                            return showImageTooltip(data);
+                        }
+                    },
+                    {
+                        data: "id",
+                        autoWidth: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            const content = `<input type="number" id="q${row.uniqueId}" data-json='${JSON.stringify(row)}' class="qty" name='tentacles' required min="1" max="100" data-parsley-trigger="keyup" data-parsley-type="digits" /*disabled*/>`;
+                            return content;
+                        }
+                    },
+                    {
+                        data: "medicineName",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "strength",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "packageSize",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "dosageForm",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "ndc",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "id",
+                        autoWidth: false,
+                        searchable: false,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            const content = `<div class="history_tab MedicinePurchaseHistory" data-MedicineId="${data}"><a  href="javascript:;"><i class="fa fa-history" aria-hidden="true"></i></a></div>`;
+                            return content;
+                        }
+                    },
+                    {
+                        data: "stock",
+                        autoWidth: false
+                    },
+                    {
+                        data: "category",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "awpPrice",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "wacPrice",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "distributorName",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                ]
+            });
+            applyScroll();
+        }
+
+        $(document).on("change", ".filter-text", function () {
+            var isClear = filterTextClear();
+            $("#iconFilter").removeClass(isClear ? "fa-filter" : "fa-close");
+            $("#iconFilter").addClass(isClear ? "fa-close" : "fa-filter");
+            var value = $(this).val();
+            var columnNo = $(this).attr("data-Column");
+            searchMedicine.columns(columnNo).search(escape(value)).draw();
+        });
+
+        $(document).on("click", "#iconFilter", function () {
+            var isClear = filterTextClear(true);
+            $("#iconFilter").removeClass(isClear ? "fa-close" : "fa-filter");
+            $("#iconFilter").addClass(isClear ? "fa-filter" : "fa-close");
+            $("#Search").click();
+        });
+
+        function filterTextClear(toClear = false) {
+            var result = false;
+            $(".filter-text").each(function (i, item) {
+                if (toClear)
+                    $(item).val("");
+                if (result == false && toClear == false)
+                    result = ($.trim($(item).val()) !== "");
+            });
+            if (toClear)
+                result = true;
+            return result;
+        }
+        $("#Search").click(function () {
+            BindSearchMedicine();
+        });
+
+        function reset() {
+            $("#OTC").prop('checked', false);
+            $("#Generic").prop('checked', false);
+            $("#Brand").prop('checked', false);
+            $("#ShortDated").prop('checked', false);
+            $("#Contracted").prop('checked', false);
+            $("#BestDeal").prop('checked', false);
+            $("#NDC").val("");
+            $("#DistributorId").val("");
+            $("#Medicine").text("");
+            BindSearchMedicine();
+        }
+
+        $(document).on("keyup", ".qty", function (e) {
+            if ($(e.currentTarget).is(":focus") && (e.keyCode == 13)) {
+                var result = [];
+                // Do something
+                var rowData = $(e.currentTarget).data('json');
+                var qId = '#q' + rowData.uniqueId;
+
+                $(qId).parsley().validate();
+                validationFlag = $(qId).parsley().isValid();
+                if ($(qId).parsley().isValid()) {
+                    var Medicine = {
+                        MedicineId: rowData.id,
+                        Quantity: $(qId).val(),
+                        DistributorId: rowData.distributorId
+                    }
+                    result.push(Medicine);
+                }
+
+                if (result != 0 && validationFlag) {
+                    $.ajax({
+                        url: '/Pharmacy/Order/AddtoCart',
+                        type: 'POST',
+                        data: { model: result },
+                        success: function (response) {
+                            RxFair.HandleResponse(response);
+                            $("#CartCount").html(response.data);
+                            //$(document).find("input[type='checkbox']:checked").prop('checked', false);
+                            //$(document).find("[name='tentacles']").val("");
+                            //$(document).find("[name='tentacles']:enabled").prop('disabled', true);
+                            $("input[type='search']").focus();
+                        }
+                    });
+                }
+            }
+        });
+        //$("#AddToCart").click(function () {
+        //    var result = [];
+        //    var validationFlag = true;
+        //    $("#dtSearchMedicine").find("input[type='checkbox']:checked").each(function (index, element) {
+        //        var rowData = $(element).data('json');
+        //        var qId = '#q' + rowData.uniqueId;
+
+        //        $(qId).parsley().validate();
+        //        validationFlag = $(qId).parsley().isValid();
+        //        if ($(qId).parsley().isValid()) {
+        //            var Medicine = {
+        //                MedicineId: rowData.id,
+        //                Quantity: $(qId).val(),
+        //                DistributorId: rowData.distributorId
+        //            }
+        //            result.push(Medicine);
+        //        }
+        //    });
+
+        //    if (result != 0 && validationFlag) {
+        //        $.ajax({
+        //            url: '/Pharmacy/Order/AddtoCart',
+        //            type: 'POST',
+        //            data: { model: result },
+        //            success: function (response) {
+        //                RxFair.HandleResponse(response);
+        //                $("#CartCount").html(response.data);
+        //                $(document).find("input[type='checkbox']:checked").prop('checked', false);
+        //                $(document).find("[name='tentacles']:enabled").val("");
+        //                $(document).find("[name='tentacles']:enabled").prop('disabled', true);
+        //            }
+        //        });
+        //    }
+        //});
+
+        function setQuantity(chkId, qId) {
+            if ($(chkId).prop('checked')) {
+                $(qId).prop('disabled', false);
+            }
+            else {
+                $(qId).prop('disabled', true);
+                $(qId).val('');
+                $(qId).parsley().reset();
+            };
+        }
+
+        $(document).on("click", ".MedicinePurchaseHistory", function () {
+            var id = $(this).attr("data-MedicineId");
+            window.location.href = "/Pharmacy/Order/ViewPurchaseHistory/" + id;
+        });
+
+    </script>
+}

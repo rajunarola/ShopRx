@@ -1,0 +1,211 @@
+﻿@{
+    string userGroup = ViewBag.UserGroupName.Replace("User", " User");
+    ViewData["Title"] = userGroup;
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a >Users</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">@userGroup </a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage @userGroup List
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="javascript:;" onclick="AddEditUser(0);" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add @userGroup</a>
+            </div>
+        </div>
+        <div class="col-12 data-padding">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtManageUser" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Email Confirmed</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            window.BindUserList();
+        });
+        function BindUserList() {
+
+            if ($.fn.DataTable.isDataTable("#dtManageUser")) {
+                $('#dtManageUser').DataTable().destroy();
+            }
+            var table = $('#dtManageUser')
+                .DataTable({
+                    "sAjaxSource": "/ManageUsers/GetUserList/@ViewBag.UserGroupId",
+                    "columns":[
+                        {
+                            "data": "id",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                // Pending Implementations
+                                //<a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                var content = `<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>`;
+                                if (row.emailConfirmed) {
+                                    content+=`<a href="javascript:;" ${dataParams("Reset Password", "reset", data)} class="dropdown-item action"><i class="fa fa-expeditedssl" aria-hidden="true"></i>Reset Password</a>`;
+                                }
+                                return dataTableAction(content);
+                            }
+                        },
+                        {
+                            "data": "isActive",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "className": "admin_toggle",
+                            "render": function (data, type, row) {
+                                return statusToggle(row.id, data);
+                            }
+                        },
+                        {
+                            "data": "emailConfirmed",
+                            "autoWidth": false,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                return emailConfirmed(data);
+                            }
+                        },
+                        {
+                            "data": "firstName",
+                            "autoWidth": false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return removeHtml(data);
+                            }
+                        },
+                        {
+                            "data": "lastName",
+                            "autoWidth": false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return removeHtml(data);
+                            }
+                        },
+                        {
+                            "data": "email",
+                            "autoWidth": false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return removeHtml(data);
+                            }
+                        },
+                        {
+                            "data": "mobile",
+                            "autoWidth": false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return removeHtml(data);
+                            }
+                        },
+                        {
+                            "data": "role",
+                            "autoWidth": false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return removeHtml(data);
+                            }
+                        }
+                    ]
+                });
+        };
+
+        $('#dtManageUser').on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "edit":
+                    AddEditUser(id);
+                    break;
+                case "delete":
+                    DeleteUser(id);
+                    break;
+                case "reset":
+                    ResetPassword(id);
+                    break;
+                default:
+            }
+        });
+
+        function AddEditUser(id) {
+            const newUrl = `/Account/AddEditUser/?id=${id}&userGroup=${'@ViewBag.UserGroupId'}`;
+            $("#modalContent").load(newUrl, function () {
+                modalSize("slg");
+                $("#divModal").modal('show');
+            });
+        }
+
+        function DeleteUser(id) {
+            RxFair.Confirm("Delete User", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!", function () {
+                    //RemoveUser(id, BindUserList());
+                    $.ajax({
+                        url: "/Account/RemoveUser",
+                        data: { id: id },
+                        type: "POST",
+                        success: function (response) {
+                            if (response.status === 1) {
+                                RxFair.HandleResponse(response);
+                                BindUserList();
+                            }
+                        },
+                        error: function(data) {
+                        }
+                    });
+                }, function (){
+
+                }
+            );
+        }
+
+        $("#dtManageUser").on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+
+            $.ajax({
+                url: "/Admin/ManageUsers/ManageIsActive",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) {
+                }
+            });
+        });
+
+
+    </script>
+}

@@ -1,0 +1,95 @@
+﻿@model RxFair.Dto.Dtos.ContactDetailView
+@{
+    ViewData["Title"] = "Contact Details";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Contact Details</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Contact Details
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+
+                        <div class="accordian-block border-0">
+                            <div class="accordian-para acc-show">
+                                <form id="frmContactDetail">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="Id" id="Id" name="Id" />
+                                    <div class="form-row">
+                                        <div class="form-group col-xl-4 col-lg-6">
+                                            <label for="Email">Email *</label>
+                                            <input type="text" asp-for="Email" class="form-control" data-parsley-required data-parsley-trigger="change" />
+                                        </div>
+                                        <div class="form-group col-xl-8 col-lg-12">
+                                            <label for="Address">Address *</label>
+                                            <textarea asp-for="Address" class="form-control" data-parsley-required data-parsley-trigger="change"></textarea>
+                                            @*<input type="text" asp-for="Address" class="form-control" data-parsley-required data-parsley-trigger="change" />*@
+                                        </div>
+                                        <div class="form-group col-xl-4 col-lg-6">
+                                            <label for="City">City *</label>
+                                            <input type="text" asp-for="City" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$" />
+                                        </div>
+                                        <div class="form-group col-xl-2 col-lg-6">
+                                            <label for="State">State *</label>
+                                            <input type="text" asp-for="State" class="form-control" data-parsley-required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z]+$" />
+                                        </div>
+                                        <div class="form-group col-xl-2 col-lg-6">
+                                            <label for="ZipCode">Zip *</label>
+                                            <input type="text" asp-for="ZipCode" data-mask="99999" class="form-control" data-parsley-required data-parsley-trigger="change" />
+                                        </div>
+                                        <div class="form-group col-xl-2 col-lg-6">
+                                            <label for="Telephone">Phone *</label>
+                                            <input type="text" asp-for="Telephone" data-mask="999-999-9999" class="form-control" data-parsley-required data-parsley-trigger="change" />
+                                        </div>
+                                        <div class="form-group col-xl-2 col-lg-6">
+                                            <label for="Fax">Fax</label>
+                                            <input type="text" asp-for="Fax" data-mask="999-999-9999" class="form-control" data-parsley-trigger="change" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+
+                    <div class="btn_sec mtf-2">
+                        <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                        <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript">
+        window.InitMaskInput();
+        $("#btnSave").click(function () {
+            $('#frmContactDetail').parsley().validate();
+            if ($("#frmContactDetail").parsley().isValid()) {
+                $.post("/Admin/Master/SaveContactDetail", $("#frmContactDetail").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                });
+            }
+        });
+    </script>
+}

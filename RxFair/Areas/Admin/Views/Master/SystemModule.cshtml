@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewData["Title"] = "SystemModule";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="SystemModule">System Module</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title d-flex">
+                <h3 class="d-flex w-100 align-items-center">Manage System Module</h3>
+                <div class="accordian-block border-0 w-100">
+                    <div class="accordian-para acc-show purches_order p-0">
+                        <form>
+                            <div class="form-row mt-0 d-flex justify-content-end">
+                                <div class="form-group m-0 d-flex w-75">
+                                    <div class="ml-auto w-50">
+                                        @Html.DropDownList("SystemUserGroupId", ViewBag.UserGroup as IEnumerable<SelectListItem>, new { @class = "form-control", id = "SystemUserGroupId", required = "Select Group" })
+                                    </div>
+                                    <button type="button" onclick="AddEditSystemModule(0);" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right active m-0 ml-2">Add System Module</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtSystemModule" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>User Group</th>
+                                    <th>Module Name</th>
+                                    <th>Menu Display Text</th>
+                                    <th>Parent Menu</th>
+                                    <th>Controller</th>
+                                    <th>Url Action</th>
+                                    <th>Field</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            bindSystemModuleList(1);
+        });
+
+        function bindSystemModuleList(userGroupId) {
+            if ($.fn.DataTable.isDataTable("#dtSystemModule")) {
+                $('#dtSystemModule').DataTable().destroy();
+            }
+            const table = $('#dtSystemModule').DataTable({
+                "sAjaxSource": "/Admin/Master/GetSystemModuleList/" + userGroupId,
+                "order": [[0, ""]],
+                "columns": [
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var content = "";
+                            //if (row.isAccess) {
+                                content += `<a href="javascript:;" ${dataParams("Access Functionality", "accessfunctionality", data)} class="dropdown-item action"><i class="fa fa-key" aria-hidden="true"></i> Access Functionality</a>`;
+                            //}
+                            content +=`<a href="javascript:;" ${dataParams("Edit", "edit", data)} class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                       <a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "data": "userGroup",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "moduleName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "menuDisplayText",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "parentMenu",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "controller",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "action",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "isField",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "admin_toggle",
+                        "render": function(data, type, row) {
+                            return statusToggle(row.id, data, true);
+                        }
+                    }
+                ]
+            });
+        };
+
+        $(document).on("change", "#SystemUserGroupId", function(e) {
+            const id = parseInt($.trim($(this).val()));
+            if (isNaN(id)) {
+                RxFair.Error("Select User Group", "Please select user group.");
+                return false;
+            }
+            bindSystemModuleList(id);
+        });
+
+        $('#dtSystemModule').on("click", ".action", function(e) {
+                const flag = $(e.currentTarget).data("flag");
+                const id = $(e.currentTarget).data("id");
+                switch (flag) {
+                case "accessfunctionality":
+                    window.location.href = `/Admin/Master/AccessModuleFunctionality/${id}`;
+                    break;
+                case "edit":
+                    AddEditSystemModule(id);
+                    break;
+                case "delete":
+                    DeleteSystemModule(id);
+                    break;
+                default:
+                    break;
+                }
+            });
+
+        function AddEditSystemModule(id) {
+            var userGroupId = parseInt($("#SystemUserGroupId").val());
+            if (!isNaN(userGroupId)) {
+                $("#modalContent").load(`/Admin/Master/AddEditSystemModule?userGroup=${userGroupId}&id=${id}`,function() {
+                        $("#divModal").modal('show');
+                    });
+            } else {
+                RxFair.Error("Select User Group", "Please select user group.");
+                return false;
+            }
+        }
+
+        function DeleteSystemModule(id) {
+            RxFair.Confirm("Delete System Module", RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, delete it!",
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("RemoveSystemModule", "Master")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function(response) {
+                            RxFair.HandleResponse(response);
+                            if (response.status === 1) {
+                                refreshDatatable('#dtSystemModule', id);
+                            }
+                        },
+                        error: function(data) {
+                        }
+                    });
+                },
+                function() {
+                });
+        }
+    </script>
+}

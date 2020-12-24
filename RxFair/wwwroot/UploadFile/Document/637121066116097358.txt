@@ -1,0 +1,97 @@
+USE [RxFair]
+GO
+/****** Object:  StoredProcedure [dbo].[GetUploadedMedicineList]    Script Date: 13-12-2019 18:14:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[GetUploadedMedicineList]
+	-- Add the parameters for the stored procedure here
+	 @DistributorId BIGINT,
+	 @IsApproved BIT NULL,
+	 @iDisplayStart  INT,
+	 @iDisplayLength INT,
+	 @SortColumn     VARCHAR(MAX),
+	 @SortDir        VARCHAR(MAX),
+	 @Search         VARCHAR(MAX),
+	 @SearchRecords  INT OUT
+AS
+BEGIN
+	DECLARE @Total INT;
+	DECLARE @Finalquery NVARCHAR(MAX);
+
+	IF @DistributorId != 0
+	BEGIN
+		SET @Finalquery = ';WITH sm AS (
+			SELECT  um.Id, 0 AS MediPriceId, um.IsActive, Ndc, ISNULL(Upc,'''') AS Upc, ISNULL(MedicineImage,'''') AS MedicineImage, MedicineName, Strength, ISNULL(PackageSize, 0) AS PackageSize, Manufacturer, d.CompanyName AS Distributor, Category, 
+					CASE  WHEN um.IsApproved IS NULL THEN ''Pending'' WHEN um.IsApproved = 1 THEN ''Approved'' ELSE ''Rejected'' END AS [Status], ISNULL(um.Reason, '''') AS Reason
+			FROM UploadedMedicines um
+				JOIN Distributor d on um.DistributorId = d.Id
+			WHERE 1 = 1 AND (um.DistributorId = @DistributorId OR @DistributorId = 0)
+			UNION ALL
+			SELECT MedicineId AS Id, mv.MedicinePriceId AS MediPriceId, mv.IsActive, NDC AS Ndc, '''' AS Upc, MedicineImage, mv.MedicineName, ISNULL(Strength,'''') AS Strength, ISNULL(PackageSize, 0) AS PackageSize, 
+				   ISNULL(ManufacturerName, '''') AS Manufacturer, d.CompanyName AS Distributor, MedicineCategory AS Category, ''Approved'' AS [Status], '''' AS Reason
+			FROM MedicineView mv
+				JOIN Distributor d on mv.DistributorId = d.Id
+			WHERE 1 = 1 AND (d.Id = @DistributorId OR @DistributorId = 0)
+			)
+			SELECT *, TotalRecords = Count(1) Over() FROM sm 
+				WHERE 1 = 1 AND  ((Ndc LIKE ''%''+@Search+''%'' OR Upc LIKE ''%''+@Search+''%'' OR MedicineName LIKE ''%''+@Search+''%'' OR Strength LIKE ''%''+@Search+''%'' OR PackageSize LIKE ''%''+@Search+''%'' OR Manufacturer LIKE ''%''+@Search+''%'' OR Distributor LIKE ''%''+@Search+''%'' OR Category LIKE ''%''+@Search+''%'' OR [Status] LIKE ''%''+@Search+''%'') OR @Search = '''')';  
+	END
+	ELSE
+	BEGIN
+		IF @IsApproved IS NULL
+		BEGIN 
+			SET @Finalquery = ';WITH sm AS (
+			SELECT  um.Id, 0 AS MediPriceId, um.IsActive, Ndc, ISNULL(Upc,'''') AS Upc, ISNULL(MedicineImage,'''') AS MedicineImage, MedicineName, Strength, ISNULL(PackageSize, 0) AS PackageSize, Manufacturer, d.CompanyName AS Distributor, Category, 
+					''Pending'' AS [Status], ISNULL(um.Reason, '''') AS Reason, TotalRecords = COUNT(1) OVER() 
+			FROM UploadedMedicines um
+				JOIN Distributor d on um.DistributorId = d.Id
+			WHERE 1 = 1 AND (um.DistributorId = @DistributorId OR @DistributorId = 0) AND IsApproved IS NULL
+			)
+			SELECT * FROM sm  WHERE 1 = 1 AND  ((Ndc LIKE ''%''+@Search+''%'' OR Upc LIKE ''%''+@Search+''%'' OR MedicineName LIKE ''%''+@Search+''%'' OR Strength LIKE ''%''+@Search+''%'' OR PackageSize LIKE ''%''+@Search+''%'' OR Manufacturer LIKE ''%''+@Search+''%'' OR Distributor LIKE ''%''+@Search+''%'' OR Category LIKE ''%''+@Search+''%'' OR [Status] LIKE ''%''+@Search+''%'') OR @Search = '''')';
+		END
+		ELSE IF @IsApproved = 0
+		BEGIN
+			SET @Finalquery = ';WITH sm AS (
+			SELECT  um.Id, 0 AS MediPriceId, um.IsActive, Ndc, Upc, ISNULL(MedicineImage,'''') AS MedicineImage, MedicineName, Strength, ISNULL(PackageSize, 0) AS PackageSize, Manufacturer, d.CompanyName AS Distributor, Category, 
+					CASE  WHEN um.IsApproved IS NULL THEN ''Pending'' WHEN um.IsApproved = 1 THEN ''Approved'' ELSE ''Rejected'' END AS [Status], ISNULL(um.Reason, '''') AS Reason, TotalRecords = COUNT(1) OVER()  
+			FROM UploadedMedicines um
+				JOIN Distributor d on um.DistributorId = d.Id
+			WHERE 1 = 1 AND (um.DistributorId = @DistributorId OR @DistributorId = 0) AND IsApproved = @IsApproved
+			)
+			SELECT * FROM sm 
+			WHERE 1 = 1 AND 
+			((Ndc LIKE ''%''+@Search+''%'' OR Upc LIKE ''%''+@Search+''%'' OR MedicineName LIKE ''%''+@Search+''%'' OR Strength LIKE ''%''+@Search+''%'' OR PackageSize LIKE ''%''+@Search+''%'' OR Manufacturer LIKE ''%''+@Search+''%'' OR Distributor LIKE ''%''+@Search+''%'' OR Category LIKE ''%''+@Search+''%'' OR [Status] LIKE ''%''+@Search+''%'') OR @Search = '''') ';
+		END
+		ELSE
+		BEGIN
+			SET @Finalquery = ';WITH sm AS (
+				SELECT mv.id AS Id,ISNULL (mp.Id,0) AS MediPriceId,mv.IsActive, mv.NDC_UPC_HRI AS Ndc, '''' AS Upc, ISNULL(mv.MedicineImage,'''') AS MedicineImage, mv.Drug_Name As MedicineName, ISNULL(mv.Strength,'''') AS Strength, ISNULL(mv.Package_Size, 0) AS PackageSize, 
+					    ISNULL(mm.ManufacturerName, '''') AS Manufacturer,ISNULL(d.CompanyName,'''') AS Distributor, ISNULL(mcm.MedicineCategory,'''') AS Category, ''Approved'' AS [Status], '''' AS Reason, TotalRecords = COUNT(1) OVER()
+				FROM MedicineMasters mv
+					JOIN Distributor d on mv.DistributorId = d.Id
+					LEFT JOIN MedicinePriceMasters mp on mv.Id=mp.MedicineId
+					LEFT JOIN ManufacturerMaster mm on mv.MedicineMaster_Manufacturer_Id=mm.Id
+					LEFT JOIN MedicineCategoryMaster mcm on mv.CategoryId=mcm.Id
+					where 1=1
+				 AND (d.Id = @DistributorId OR @DistributorId = 0)
+				)
+				SELECT *, TotalRecords1 = COUNT(1) over() FROM sm WHERE 1 = 1 AND 
+				((Ndc LIKE ''%''+@Search+''%'' OR Upc LIKE ''%''+@Search+''%'' OR MedicineName LIKE ''%''+@Search+''%'' OR Strength LIKE ''%''+@Search+''%'' OR PackageSize LIKE ''%''+@Search+''%'' OR Manufacturer LIKE ''%''+@Search+''%'' OR Distributor LIKE ''%''+@Search+''%'' OR Category LIKE ''%''+@Search+''%'' OR [Status] LIKE ''%''+@Search+''%'') OR @Search = '''') ';
+		END
+	END
+
+	SET @Finalquery = @Finalquery+' ORDER BY '+REPLACE(@SortColumn, '''', '');  
+      
+	IF @SortDir = 'desc'  
+	BEGIN  
+		 SET @Finalquery = @Finalquery+' DESC';  
+	END;  
+  
+	SET @Finalquery = @Finalquery+' OFFSET @iDisplayStart ROWS FETCH NEXT @iDisplayLength ROWS ONLY;';  
+	SET @Finalquery = @Finalquery+'      SELECT @SearchRecords = @@ROWCOUNT;';  
+	PRINT @Finalquery;
+	EXEC sp_executesql @Finalquery, N'@DistributorId  BIGINT, @IsApproved BIT NULL, @Search VARCHAR(MAX), @iDisplayStart INT, @iDisplayLength INT, @SortColumn VARCHAR(1000), @SearchRecords INT OUTPUT',  
+									@DistributorId, @IsApproved, @Search, @iDisplayStart, @iDisplayLength, @SortColumn, @SearchRecords OUTPUT;
+END

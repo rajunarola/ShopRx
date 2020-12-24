@@ -1,0 +1,553 @@
+﻿@using RxFair.Dto.Enum
+@model RxFair.Dto.Dtos.AdvertisementDto
+@{
+    ViewData["Title"] = ViewBag.RequestLabel;
+    string disabled = Model.Id == 0 ? "true" : "false";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Advertisement</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="@ViewBag.RequestType">@ViewBag.RequestLabel</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>@ViewBag.PageType @ViewBag.RequestLabel</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn d-inline-block float-right ml-2 btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+
+            <form id="frmAdvertisement">
+                <input type="hidden" asp-for="Id" />
+                <div class="tab-content pt-0">
+                    <div role="tabpanel" class="tab-pane in active" id="account">
+                        <!--Tab Wrapper-->
+
+                        <div class="accordian-block mbf-2">
+
+                            <div class="accordian-block border-0">
+                                <div class="accordian-para acc-show">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Distributor *</label>
+                                            @Html.DropDownListFor(m => m.DistributorId, ViewBag.DistributorList as IEnumerable<SelectListItem>, "Select Distributor", new { @class = "form-control", required = "Select distributor" })
+                                        </div>
+                                        @switch ((short)ViewBag.DealType)
+                                        {
+                                            case (short)GlobalEnums.DealType.TopDeals:
+                                                <div class="form-group col-md-4">
+                                                    <label>Start Date *</label>
+                                                    <input asp-for="AdvStartDate" class="form-control datepicker" type="text" required placeholder="MM/DD/YYYY">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>End Date *</label>
+                                                    <input asp-for="AdvEndDate" class="form-control datepicker" type="text" required placeholder="MM/DD/YYYY" disabled="@disabled">
+                                                </div>
+                                                break;
+                                            case (short)GlobalEnums.DealType.DealOfTheDay:
+                                                <div class="form-group col-md-4">
+                                                    <label>Deal of The Day Date *</label>
+                                                    <input asp-for="AdvDealDate" class="form-control  datepicker" type="text" required placeholder="MM/DD/YYYY">
+                                                </div>
+                                                break;
+                                            case (short)GlobalEnums.DealType.ProductPriceIncrease:
+                                                <div class="form-group col-md-4">
+                                                    <label>Product Price Increase Date *</label>
+                                                    <input asp-for="AdvPriceIncreaseDate" class="form-control datepicker" type="text" required placeholder="MM/DD/YYYY">
+                                                    @*<input asp-for="AdvPriceIncreaseDate" type='text'  required class="form-control datepicker" placeholder="MM/DD/YYYY" />*@
+                                                </div>
+                                                break;
+                                        }
+                                        <div class="form-group col-md-12">
+                                            <label>Request *</label>
+                                            <textarea asp-for="Request" class="form-control" rows="5" required></textarea>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>Notes </label>
+                                            <textarea asp-for="Notes" class="form-control" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordian-block mbf-2" id="firstTableDiv">
+                            <div class="col-12">
+                                <div class="database_title">
+                                    <h3>Add @ViewBag.RequestLabel Medicines</h3>
+                                </div>
+                            </div>
+
+                            <div class="tab-content pt-0">
+                                <div class="tile-body">
+                                    <div class="dataTables_wrapper no-footer">
+                                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtTopDealsTableFirst" role="grid" aria-describedby="sampleTable_info">
+                                            <thead>
+                                                <tr role="row" class="title_datatable">
+                                                    <th>Add</th>
+                                                    <th>NDC/UPC</th>
+                                                    <th>Medicine Name</th>
+                                                    <th>Strength</th>
+                                                    <th>Dosage</th>
+                                                    <th>Package Size</th>
+                                                    <th>Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--                    -->
+                        <div class="accordian-block mbf-2">
+                            <div class="col-12">
+                                <div class="database_title">
+                                    <h3>@ViewBag.RequestLabel Medicines</h3>
+                                </div>
+                            </div>
+
+                            <div class="tab-content pt-0">
+                                <div class="tile-body">
+                                    <div class="dataTables_wrapper no-footer" id="cloneTable">
+                                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtTopDealsTableSecond" role="grid" aria-describedby="sampleTable_info">
+                                            <thead>
+                                                <tr role="row" class="title_datatable">
+                                                    <th style="display:none">Id</th>
+                                                    <th>NDC/UPC</th>
+                                                    <th>Medicine Name</th>
+                                                    <th>Strength</th>
+                                                    <th>Price</th>
+                                                    <th>Deal Price ($)</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="btn_sec mtf-2">
+                            <button type="button" id="btnSave" class="btn btn-outline-primary con_btn active mr-2">Save</button>
+                            <button type="button" id="btnCancel" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script src="~/rxfairfrontend/js/parsley-fields-comparison-validators.js"></script>
+    <script type="text/javascript">
+        var container = $('#frmAdvertisement').length > 0 ? $('#frmAdvertisement').parent() : "body";
+        var topDealsMedicinestable;
+        var TopDeal;
+        var DealArray = []; //For TopDeals (secondTable)
+        var tempArray = []; //For Medicines (firstTable)
+        var secondTableClone = $('#dtTopDealsTableSecond').clone();
+        $(document).ready(function() {
+            $("#frmTopDeals").parsley();
+            var distributorId = parseInt($("#DistributorId").val());
+            if (distributorId !== 0 && !isNaN(distributorId)) {
+                BindTopDealMedicinesList();
+            }
+
+            // View Portion
+            @if (ViewBag.isView == true)
+            {
+                <text>
+                    // Setting  ReadOnly
+                    ViewAdvertisement();
+                    $("#Notes").attr("required", true);
+                </text>
+            }
+        });
+
+        $("#DistributorId").on("change",
+            function(e) {
+                var distributorId = parseInt($(this).val());
+                if (distributorId !== 0 && !isNaN(distributorId)) {
+                    $.ajax({
+                        url: "/Admin/ManageAdvertisement/CheckSubscriptionLimit",
+                        type: "GET",
+                        data: { id: distributorId },
+                        success: function(response) {
+                            if (response.status == 0) {
+                                RxFair.HandleResponse(response);
+                                $("#DistributorId").val("");
+                            } else {
+                                BindTopDealMedicinesList();
+                            }
+                        }
+                    });
+                } else {
+                    RxFair.Warning("Warning", "Please select distributor");
+                }
+            });
+
+        $('#AdvStartDate').datepicker({
+            startDate: '-0m',
+            format: "M/dd/yyyy",
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        }).on('changeDate', function () {
+                $("input[name=AdvStartDate]").parsley().reset();
+                $('#AdvEndDate').removeAttr("disabled");
+                $('#AdvEndDate').datepicker('setStartDate', new Date($(this).val()));
+            });
+
+        $('#AdvEndDate').datepicker({
+            format: "M/dd/yyyy",
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        }).on('changeDate', function() {
+                $("input[name=AdvEndDate]").parsley().reset();
+                $('#AdvStartDate').datepicker('setEndDate', new Date($(this).val()));
+            });
+
+        $('#AdvPriceIncreaseDate').datepicker({
+            startDate: '-0m',
+            format: "M/dd/yyyy",
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        }).on('changeDate', function() {
+                $("input[name=AdvPriceIncreaseDate]").parsley().reset();
+            });
+
+        $('#AdvDealDate').datepicker({
+            format: "M/dd/yyyy",
+            startDate: '-0m',
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>',
+            autoclose: true,
+            container: container,
+            orientation: 'bottom'
+        }).on('changeDate', function() {
+                $("input[name=AdvDealDate]").parsley().reset();
+            });
+
+        function BindFirstTable() {
+            var rowcount = 0;
+            var advertisementId = parseInt($("#Id").val());
+            advertisementId = isNaN(advertisementId) ? 0 : advertisementId;
+            var medicineIdList = DealArray.join(",");
+            var distributorId = parseInt($("#DistributorId").val());
+            distributorId = isNaN(distributorId) ? 0 : distributorId;
+            if ($.fn.DataTable.isDataTable("#dtTopDealsTableFirst")) {
+                $('#dtTopDealsTableFirst').DataTable().destroy();
+            }
+            var topdealUrl = `/Admin/ManageAdvertisement/GetMedicineList?advertisementId=${advertisementId}&dealType=${@ViewBag.DealType}&medicineIdList=${medicineIdList}&distributorId=${distributorId}`;
+            topDealsMedicinestable = $('#dtTopDealsTableFirst').DataTable({
+                sAjaxSource: topdealUrl,
+                "rowCallback": function (row, data, index) {
+                    $(row).attr("data-RowId", data["id"]);
+                    DealArray.find(function (element) {
+                        if (element === data["id"])
+                            $(row).hide();
+                    });
+                },
+                order: [[2, ""]],
+                "columns": [
+                    {
+                        "data": "id",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function(data, type, row) {
+                            const content =
+                                `<button type="button" onclick=AddMedicine(${data},'${row.ndc}')  class="btn btn-outline-primary con_btn active add_btn"><i class="fa fa-plus p-0" aria-hidden="true"></i> Add</button>`;
+                            return content;
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "dosage",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "packageSize",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "price",
+                        "autoWidth": false,
+                        "searchable": true
+                    }
+                ]
+            });
+        }
+
+        function BindSecondTable() {
+            TopDeal = $("#dtTopDealsTableSecond").DataTable({
+                ordering: false,
+                serverSide: false,
+                columns: [
+                    { title: "id", "visible": false },
+                    { title: "NDC/UPC", render: function (data, type, full) { return data; } },
+                    { title: "Medicine Name", render: function(data, type, full) { return full[0]; } },
+                    { title: "Strength" },
+                    {
+                        title: "Price",
+                        render: function(data, type, full) {
+                            return `<input type="text" readonly class="form-control medicinePrice" id="medicinePrice${
+                                full[0]}"/>`;
+                        }
+                    },
+                    {
+                        title: "Deal Price ($)",
+                        render: function(data, type, full) {
+                            var validation = 'lt';
+                            var inputContent =
+                                `<input type="text" class="form-control dealPrice"  id="dealprice${full[0]
+                                    }" placeholder="Enter Price $" data-parsley-required="true" data-parsley-trigger="keyup" data-parsley-{Validation}="#medicinePrice${
+                                    full[0]}"  min="1" >`;
+                            @if ((short) ViewBag.DealType == (short) GlobalEnums.DealType.ProductPriceIncrease)
+                            {
+                                <text>
+                                    validation = 'gt';
+                                </text>
+                            }
+                            inputContent = inputContent.replace("{Validation}", validation);
+                            return inputContent;
+                        }
+                    },
+                    {
+                        title: "Action",
+                        "visible": @(ViewBag.isView ? "false" : "true"),
+                        render: function(data, type, full) {
+                            const action =
+                                `<a href="javascript:;" onClick=DeleteMedicine('${full[0]}','${full[1].toString()
+                                    }') class="database_del_icon "><i class="fa fa-trash-o" aria-hidden="true"></i></a>`;
+                            return action;
+                        }
+                    }
+                ]
+            });
+
+            //Edit Portion For Second DataTable
+            @if (Model != null)
+            {
+                if (Model.Medicine != null)
+                {
+                    foreach (var x in Model.Medicine)
+                     {
+                         <text>
+                             TopDeal.row.add([
+                                 "@x.Id",
+                                 "@x.NDC",
+                                 "@x.MedicineName",
+                                 "@x.Strength",
+                                 "@x.Price",
+                                 "@x.DealPrice",
+                             ]).draw();
+                             $("#medicinePrice" + @x.Id).val(@x.Price);
+                             $("#dealprice" + @x.Id).val(@x.DealPrice);
+
+                         </text>
+                    }
+                 }
+            }
+        }
+
+        function BindTopDealMedicinesList() {
+            BindFirstTable();
+            BindSecondTable();
+        };
+
+        function AddMedicine(data, ndc) {
+            var distributorId = $("#DistributorId").val();
+            $.ajax({
+                url: "/Admin/ManageAdvertisement/GetSubscriptionTypeId",
+                data: { id: distributorId },
+                type: "GET",
+                success: function(response) {
+                    var goldSubscription = @((long) GlobalEnums.SubscriptionTypes.Gold);
+                    if (response.data == goldSubscription) {
+                        if (TopDeal.rows().count() >= @((int) GlobalEnums.AdvertisementLimit.MeidicineLimit)) {
+                            RxFair.Error("Upgrade Your subscription plan for More Medicines");
+                            return false;
+                        } else
+                            return true;
+                    }
+                }
+            });
+
+            DealArray.push(data);
+            const rowsId = GetTopdealRowId("#dtTopDealsTableFirst", ndc);
+            // Remove From TopDeal Table
+            const result = $("#dtTopDealsTableFirst").DataTable().rows(rowsId).data();
+
+            tempArray.push({ uId: data, rowData: result });
+
+            TopDeal.row.add([
+                result[0].id,
+                result[0].ndc,
+                result[0].medicineName,
+                result[0].strength,
+                result[0].price,
+                result[0].dealPrice,
+            ]).draw();
+
+            //Result[0].id  is  SecondTable Row Id
+            $("#medicinePrice" + result[0].id).val(result[0].price);
+            BindFirstTable();
+        }
+
+        function DeleteMedicine(data, ndc) {
+            // Removing Medicine From Second Table
+            var rowId = GetTopdealRowId("#dtTopDealsTableSecond", ndc);
+            var removeResult = $("#dtTopDealsTableSecond").DataTable().rows(rowId).remove().draw();
+            DealArray = arrayRemove(DealArray, data);
+            BindFirstTable();
+        }
+
+        $("#btnSave").click(function() {
+            $("#frmAdvertisement").parsley().validate();
+            if ($("#frmAdvertisement").parsley().isValid()) {
+                @if ((short) ViewBag.DealType == (short) GlobalEnums.DealType.TopDeals)
+                {
+                    <text>
+                        var startDate = $.trim($("#AdvStartDate").val());
+                        var endDate = $.trim($("#AdvEndDate").val());
+                        if (startDate !== "" && endDate !== "") {
+                            var sDate = new Date(startDate);
+                            var eDate = new Date(endDate);
+                            if (Date.parse(sDate) > Date.parse(eDate)) {
+                                RxFair.Error("", "End date should not be less than start date.");
+                                return false;
+                            }
+                        }
+                    </text>
+                }
+                var alldealPrices = $(".dealPrice");
+                var AdvertisementId;
+                @if (Model != null)
+                {
+                    <text>
+                        AdvertisementId = @Model.Id;
+                    </text>
+                }
+                var model = {
+                    "id": AdvertisementId,
+                    "distributorId": $("#DistributorId").val(),
+                    "dealType": @ViewBag.DealType,
+                    "AdvStartDate": $("#AdvStartDate").val(),
+                    "AdvEndDate": $("#AdvEndDate").val(),
+                    "AdvDealDate": $("#AdvDealDate").val(),
+                    "AdvPriceIncreaseDate": $("#AdvPriceIncreaseDate").val(),
+                    "isActive": true,
+                    "request": $("#Request").val(),
+                    "notes": $("#Notes").val(),
+                    "status": 1,
+                    "medicine": []
+                };
+
+                var allRow = $("#dtTopDealsTableSecond").DataTable().rows().data();
+                $.each(allRow,
+                    function(key, element) {
+                        element[5] = parseFloat($(alldealPrices[key]).val());
+                        var medicineData = [];
+                        medicineData = {
+                            "id": element[0],
+                            "ndc": element[1],
+                            "medicineName": element[2],
+                            "strength": element[3],
+                            "price": element[4],
+                            "dealPrice": element[5],
+                        };
+                        model.medicine.push(medicineData);
+                    });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ManageAdvertisement/AddEditAdvertisement",
+                    data: model,
+                    success: function(response) {
+                        localStorage.setItem("ActiveTab", response.data);
+                        if (response.status === 1) {
+                            RxFair.HandleResponse(response,
+                                true,
+                                function() {
+                                    window.location.href = "/Admin/ManageAdvertisement/@ViewBag.RequestType";
+                                });
+                        } else {
+                            RxFair.HandleResponse(response);
+                        }
+                    }
+                });
+            }
+        });
+
+        function GetTopdealRowId(tableId, newNdc) {
+            var ndc = "";
+            var rowId;
+            var tableData = $(tableId).DataTable().rows().data();
+            $.each(tableData,
+                function(key, element) {
+                    if (tableId === "#dtTopDealsTableSecond")
+                        ndc = element[1].trim();
+                    else if (tableId === "#dtTopDealsTableFirst")
+                        ndc = element.ndc.trim();
+                    if (newNdc == ndc) {
+                        rowId = key;
+                        return rowId;
+                    }
+                });
+            return rowId;
+        }
+
+        function ViewAdvertisement() {
+            $("#firstTableDiv").hide();
+            $("#frmAdvertisement").find("input,button,textarea,select").attr("disabled", "disabled");
+            $("#btnSave").hide();
+            $("#btnCancel").prop("disabled", false);
+            $(".dealprice").attr("disabled", true);
+            $("#btnCancel").text("Back");
+            $("#dtTopDealsTableSecond_filter").find('input[type="search"]').removeAttr("disabled");
+        }
+
+        $(document).on("keydown",
+            ".datepicker",
+            function() {
+                return false;
+            });
+    </script>
+
+}
+

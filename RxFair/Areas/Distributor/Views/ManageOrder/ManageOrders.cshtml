@@ -1,0 +1,347 @@
+﻿@using RxFair.Dto.Enum;
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="ManageOrders">Manage Orders</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#new-request" role="tab" data-toggle="tab">New Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#approved" role="tab" data-toggle="tab">Find Orders</a>
+            </li>
+        </ul>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="new-request">
+
+
+                    <div class="tile-body">
+                        <div class="dataTables_wrapper no-footer">
+                            <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtNewOrderRequest" role="grid" aria-describedby="sampleTable_info">
+                                <thead>
+                                    <tr role="row" class="title_datatable">
+                                        <th>Action</th>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Pharmacy</th>
+                                        <th>Total Amount $</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="approved">
+                    <div class="accordian-block border-0">
+                        <div class="accordian-para acc-show purches_order">
+                            <form>
+                                <div class="form-row mt-0">
+                                    <div class="form-group ">
+                                        <label>Order Status</label>
+                                        @Html.DropDownList("OrderStatus", ViewBag.OrderStatus as IEnumerable<SelectListItem>, "Select Order Status", new { @class = "form-control", @id = "OrderStatus", required = "Select Order Status" })
+                                    </div>
+                                    <div class="form-group ">
+                                        <label>From Date *</label>
+                                        @*<input id="fromDate" class="form-control datepicker" type="text" required placeholder="DD/MM/YYYY">*@
+                                        <input type="text" name="fromDate" id="fromDate" readonly value="" class="date" required placeholder="DD/MM/YYYY" />
+                                    </div>
+                                    <div class="form-group ">
+                                        <label>To Date *</label>
+                                        @*<input id="toDate" class="form-control datepicker" type="text" required placeholder="DD/MM/YYYY">*@
+                                        <input type="text" name="toDate" id="toDate" readonly value="" class="date2" required placeholder="DD/MM/YYYY" />
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button id="search" type="button" class="btn btn-outline-primary con_btn database_btn back_btn active mb-0">View Orders</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Tab panes -->
+                    <div class="tab-content pt-0">
+                        <div class="tile-body">
+                            <div class="dataTables_wrapper no-footer">
+                                <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec w-100" id="dtOrderDetails" role="grid" aria-describedby="sampleTable_info">
+                                    <thead>
+                                        <tr role="row" class="title_datatable">
+                                            <th>Order ID</th>
+                                            <th>Date</th>
+                                            <th>Pharmacy</th>
+                                            <th>Total Amount $</th>
+                                            <th>Track</th>
+                                            <th>Order Status</th>
+                                            <th>Payment Status</th>
+                                            <th>Trans. Statement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+
+        var PendingOrderTableId = "#dtNewOrderRequest";
+        var AllOrderTableId = "#dtOrderDetails";
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href");// activated tab
+            ActiveTab(target);
+        });
+       
+        $(document).ready(function () {
+            bindPendingOrderList();
+        });
+
+        function ActiveTab(active) {
+            switch (active) {
+                case "#new-request":
+                    bindPendingOrderList();
+                    break;
+                case "#approved":
+                    secondTab();
+                    bindAllOrderList();
+                    break;
+            }
+        }
+
+        function secondTab() {
+            $(function () {
+                $(".date").datepicker({
+                    onSelect: function (dateText) {
+                        $(this).change();
+                    }
+                }).on("change", function () {
+                    $('#toDate').datepicker('setStartDate', new Date($(this).val()));
+                  });
+            });
+
+            $('#fromDate').datepicker({
+                endDate: '+0d',
+                format: "M/dd/yyyy",
+                //setDate: new Date(),
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                autoclose: true
+            }).on('changeDate', function () {
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                if (Date.parse(startDate) > Date.parse(endDate)) {
+                    RxFair.Error("Start date cannot be greater than end date !");
+                }
+            });
+
+            myDate = new Date();
+            minusSeven = new Date(myDate.setDate(myDate.getDate() - 6));
+            $('#fromDate').datepicker('setDate', minusSeven);
+
+            $('#toDate').datepicker({
+                endDate: '+0d',
+                startDate: new Date($('#fromDate').val()),   
+                format: "M/dd/yyyy",
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                autoclose: true
+            })
+            $('#toDate').datepicker('setDate', new Date());
+
+        }
+        function bindAllOrderList() {
+            var orderStatus = $("#OrderStatus").val();// == 0 ? 6 : $("#OrderStatus").val() - 1;
+            orderStatus = isNaN(orderStatus) ? 0 : orderStatus;
+            orderStatus = (orderStatus == 0 ? 6 : orderStatus - 1);
+
+            var startDate = $("#fromDate").val();
+            var endDate = $("#toDate").val();
+
+            if ($.fn.DataTable.isDataTable("#OrderTable")) {
+                $("#OrderTable").DataTable().destroy();
+            }
+
+            var allOrder = $(AllOrderTableId).DataTable({
+                sAjaxSource: "/Distributor/ManageOrder/GetAllOrderList?orderStatus=" + orderStatus + "&fromDate=" + startDate + "&toDate=" + endDate,
+                columns: [
+                    {
+                        data: "orderId",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return `<a href="javascript:;" class="ViewOrderDetailsLink" data-orderId="${data}">${data}</a>`;
+                        }
+                    },
+                    {
+                        data: "orderDate",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "pharmacyName",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "totalAmount",
+                        autoWidth: true,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return '$ ' + data;
+                        }
+                    },
+                    {
+                        data: "trackingNo",
+                        autoWidth: true,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return `<a href="https://${row.trackingLink}" target="_blank"> ${data} </a>`;
+                        }
+                    },
+                    {
+                        data: "orderStatus",
+                        autoWidth: true,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            switch (parseInt(data)) {
+                                case 0: return "Pending"; break;
+                                case 1: return "Confirmed"; break;
+                                case 2: return "Shipped"; break;
+                                case 3: return "Delivered"; break;
+                                case 4: return "Cancelled"; break;
+                                case 5: return "Returned"; break;
+                            }
+                        }
+                    },
+                    {
+                        data: "paymentStatus",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "orderId",
+                        orderable:false,
+                        autoWidth: true,
+                        render: function (data, type, row) {
+                            return `<a href="javascript:;" class="icon_btn text-center OrderInvoice" data-id="${data}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>`;
+                        }
+                    }
+                ]
+            });
+        }
+        function bindPendingOrderList() {
+           
+            var PendingOrder = $(PendingOrderTableId).DataTable({
+                sAjaxSource: "/Distributor/ManageOrder/GetPendingOrderList",
+                columns: [
+                    {
+                        data: "id",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            var content = `<a href="javascript:;" onclick=ChangeOrderStatus('${data}',1) class="dropdown-item action"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Confirm Order</a>
+                                           <a href="javascript:;" onclick=ChangeOrderStatus(${data},4) class="dropdown-item action"><i class="fa fa-window-close-o" aria-hidden="true"></i> Cancel Order</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        data: "orderId",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return `<a href="javascript:;" class="ViewOrderDetailsLink" data-orderId="${data}">${data}</a>`;
+                        }
+                    },
+                    {
+                        data: "orderDate",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "pharmacyName",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "totalAmount",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return '$ ' + data;
+                        }
+                    },
+                ]
+            });
+        }
+
+        function ChangeOrderStatus(orderChargeId, OrderStatus) {
+            $.ajax({
+                url: "/Distributor/ManageOrder/ManageOrderStatus",
+                data: { id: orderChargeId, status: OrderStatus },
+                type: "POST",
+                success: function (response) {
+                    if (response.status == 1)
+                        RxFair.HandleResponse(response);
+                    $(PendingOrderTableId).DataTable().ajax.reload();
+                },
+                error: function (response) {
+                    RxFair.Error(response.message);
+                }
+            });
+        }
+
+        $(document).on("click", ".ViewOrderDetailsLink", function () {
+            var id = $(this).attr("data-orderId");
+            window.location.href = "/Distributor/ManageOrder/ViewOrderDetails/" + id;
+        });
+
+        $("#search").click(function () {
+            var startdate = $('#fromDate').val();
+            var enddate = $('#toDate').val();
+            if (Date.parse(startdate) > Date.parse(enddate)) {
+                RxFair.Error("From date cannot be greater than To date !");
+            }
+            else
+            {
+                bindAllOrderList();
+            }
+        });
+
+        $(document).on("click", ".OrderInvoice", function () {
+            var orderId = $(this).attr("data-id");
+            window.location.href = "/Distributor/ManageOrder/DownloadInvoice/" + orderId;
+
+        });
+                    //$(AllOrderTableId).DataTable().search.push(
+                    //    function (settings, data, dataIndex) {
+
+                    //        switch (data[5]) {
+
+                    //            case 'Pending': data[5] = 0; break;
+                    //            case 'Confirmed': data[5] = 1; break;
+                    //            case 'Delivered': data[5] = 2; break;
+                    //            case 'Cancelled': data[5] = 3; break;
+                    //            case 'Returned': data[5] = 4; break;
+                    //        }
+                    //        return true;
+                    //    }
+                    //);
+
+    </script>
+}
+

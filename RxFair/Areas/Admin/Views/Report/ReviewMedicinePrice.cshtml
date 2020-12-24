@@ -1,0 +1,191 @@
+﻿@{
+    ViewData["title"] = "Review Medicine Price ";
+}
+@model RxFair.Dto.Dtos.ReportDto
+<style>
+    td.details-control {
+        background: url('/rxfairfrontend/images/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.shown td.details-control {
+        background: url('/rxfairfrontend/images/details_close.png') no-repeat center center;
+    }
+</style>
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Order</a></li>
+            <li class="breadcrumb-item"><a href="ReviewMedicinePrice">Review Medicine Price</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Review Medicine Price</h3>
+                <button type="button" id="ExportToExcel" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right active"><i class="fa fa-align-center" aria-hidden="true"></i> Export</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="accordian-block border-0">
+                <div class="accordian-para acc-show purches_order">
+                    <div class="row mb-3">
+                        <div class="col-md-10 cust-drop-multi" id="cust-drop-multi">
+                            <label>Distributor *</label>
+                            @Html.DropDownListFor(m => m.DistributorList, ViewBag.DistributorList as IEnumerable<SelectListItem>, new { @class = "form-control select2", multiple = "multiple" })
+                        </div>
+                        <div class="col-md-2">
+                            <div class="drop-d-btn">
+                                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn active mb-2" id="btnView">View Reports</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtReviewMedicinePrice" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th></th>
+                                    <th></th>
+                                    <th>Ndc</th>
+                                    <th>Name</th>
+                                    <th>Strength</th>
+                                    <th>Dosage</th>
+                                    <th>Package Size</th>
+                                    <th>Manufacturer</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/rxfairbackend/js/plugins/bootstrap-datepicker.min.js"></script>
+    <script src="~/rxfairbackend/js/plugins/select2.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var dropdownParent = $('#cust-drop-multi');
+            $("#DistributorList").select2({
+                dropdownParent: dropdownParent,
+                tags: true,
+            });
+            var list = $('#DistributorList').val();
+            bindReport(list);
+        });
+
+        $(document).on("change", "", function () { });
+        $(document).on('click', '#btnView', function () {
+            var list = $('#DistributorList').val();
+            //// Add event listener for opening and closing details
+            bindReport(list);
+        });
+
+        $(document).on('click', '#ExportToExcel', function () {
+            var list = $('#DistributorList').val();
+            var search = $("input[type='search']")[1].value;;
+
+            ExportToExcelData(list, search);
+            // Add event listener for opening and closing details
+        });
+
+        function ExportToExcelData(list, search) {
+            window.location = `/Admin/Report/ExportToExcelReviewMedicinePrice?distributorList=${list}&search=${search}`;
+        }
+
+        function bindReport(list) {
+            //if ($.fn.DataTable.isDataTable("#dtReviewMedicinePrice")) {
+            //    historyTable.destroy();
+            //}
+            var historyTable = $('#dtReviewMedicinePrice')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Report/GetReviewMedicinePrice?distributorList=" + list,
+                    "order": [[2, "asc"]],
+                    "columns": [
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                const content = `<div><a href="javascript:;" data-toggle="tooltip" data-original-title="view" onclick="ViewMedicine(${data},'${$.trim(row.medicineName)}')" class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i></a></div>`;
+                                return content;
+                            }
+                        },
+                        {
+                            "data": "id",
+                            "visible": false,
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": false,
+                        },
+                        {
+                            "data": "ndc",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "medicineName",
+                            "className": "medicineName",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "strength",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "dosage",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "packageSize",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "manufacturer",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": true,
+                        }
+                    ]
+                });
+        };
+
+        function ViewMedicine(id, medName) {
+            var medicineName = medName;
+            const newUrl = `/Admin/Report/ViewDistributorDetails/?id=${id}`;
+            $("#modalContent").load(newUrl, function () {
+                $("#lblmedicineName").html("");
+                $("#lblmedicineName").html(medicineName);
+                modalSize("l");
+                $("#divModal").modal('show');
+            });
+        }
+    </script>
+}
+
+
+
+
+

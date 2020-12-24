@@ -1,0 +1,146 @@
+﻿@model RxFair.Dto.Dtos.MedicinePurchaseHistoryViewDto
+@{
+    ViewData["Title"] = "ViewPurchaseHistory";
+}
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Order</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="SearchMedicine">Medicine History</a></li>
+        </ul>
+    </div>
+
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Medicine History</h3>
+                <button type="button" class="btn btn-outline-primary con_btn database_btn back_btn d-inline-block float-right  btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content invoice_data pt-0">
+                <table style="width: 100%" class="roundedCorners">
+                    <tr>
+                        <th colspan="6">
+                            Medicine Details
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="title w-0">Medicine Name</td>
+                        <td class="title w-0">Strength</td>
+                        <td class="title w-0">Dosage</td>
+                        <td class="title w-0">Type</td>
+                        <td class="title w-0">Manufacturer</td>
+                        <td class="title w-0">Flavour</td>
+                    </tr>
+                    <tr>
+                        <td>@Model.MedicineName</td>
+                        <td>@Model.Strength</td>
+                        <td>@Model.DosageForm</td>
+                        <td>@Model.Category</td>
+                        <td>@Model.Manufacturer</td>
+                        <td>@Model.Flavour</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bottom_admin_tbl pharmacies_form mt-4">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>Purchase History</h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicineHistory" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Date</th>
+                                    <th>Order Id</th>
+                                    <th>NDC</th>
+                                    <th>Package Size</th>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Distributor</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindPurchaseHistory(@Model.Id)
+        });
+
+        function bindPurchaseHistory(MedicineId) {
+            var MedicineTable = $("#dtMedicineHistory").DataTable({
+                sAjaxSource: "/Pharmacy/Order/GetMedicinePurchaseHistory?id=" + MedicineId,
+                columns: [
+                    {
+                        data: "orderDate",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "orderId",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "ndc",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "packageSize",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "description",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "quantity",
+                        autoWidth: true,
+                        searchable: true
+                    },
+                    {
+                        data: "price",
+                        autoWidth: true,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return `$ ${data}`;
+                        }
+                    },
+                    {
+                        data: "companyName",
+                        autoWidth: true,
+                        searchable: true
+                    },
+
+                ]
+        
+                });
+        }
+
+    </script>
+}
+
+

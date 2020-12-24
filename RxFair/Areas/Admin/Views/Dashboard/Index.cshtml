@@ -1,0 +1,221 @@
+﻿@using RxFair.Dto.Enum
+@using RxFair.Utility.Extension
+@model RxFair.Dto.Dtos.DashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="page_title">
+                <h2>@User.GetClaimValue(UserClaims.FullName)</h2>
+                <h5>We are glad to see you!</h5>
+            </div>
+        </div>
+    </div>
+    <!-- Statues Div Start -->
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="status_sec">
+                <div class="status_title">
+                    <a href="/Admin/ManageDistributor"><h4>Active Distributors</h4></a>
+                </div>
+                <div class="status_text">
+                    <h3>@Model.UserDto.ActiveDistributors</h3>
+                    <div class="status_icon">
+                        <img src="~/rxfairbackend/images/s1.png" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="status_sec new_d">
+                <div class="status_title">
+                    <a href="/Admin/Master/NewDistributorRequest"><h4>New Distributor Requests</h4></a>
+                </div>
+                <div class="status_text">
+                    <h3>@Model.UserDto.NewDistributorRequest</h3>
+                    <div class="status_icon">
+                        <img src="~/rxfairbackend/images/s2.png" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="status_sec">
+                <div class="status_title">
+                    <a href="/Admin/ManagePharmacy/Index/Active"><h4>Active Pharmacies</h4></a>
+                </div>
+                <div class="status_text">
+                    <h3>@Model.UserDto.ActivePharmacies</h3>
+                    <div class="status_icon">
+                        <img src="~/rxfairbackend/images/s3.png" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="status_sec new_d">
+                <div class="status_title">
+                    <a href="/Admin/ManagePharmacy/Index/New"><h4>New Pharmacy Requests</h4></a>
+                </div>
+                <div class="status_text">
+                    <h3>@Model.UserDto.NewPharmacyRequests</h3>
+                    <div class="status_icon">
+                        <img src="~/rxfairbackend/images/s4.png" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Statues Div End -->
+    <div class="row">
+        <div class="col-12">
+            <div class="dash_info_sec">
+                <div class="dash_info_title">
+                    <div class="left_text">
+                        <img src="~/rxfairbackend/images/admin/title_one.png" alt="" class="img-fluid">
+                        <h3>Orders</h3>
+                    </div>
+                    <div class="right_text">
+                        <h3>Total Order  - <span>@Model.OrderDto.TotalOrder</span></h3>
+                    </div>
+                </div>
+                <div class="dash_info_data">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon">
+                                    <img src="~/rxfairbackend/images/admin/o1.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Pending</h5>
+                                    <h3><span>@Model.OrderDto.Pending</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon green">
+                                    <img src="~/rxfairbackend/images/admin/o2.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Confirmed</h5>
+                                    <h3><span>@Model.OrderDto.Confirmed</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon blue">
+                                    <img src="~/rxfairbackend/images/admin/o3.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Shipped</h5>
+                                    <h3><span>@Model.OrderDto.Shipped</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data border_bot">
+                                <div class="dash_infoicon green">
+                                    <img src="~/rxfairbackend/images/admin/o4.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Delivered</h5>
+                                    <h3><span>@Model.OrderDto.Delivered</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data">
+                                <div class="dash_infoicon red">
+                                    <img src="~/rxfairbackend/images/admin/o5.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Cancelled</h5>
+                                    <h3><span>@Model.OrderDto.Cancelled</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="order_data">
+                                <div class="dash_infoicon high_red">
+                                    <img src="~/rxfairbackend/images/admin/o6.png" class="img-fluid" alt="">
+                                </div>
+                                <div class="dash_text">
+                                    <h5>Returned</h5>
+                                    <h3><span>@Model.OrderDto.Returned</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-md-3">
+                                <div class="order_data">
+                                    <div class="dash_infoicon high_red">
+                                        <img src="~/rxfairbackend/images/admin/o7.png" class="img-fluid" alt="">
+                                    </div>
+                                    <div class="dash_text">
+                                        <h5>Partial Returned</h5>
+                                        <h3><span>@Model.OrderDto.PartialReturned</span></h3>
+                                    </div>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+          @if (ViewBag.distributorInfoList.Count == 0)
+          {
+                <text>
+        $("#DistributorInfo").parent('ul').append(`<li class="app-notification__title">You have @ViewBag.distributorInfoList.Count New notifications.</li>`)
+        $("#DistributorInfo").parent().parent().find('.notice_status').text('@ViewBag.distributorInfoList.Count');
+        </text>
+            }
+          else {
+
+     foreach (var item in ViewBag.distributorInfoList) {
+             <text>
+        var distributorinfo = document.getElementById("DistributorInfo");
+        if (distributorinfo) {
+
+                  $("#DistributorInfo").append(`<li>
+                             <a class="app-notification__item" href="javascript:;">
+                                 <span class="app-notification__icon"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x text-primary"></i><i class="fa fa-envelope fa-stack-1x fa-inverse"></i></span></span>
+                                 <div>
+                                     <p class="app-notification__message">@item.CompanyName</p>
+                                     <p class="app-notification__meta">@item.PendingDays   days left </p>
+                                 </div>
+                                 </a>
+                             </li>`);
+
+                            }
+             </text>
+
+         }
+
+        <text>
+                 $("#DistributorInfo").parent('ul').append(`<li class="app-notification__title">You have @ViewBag.distributorInfoList.Count New notifications.</li>`)
+                 $("#DistributorInfo").parent().parent().find('.notice_status').text('@ViewBag.distributorInfoList.Count');
+        </text>
+    }
+
+    });
+
+</script>
+
+}
+

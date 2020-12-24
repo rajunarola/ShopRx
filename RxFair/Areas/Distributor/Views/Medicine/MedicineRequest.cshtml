@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Medicine Request";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Distributor">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Medicine Request</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Medicine Request
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("UploadMedicine","Medicine", new { area="Distributor" })" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Medicine Request</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtUploadedMedicine" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Image</th>
+                                    <th>NDC</th>
+                                    <th>UPC</th>
+                                    <th>Medicine</th>
+                                    <th>Strength</th>
+                                    <th>Package Size</th>
+                                    <th>Manufacturer</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script type="text/javascript">
+        var dynamic;
+        var table = {
+            id: "",
+            dtNewMedicine: "#dtNewMedicine",
+            dtRejMedicine: "#dtRejectedMedicine"
+        };
+
+        $(document).ready(function () {
+            window.bindUploadedMedicine(table.dtNewMedicine, null);
+        });
+
+        function bindUploadedMedicine() {
+            if ($.fn.DataTable.isDataTable("#dtUploadedMedicine")) {
+                $("#dtUploadedMedicine").dataTable().fnDestroy();
+            }
+            //DataTable
+            dynamic = $("#dtUploadedMedicine").DataTable({
+                "sAjaxSource": "/Distributor/Medicine/GetMedicineRequestList",
+                "rowCallback": function (settings, json) {
+                    setTimeout(function () {
+                        ImageBroken.fixBrokenImages(ImageBroken.path.MedicineImage);
+                    },
+                        300);
+                },
+                "order": [[2, ""]],
+                "columns": [
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var content = '';
+                            if (row.status === "Approved") {
+                                content += `<a href="/Distributor/Medicine/AddEditMedicine/${data}" class="dropdown-item"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                           `;
+                            } else {
+                                content += `<a href="javascript:;" onclick=ViewMedicine(${data},true) class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View</a>`;
+                            }
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "data": "medicineImage",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            debugger;
+                            return showImageTooltip(data);
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "upc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "packageSize",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "manufacturer",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "category",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "status",
+                        "autoWidth": false,
+                        "render": function (data, type, row) {
+                            var content = "";
+                            if (data === "Rejected") {
+                                content = `<label>${data} <i class="fa fa-info-circle rejected-med-info" aria-hidden="true" data-toggle="tooltip" data-original-title="${row.reason}" ></i></label>`;
+                            } else {
+                                content = `<label>${data}</label>`;
+                            }
+                            return renderHtml(content);
+                        }
+                    }
+                ]
+            });
+        }
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            const target = $(e.target).attr("href"); // activated tab
+            ActiveTab(target);
+        });
+
+        function ActiveTab(active) {
+            switch (active) {
+                case "#newmedicine":
+                    bindUploadedMedicine(table.dtNewMedicine, null);
+                    break;
+                case "#rejectedmedicine":
+                    bindUploadedMedicine(table.dtRejMedicine, false);
+                    break;
+            }
+        }
+    </script>
+}

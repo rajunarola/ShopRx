@@ -1,0 +1,468 @@
+﻿@model RxFair.Dto.Dtos.DistributorProfileDto
+@{
+    ViewData["Title"] = "Distributor Profile";
+}
+<main class="app-content">
+    <div class="app-title pharmacies_img">
+        <div class="avatar-upload">
+            <div class="avatar-edit">
+                <input type='file' id="profileImage" accept=".png, .jpg, .jpeg" />
+                <label for="profileImage"></label>
+            </div>
+            <div class="avatar-preview">
+                <div id="imagePreview" modelvalue="@Model.UserProfileImage" style="background-image: url('/UploadFile/UserProfile/@Model.UserProfileImage');">
+                </div>
+            </div>
+        </div>
+        <h3>@Model.FirstName @Model.LastName</h3>
+    </div>
+    <div class="row pharmacies_form">
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#account" role="tab" data-toggle="tab">Distributor Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#security" role="tab" data-toggle="tab">Order Setting</a>
+            </li>
+        </ul>
+
+        <div class="col-12">
+
+            <!-- Tab panes -->
+            <div class="tab-content accordion">
+                <div role="tabpanel" class="tab-pane in active" id="account">
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block mbf-2">
+                        <div class="ac-title acc-active"  data-toggle="collapse" data-target="#tab1" aria-expanded="false">
+                            <p>Distributor Company Info.</p>
+                            <i class="fa fa-angle-down plus-icon cross-icon"></i>
+                        </div>
+                        <div class="accordian-para collapse show" id="tab1" aria-labelledby="headingThree" data-parent="#accordionExample">
+                            <form id="FormDisCompanyInfo">
+                                <input type="hidden" asp-for="@Model.Id">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Company Name *</label>
+                                        <input asp-for="@Model.CompanyName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z _0-9]+$" data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Email *</label>
+                                        <input asp-for="@Model.Email" type="text" class="form-control" required data-parsley-type="email">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Mobile *</label>
+                                        <input asp-for="@Model.Mobile" type="text" class="form-control" required data-mask="9999999999">
+                                    </div>
+                                    <div class="form-group col-md-12 mbf-3">
+                                        <label>Address *</label>
+                                        <input asp-for="@Model.Address" type="text" class="form-control" required data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>City *</label>
+                                        <input asp-for="@Model.City" type="text" class="form-control" required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>State *</label>
+                                        @Html.DropDownListFor(m => m.StateId, ViewBag.State as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control ", required = "Select State" })
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Zip *</label>
+                                        <input asp-for="@Model.ZipCode" type="text" class="form-control" data-mask="99999" required data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Phone</label>
+                                        <input asp-for="@Model.Phone" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Fax</label>
+                                        <input asp-for="@Model.FaxNumber" type="text" class="form-control" data-mask="999-999-9999" data-parsley-trigger="change">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+                    <!--Tab Wrapper-->
+                    <div class="accordian-block accordion">
+                        <div class="ac-title" data-toggle="collapse" data-target="#tab2" aria-expanded="false">
+                            <p>Contact Person Info.</p>
+                            <i class="fa fa-angle-down plus-icon"></i>
+                        </div>
+                        <div class="accordian-para collapse show" id="tab2" aria-labelledby="headingThree" data-parent="#accordionExample">
+                            <form id="FormDisPersonInfo">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Name *</label>
+                                        <input asp-for="@Model.ContactName" type="text" class="form-control" required data-parsley-pattern="^[a-zA-Z ]+$" data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Email *</label>
+                                        <input asp-for="@Model.ContactEmail" type="text" class="form-control" required data-parsley-type="email">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Mobile *</label>
+                                        <input asp-for="@Model.ContactMobile" type="text" class="form-control" data-mask="9999999999" required data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-8 mbf-3">
+                                        <label>Address *</label>
+                                        <input asp-for="@Model.ContactAddress" type="text" data-old="@Model.ContactAddress" class="form-control" required data-parsley-trigger="change">
+                                    </div>
+                                    <div class="form-group col-md-4 mt-4 mb-0">
+                                        <div class="check_box">
+                                            <div class="form-group">
+                                                <input type="checkbox" asp-for="SameAsCompany">
+                                                <label for="SameAsCompany">Same as company address</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>City *</label>
+                                        <input asp-for="@Model.ContactCity" type="text" data-old="@Model.ContactCity" class="form-control" required data-parsley-trigger="change" data-parsley-pattern="^[a-zA-Z ]+$">
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>State *</label>
+                                        @Html.DropDownListFor(m => m.ContactStateId, ViewBag.State as IEnumerable<SelectListItem>, "Select State", new { @class = "form-control ", data_old = Model.ContactStateId, required = "Select State" })
+                                    </div>
+                                    <div class="form-group col-md-4 mbf-3">
+                                        <label>Zip *</label>
+                                        <input asp-for="@Model.ContactZipCode" type="text" data-old="@Model.ContactZipCode" class="form-control" data-mask="99999" required data-parsley-trigger="change">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+                    <div class="btn_sec mtf-2">
+                        <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnSave">Save</button>
+                        <button type="button" class="btn btn-outline-primary con_btn btn-back" id="btnCancel">Cancel</button>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="security">
+                    <!--Tab Wrapper-->
+                    <div class="admin_form">
+                        <div class="accordian-block accordion">
+                            <div class="ac-title acc-active" data-toggle="collapse" data-target="#tab3" aria-expanded="false">
+                                <p>Order Setting</p>
+                                <i class="fa fa-angle-down plus-icon"></i>
+                            </div>
+                            <div class="accordian-para collapse show" id="tab3" aria-labelledby="headingThree" data-parent="#accordionExample">
+
+                                <form id="FormDisOrderSettingInfo">
+                                    @Html.AntiForgeryToken()
+                                    <input asp-for="DistributerOrderSettingDto.Id" type="hidden" />
+                                    <input asp-for="DistributerOrderSettingDto.DistributorId" type="hidden" />
+                                    <div class="form-row">
+                                        <div class="form-group col-md-3">
+                                            <label>Time Zone *</label>
+                                            @Html.DropDownListFor(x => x.DistributerOrderSettingDto.TimeZoneId, ViewBag.TimeZoneList as IEnumerable<SelectListItem>, "Select TimeZone", new { @class = "form-control", required = "Select TimeZone" })
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Minimum Order Amount($) *</label>
+                                            <input asp-for="DistributerOrderSettingDto.MinOrderAmount" type="text" placeholder="0" class="form-control" data-parsley-type="number" required data-parsley-trigger="change" data-parsley-pattern="^[1-9]\d*(\.\d+)?$">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Shipping Charge($) *</label>
+                                            <input asp-for="DistributerOrderSettingDto.ShippingCharge" type="text" placeholder="0" class="form-control" data-parsley-type="number" required data-parsley-trigger="change" data-parsley-pattern="^[1-9]\d*(\.\d+)?$">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>Overnight Amount($) *</label>
+                                            <input asp-for="DistributerOrderSettingDto.OverNightAmount" type="text" placeholder="0" class="form-control" data-parsley-type="number" required data-parsley-trigger="change" data-parsley-pattern="^[1-9]\d*(\.\d+)?$">
+                                        </div>
+                                        <div class="form-group col-md-7">
+                                            <div class="order_setting">
+                                                <h6>Service Days</h6>
+                                                <div class="form-row d-flex justify-content-around mt-0">
+                                                    <div class="form-group-o col-md-5 d-flex mb-3">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDayMonday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDayMonday">Monday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.MondayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.MondayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group-o col-md-5 d-flex mb-3">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDayTuesday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDayTuesday">Tuesday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.TuesdayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.TuesdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row d-flex justify-content-around mt-0">
+                                                    <div class="form-group-o col-md-5 d-flex mb-3">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDayWednesday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDayWednesday">Wednesday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.WednesdayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.WednesdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group-o col-md-5 d-flex mb-3">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDayThursday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDayThursday">Thursday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.ThursdayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.ThursdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row d-flex justify-content-around mt-0">
+                                                    <div class="form-group-o col-md-5 d-flex mb-3">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDayFriday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDayFriday">Friday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.FridayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.FridayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group-o col-md-5 d-flex mb-3">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDaySaturday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDaySaturday">Saturday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.SaturdayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.SaturdayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row d-flex mt-0">
+                                                    <div class="form-group-o col-md-5 d-flex mb-3 ml-4">
+                                                        <div class="check_box w-50 d-flex align-items-center">
+                                                            <div class="form-group m-0">
+                                                                <input asp-for="DistributerOrderSettingDto.ServiceDaySunday" type="checkbox">
+                                                                <label for="DistributerOrderSettingDto_ServiceDaySunday">Sunday</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group w-50 m-0">
+                                                            <label class="in_text mt-1">CutOff Time</label>
+                                                            <input asp-for="DistributerOrderSettingDto.SundayCutOffTime" data-oldValue="@Model.DistributerOrderSettingDto.SundayCutOffTime" type="text" class="form-control h-50 ordertime">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="admin_formsec" style="display: block">
+                            <div class="btn_sec mtf-2">
+                                <button type="button" class="btn btn-outline-primary con_btn active mr-2" id="btnOrderSave">Save</button>
+                                <button type="button" class="btn btn-outline-primary con_btn btn-back">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Wrapper close-->
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/rxfairfrontend/js/jquery.maskedinput.min.js"></script>
+    <link href="~/rxfairbackend/css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .orderTime {
+        }
+    </style>
+    <script src="~/rxfairbackend/js/plugins/bootstrap-timepicker.min.js"></script>
+    <script src="~/rxfairbackend/js/plugins/moment.min.js"></script>
+    <script type="text/javascript">
+        window.InitMaskInput();
+        $('.orderTime').timepicker({ defaultTime: false, minuteStep: 15}).keydown(function (event) {
+            var code = event.keyCode || event.which;
+            if (code == '9') {
+                //$(".orderTime").prop("disabled", true);
+                $(".bootstrap-timepicker-widget").hide();
+            }
+        }).click(function (e) {
+            $(".bootstrap-timepicker-widget").show();
+            var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+            var d = new Date();
+            var current_time = moment(d).format('hh:mm A'); // time format with moment.js
+            $(timeBox).timepicker('setTime', current_time); // setting timepicker to current time
+            $(timeBox).val(current_time); // setting input field to current time
+        });
+
+        $(document).ready(function () {
+            @if (Model.DistributerOrderSettingDto.Id != 0)
+            {
+                <Text>
+                checkIsSelected();
+                </Text>
+            }
+            else
+            {
+                <Text>
+                $(".orderTime").prop("disabled", true);
+                </Text>
+            }
+        });
+
+        $(document).on("change", "#SameAsCompany", function (e) {
+            if ($(this).is(":checked")) {
+                $("#ContactAddress").val($.trim($("#Address").val()));
+                $("#ContactCity").val($.trim($("#City").val()));
+                $("#ContactStateId").val($.trim($("#StateId").val()));
+                $("#ContactZipCode").val($.trim($("#ZipCode").val()));
+            }
+            else {
+                var oldAddress = $("#ContactAddress").data("old");
+                $("#ContactAddress").val(oldAddress);
+                var oldCity = $("#ContactCity").data("old");
+                $("#ContactCity").val(oldCity);
+                var oldStateId = $("#ContactStateId").data("old");
+                $("#ContactStateId").val(oldStateId);
+                var oldZipCode = $("#ContactZipCode").data("old");
+                $("#ContactZipCode").val(oldZipCode);
+            }
+        });
+
+        $("#btnSave").on("click", function (e) {
+            $("#FormDisCompanyInfo").parsley().validate();
+            $("#FormDisPersonInfo").parsley().validate();
+            if ($("#FormDisCompanyInfo").parsley().isValid() && $("#FormDisPersonInfo").parsley().isValid()) {
+                $.post("/Distributor/DistributorProfile/EditDistributor", $("#FormDisCompanyInfo,#FormDisPersonInfo").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                });
+            }
+        });
+
+        $("#btnOrderSave").on("click", function (e) {
+            var result = checkOnOrderSave();
+            $("#FormDisOrderSettingInfo").parsley().validate();
+            if ($("#FormDisOrderSettingInfo").parsley().isValid() && result) {
+                $.post("/Distributor/DistributorProfile/EditOrderSetting", $("#FormDisOrderSettingInfo").serialize(), function (response) {
+                    RxFair.HandleResponse(response);
+                });
+            }
+        });
+
+        //$(document).on("change", "input[type='checkbox']", function (e) {
+        //    var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+        //    var oldval = $(timeBox).data("oldvalue");
+        //    if ($(e.currentTarget).is(":checked")) {
+        //        //  timeBox.attr('data-parsley-required data-parsley-trigger="change"');
+        //        timeBox.attr({ 'data-parsley-required': 'true', 'data-parsley-trigger': 'change' });
+        //        if (oldval !== "") {
+        //            $(timeBox).val(oldval);
+        //        }
+        //        $(timeBox).prop("disabled", false);
+        //    } else {
+        //        timeBox.removeAttr({ 'data-parsley-required': 'true', 'data-parsley-trigger': 'change' });
+        //        $(timeBox).val("");
+        //        $(timeBox).prop("disabled", true);
+        //    }
+        //});
+
+        $(document).on("change", "input[type='checkbox']", function (e) {
+            var timeBox = $(e.currentTarget).parents(".form-group-o").find(".orderTime");
+            var oldval = $(timeBox).data("oldvalue");
+            if ($(e.currentTarget).is(":checked")) {
+                $(timeBox).attr({ 'data-parsley-required': 'true', 'data-parsley-trigger': 'change' });
+                if (oldval !== "") {
+                    $(timeBox).val(oldval);
+                }
+                $(timeBox).prop("disabled", false);
+            } else {
+                if ($(timeBox).attr('data-parsley-required') && $(timeBox).attr('data-parsley-trigger')) {
+                    $(timeBox).removeAttr('data-parsley-required data-parsley-trigger');
+                }
+                $(timeBox).val("");
+                $(timeBox).prop("disabled", true);
+                $(timeBox).parsley().reset();
+            }
+        });
+
+        $("#profileImage").on('change', function () {
+            var formData = new FormData();
+            var files = $("#profileImage").get(0).files;
+
+            if (files.length <= 0) {
+                RxFair.Error("Error", "please select file");
+                return false;
+            }
+            else {
+                var fileName = $('#profileImage').val();
+                var getExt = fileName.split('.');
+                getExt = getExt.reverse();
+                if ($.inArray(getExt[0].toLowerCase(), RxFair.Filetypes) === -1) {
+                    const fileTypes = RxFair.Filetypes.join();
+                    RxFair.Error("Error", "The file type you are attempting to upload is not allowed.\nAllowed types " + fileTypes);
+                    return false;
+                } else {
+                    readImageURL(this, "#imagePreview");
+                    formData.append("profileImage", files[0]);
+                    $.ajax({
+                        url: '/Distributor/DistributorProfile/UploadProfile',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        data: formData,
+                        success: function (response) {
+                            RxFair.HandleResponse(response);
+                            if (response.status === 1) {
+                                const imgPath = response.data.replace(/\\/g, "/");
+                                $("#imagePreview").css('background-image', "");
+                                $("#imagePreview").css('background-image', 'url("' + imgPath + '")');
+                                //$(".UserProfileImage").attr("src", imgPath);
+                            }
+                        },
+                        error: function (response) {
+                        }
+                    });
+                    return true;
+                }
+            }
+        });
+
+        function checkIsSelected() {
+            $.each($("#FormDisOrderSettingInfo input[type='checkbox']:not(:checked)"), function (i, item) {
+                    var timeBox = $(item).parents(".form-group-o").find(".orderTime");
+                    $(timeBox).val("");
+                    $(timeBox).prop("disabled", true);
+            });
+        }
+
+        function checkOnOrderSave() {
+            var noEmpty = true;
+            $.each($("#FormDisOrderSettingInfo input[type='checkbox']:checked"), function (i, item) {
+                var timeBox = $(item).parents(".form-group-o").find(".orderTime");
+                var timeValue = $.trim($(timeBox).val());
+                if (timeValue === "") {
+                    $(timeBox).attr({ 'data-parsley-required': 'true', 'data-parsley-trigger': 'change' });
+                    noEmpty = false;
+                }
+                $(timeBox).prop("disabled", false);
+            });
+            return noEmpty;
+        }
+
+    </script>
+}

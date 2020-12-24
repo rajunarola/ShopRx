@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewData["Title"] = "Commission Invoice Payment";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Distribution Commission</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;" mhref="CommissionInvoicePayment">Invoice Payment</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Invoice Payment
+                </h3>
+
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="javascript:;" onclick="AddInvoicePayment();" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Invoice Payment</a>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtCommissionInvoicePayment" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Invoice ID</th>
+                                    <th>Distributor</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Amount ($)</th>
+                                    <th>Paid Date</th>
+                                    <th>Paid Amount ($)</th>
+                                    <th>Paid By</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindPaymentTable();
+        });
+
+        function bindPaymentTable() {
+            var commissionTable = $("#dtCommissionInvoicePayment").DataTable({
+                sAjaxSource: "/Admin/DistributorCommission/GetCommissionInvoicePaymentList?id=@ViewBag.distributorId&invoiceId=@ViewBag.InvoiceId",
+                columns: [
+                    {
+                        data: "invoiceId",
+                        autoWidth: false,
+                        orderable: false,
+                        searchable: true,
+                        visible: false,
+                        render: function (data, type, row) {
+                            content = `<a class="dropdown-item" href="javascript:;"><i class="fa fa-download" aria-hidden="true"></i>Download Invoice</a>
+                                       <a class="dropdown-item" href="javascript:;"><i class="fa fa-envelope" aria-hidden="true"></i>Send Invoice Email</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        data: "invoiceId",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "companyName",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "invoiceDate",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "invoiceAmount",
+                        autoWidth: false,
+                        searchable: true,
+                        render: function (data, type, row) {
+                            return ` ${data}`;
+                        }
+                    },
+                    {
+                        data: "paidDate",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "paidAmount",
+                        autoWidth: false,
+                        searchable: true
+                    },
+                    {
+                        data: "paidby",
+                        autoWidth: false,
+                        searchable: true
+                    }
+                ]
+            });
+        }
+
+        function AddInvoicePayment() {
+            $("#modalContent").load("/Admin/DistributorCommission/AddInvoicePayment/0", function () {
+                modalSize("slg");
+                $("#divModal").modal('show');
+            });
+        }
+
+    </script>
+
+}
+

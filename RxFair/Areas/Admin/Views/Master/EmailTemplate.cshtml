@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["title"] = "Email Template";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Master</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Email Templates</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Email Templates
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("EmailTemplateAddEdit","Master")" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Template</a>
+            </div>
+        </div>
+        <div class="col-12 data-padding">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtAdvertise" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Template Name</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            bindAdvertiseTemplate();
+        });
+
+        function bindAdvertiseTemplate() {
+            if ($.fn.DataTable.isDataTable("#dtAdvertise")) {
+                $('#dtAdvertise').DataTable().destroy();
+            }
+            var table = $('#dtAdvertise')
+                .DataTable({
+                    "sAjaxSource": "/Admin/Master/GetAdvertiseTemplateList",
+                    "order": [[2, "DESC"]],
+                    "columns": [
+                        {
+                            "data": "id",
+                            "width":"5%",
+                            //autoWidth: true,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function(data) {
+                                var content =
+                                    `<a href="/Admin/Master/EmailTemplateAddEdit/${data}" class="dropdown-item action"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                     <a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                     <a href="javascript:;" ${dataParams("View", "view", data)} class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View</a>`;
+                                return dataTableAction(content);
+                            }
+                        },
+                        {
+                            "data": "isActive",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": false,
+                            "className": "admin_toggle text-center",
+                            "render": function(data, type, row) {
+                                return statusToggle(row.id, data);
+                            }
+                        },
+                        {
+                            "data": "templateName",
+                            "targets": [2],
+                            "width":"5%",
+                            "orderData": [0, 2],
+                            //autoWidth: false,
+                            "searchable": true,
+                            "render": function (data, type, row) {
+                                return data;
+                            }
+                        }
+                    ]
+                });
+        };
+
+        $('#dtAdvertise').on("click", ".action", function(e) {
+                const flag = $(e.currentTarget).data("flag");
+                const id = $(e.currentTarget).data("id");
+                switch (flag) {
+                case "delete":
+                    DeleteAdvertiseTemplate(id);
+                    break;
+                case "view":
+                    ViewEmailTemplate(id);
+                default:
+                }
+            });
+
+        $('#dtAdvertise').on("change", ".admin_toggle", function(e) {
+                const current = $(e.currentTarget).find("input");
+                const id = $(current).data("id");
+                $.ajax({
+                    url: "@Url.Action("ManageTemplateStatus", "Master")",
+                    data: { id: id },
+                    type: "POST",
+                    success: function(response) {
+                        RxFair.HandleResponse(response);
+                    },
+                    error: function(data) {
+                    }
+                });
+            });
+
+        function DeleteAdvertiseTemplate(id) {
+            RxFair.Confirm("Delete Email Templates",
+                RxFair.typeModel.Warning,
+                "Are you sure?",
+                RxFair.typeModel.Danger,
+                "Yes, delete it!",
+                function() {
+                    $.ajax({
+                        url: "@Url.Action("RemoveAdvertiseTemplate", "Master")",
+                        data: { id: id },
+                        type: "POST",
+                        success: function(response) {
+                            RxFair.HandleResponse(response);
+                            window.location.href = "/Admin/Master/EmailTemplate";
+                        },
+                        error: function(data) {
+                        }
+                    });
+                },
+                function() {}
+            );
+        }
+
+        function ViewEmailTemplate(id) {
+            $("#modalContent").load(`/Admin/Master/ViewEmailTemplate/${id}`, function() {
+                modalSize("lg");
+                $("#divModal").modal('show');
+                $("#divModal .modal-dialog").addClass('dtwordwrap');
+            });
+        }
+
+    </script>
+}
+

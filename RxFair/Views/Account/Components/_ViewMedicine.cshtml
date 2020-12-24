@@ -1,0 +1,99 @@
+﻿@model RxFair.Dto.Dtos.ViewMedicineDto
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"><span class="font-weight-bold">      Medicine Name : @Model.MedicineName </span></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="tab-content invoice_data pt-0">
+        <table style="width: 100%" class="roundedCorners">
+            <tbody>
+                <tr>
+                    <th>
+                        NDC : @Model.Ndc
+                    </th>
+                    <th>
+                        Distributor Name : @(Model.Distributor==""? "System Medicine" : Model.Distributor)
+                    </th>
+                    @*<th>
+                        @(string.IsNullOrEmpty(Model.Distributor) ? "" : "Distributor Name :") @Model.Distributor
+                    </th>*@
+                </tr>
+                <tr>
+                    <td class="w-50 p-0">
+                        <table class="w-100 border-0">
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    @if (!string.IsNullOrEmpty(Model.MedicineImage))
+                                    {
+                                        <img src="@Model.MedicineImage" alt="@Model.MedicineName" class="img-fluid view-img" onerror="this.src='/UploadFile/MedicineImage/medi.png'" />
+                                    }
+                                    else
+                                    {
+
+                                        <img src="/UploadFile/MedicineImage/medi-big.jpg" alt="@Model.MedicineName" class="img-fluid view-img" />
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="p-0">
+                        <table class="w-100">
+                            <tr>
+                                <td class="title w-50">Strength : </td>
+                                <td>@Model.Strength</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Brand : </td>
+                                <td>@Model.Brand</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Strength Code : </td>
+                                <td>@Model.StrengthCode</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Package Size : </td>
+                                <td>@Model.PackageSize</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Package Size Code : </td>
+                                <td>@Model.PackageSizeCode</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Package Des. Code : </td>
+                                <td>@Model.PackageDecCode</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Unit Size : </td>
+                                <td>@Model.UnitSize</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Dosage Form : </td>
+                                <td>@Model.DosageForm</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Manufacturer : </td>
+                                <td>@Model.Manufacturer</td>
+                            </tr>
+                            <tr>
+                                <td class="title w-50">Category : </td>
+                                <td>@Model.Category</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary con_btn mr-auto" data-dismiss="modal">Close</button>
+</div>
+<script type="text/javascript">
+</script>

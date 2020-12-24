@@ -1,0 +1,257 @@
+﻿
+@{
+    ViewData["Title"] = "Manage Medicines";
+}
+
+<main class="app-content">
+    <div class="app-title admin_breadcrumb">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+            <li class="breadcrumb-item"><a href="\Admin">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Medicine</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Medicines</a></li>
+        </ul>
+    </div>
+    <div class="row pharmacies_form admin_tabel">
+        <div class="col-12">
+            <div class="database_title">
+                <h3>
+                    Manage Medicines
+                </h3>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("AddEditMedicine","Medicine", new { area="Admin" })" class="btn btn-outline-primary con_btn database_btn active"><i class="fa fa-plus" aria-hidden="true"></i> Add Medicines</a>
+            </div>
+        </div>
+        <div class="col-12">
+            <!-- Tab panes -->
+            <div class="tab-content pt-0">
+                <div class="tile-body">
+                    <div class="dataTables_wrapper no-footer">
+                        <table class="table table-hover table-bordered dataTable no-footer table_bordered_sec" id="dtMedicines" role="grid" aria-describedby="sampleTable_info">
+                            <thead>
+                                <tr role="row" class="title_datatable">
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th>Image</th>
+                                    <th>NDC</th>
+                                    <th>UPC</th>
+                                    <th>Medicine</th>
+                                    <th>Strength</th>
+                                    <th>Package Size</th>
+                                    <th>Manufacturer</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal admin_modelpop" id="discontinueModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Discontinue Medicine</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="frmDiscontinue">
+                    <input type="hidden" id="medicineId" />
+                    <div class="form-row mt-0">
+                        <div class="form-group col-md-12">
+                            <label for="Reason">Reason *</label>
+                            <textarea id="Reason" name="Reason" class="form-control" rows="4" data-parsley-required data-parsley-trigger="change"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary con_btn active" id="btnSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            BindMedicineList();
+        });
+
+        function BindMedicineList() {
+            if ($.fn.DataTable.isDataTable("#dtMedicines")) {
+                $("#dtMedicines").dataTable().fnDestroy();
+            }
+            const medicine = $("#dtMedicines").DataTable({
+                "sAjaxSource": "/Admin/Medicine/GetMedicineList",
+                "order": [[3, ""]],
+                "columns": [
+                    {
+                        "data": "id",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            const content = `<a href="javascript:;" ${dataParams("View", "view", row.mediPriceId)} class="dropdown-item action"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
+                                             <a href="/Admin/Medicine/AddEditMedicine/${data}" class="dropdown-item"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                             <a href="javascript:;" ${dataParams("Delete", "delete", data)} class="dropdown-item action"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                             <a href="javascript:;" ${dataParams("Discontinue Medicine", "discontinue", data)} class="dropdown-item action"><i class="fa fa-minus-circle" aria-hidden="true"></i> Discontinue Medicine</a>`;
+                            return dataTableAction(content);
+                        }
+                    },
+                    {
+                        "data": "isActive",
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "admin_toggle text-center",
+                        "render": function (data, type, row) {
+                            return statusToggle(row.id, data);
+                        }
+                    },
+                    {
+                        "data": "medicineImage",
+                        "autoWidth": false,
+                        "searchable": false,
+                        "orderable": false,
+                        "className": "database_image",
+                        "render": function (data, type, row) {
+                           return showImageTooltip(data);
+                            //return showImage(data,true);
+                        }
+                    },
+                    {
+                        "data": "ndc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "upc",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "medicineName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "strength",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "packageSize",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "manufacturerName",
+                        "autoWidth": false,
+                        "searchable": true
+                    },
+                    {
+                        "data": "category",
+                        "autoWidth": false,
+                        "searchable": true
+                    }
+                ]
+            });
+        }
+
+        $("#dtMedicines").on("click", ".action", function (e) {
+            const flag = $(e.currentTarget).data("flag");
+            const id = $(e.currentTarget).data("id");
+            switch (flag) {
+                case "view":
+                    ViewMedicine(id);
+                    break;
+                case "delete":
+                    DeleteMedicine(id);
+                    break;
+                case "discontinue":
+                    DiscontinueMedicine(id);
+                    break;
+            }
+        });
+
+        $('#dtMedicines').on("change", ".admin_toggle", function (e) {
+            const current = $(e.currentTarget).find("input");
+            const id = $(current).data("id");
+            ManageMedicineStatus(id);
+        });
+
+        function DeleteMedicine(id) {
+            RxFair.Confirm('Delete Medicine', RxFair.typeModel.Warning, "Are you sure?", RxFair.typeModel.Danger, "Yes, do it!", function () {
+                $.ajax({
+                    url: "/Admin/Medicine/DeleteMedicine",
+                    data: { id: id },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response, true, function () {
+                            BindMedicineList();
+                        });
+                    },
+                    error: function (data) {
+                    }
+                });
+            }, function () { });
+        }
+
+        function DiscontinueMedicine(id) {
+            $("#medicineId").val(id);
+            $("#Reason").val("");
+            $("#discontinueModal").modal('show');
+        }
+        
+        $("#divModal").on("hidden.bs.modal", function () {
+            $("#Reason").val("");
+        });
+
+        function ManageMedicineStatus(id) {
+            $.ajax({
+                url: "/Admin/Medicine/ManageMedicineStatus",
+                data: { id: id },
+                type: "POST",
+                success: function (response) {
+                    RxFair.HandleResponse(response);
+                },
+                error: function (data) {
+                }
+            });
+        }
+
+        $("#discontinueModal").on("click", "#btnSave", function () {
+            const id = $("#medicineId").val();
+            const reason = $("#Reason").val();
+            $('#frmDiscontinue').parsley().validate();
+            if ($("#frmDiscontinue").parsley().isValid()) {
+                $.ajax({
+                    url: "/Admin/Medicine/DiscontinueMedicine",
+                    data: { id: id, reason: reason },
+                    type: "POST",
+                    success: function (response) {
+                        RxFair.HandleResponse(response);
+                        if (response.status === 1) {
+                            if (!status) {
+                                $("#Reason").val("");
+                                resetForm("frmDiscontinue");
+                                $("#discontinueModal").modal('hide');
+                            }
+                        }
+                    },
+                    error: function (data) { }
+                });
+            }
+        });
+
+
+ 
+    </script>
+}

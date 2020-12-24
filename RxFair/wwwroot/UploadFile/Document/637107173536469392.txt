@@ -1,0 +1,13 @@
+vj@narola.email
+
+UserName-vjnarola
+Password-P@ssw0rd
+-------------------------------------
+Api key
+4c11211d52ba48fddbc759c3559e227c-us20
+4c11211d52ba48fddbc759c3559e227c-us20
+-------------------------------------
+Unique ListId
+239971ef81
+-------------------------------------
+https://us20.admin.mailchimp.com/account/api/
